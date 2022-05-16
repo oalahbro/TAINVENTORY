@@ -1,5 +1,5 @@
 ###################
-What is CodeIgniter
+APLIKASI INVENTORY SMK 5
 ###################
 
 CodeIgniter is an Application Development Framework - a toolkit - for people
