@@ -8,28 +8,25 @@ class Mymodel extends CI_Model{
         parent::__construct();
     }
 
-	public function GetData(){
-		$table = $this->mongodb->table('details');
-		// $result = $table->find(['details' => 'PLEMBANG'],['limit' => 10])->toArray();
+	public function getData(){
+		$table = $this->mongodb->table('aset');
+		$result = $table->find()->toArray();
+		return $result;
+	}
+	public function getAdmin(){
+		$table = $this->mongodb->table('admin');
 		$result = $table->find()->toArray();
 		return $result;
 	}
 
-	public function TestPenduduk(){
-		$table = $this->mongodb->table('penduduk');
-		$result = $table->find(['ALAMAT' => 'GOLAN', 'NO_RW' => ['$lt' => '2']])->toArray();
-		//$result = $table->find()->toArray();
-		return $result;
-	}
-
 	public function add($datanya){
-		$table = $this->mongodb->table('details');
+		$table = $this->mongodb->table('aset');
 		$tambah = $table->insertOne($datanya);
 		return $tambah;
 	}
 
 	public function update($datanya){
-		$table = $this->mongodb->table('details');
+		$table = $this->mongodb->table('aset');
 		$updateResult = $table->updateOne(
 			['newCol' => 'dfghjkl;lkjhgfd'],
 			['$set' => [
@@ -40,7 +37,7 @@ class Mymodel extends CI_Model{
 		return $updateResult;
 	}
 
-	function tambah_data($data_add) {
+	function addAdmin($data_add) {
         $table = $this->mongodb->table('admin');
 		$add = $table->insertOne([
 			'id_admin' => $this->mongodb->id(),
@@ -65,6 +62,15 @@ class Mymodel extends CI_Model{
         $table = $this->mongodb->table('admin');
 		$result = $table->findOne(['username' => $where]);
 		return $result;
+    }
+
+	function addCategory($data_add) {
+        $table = $this->mongodb->table('category');
+		$add = $table->insertOne([
+			'id_category' => $this->mongodb->id(),
+			'nama_category' => $data_add['nama_category'],
+		]);
+		return $add;
     }
 }
 ?>

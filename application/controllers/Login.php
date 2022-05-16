@@ -48,7 +48,16 @@ class login extends CI_Controller {
 			}
 			
 		} else {
-			echo "<script> alert('Username / Password Salah!'); window.location = '../login'</script>";
+			$error['danger'] = '<script type="text/javascript">
+			swal({
+			title: "Username / Password Salah !",
+			text: "Silahkan cek username / password anda kembali",
+			icon: "warning",
+			buttons: "OK",
+			dangerMode: true,
+			})
+			</script>';
+			$this->load->view('loginbak',$error);
 		}
 		
 	}
@@ -61,7 +70,7 @@ class login extends CI_Controller {
 
 	function addAdmin()
 	{
-		$this->form_validation->set_rules('username','Username','required|callback_check_username_exists');
+		$this->form_validation->set_rules('username','Username','required|min_length[3]|callback_check_username_exists');
 		$this->form_validation->set_rules('nama_Admin','Nama User','required|min_length[3]');
 		$this->form_validation->set_rules('password','Password','required|min_length[5]|matches[cpassword]');
 		$this->form_validation->set_rules('cpassword','Password','required|min_length[5]');
@@ -73,15 +82,18 @@ class login extends CI_Controller {
 			'password' => $this->input->post('password'),
 			'level' => $this->input->post('level')
 		];
-		// $cek_username = $this->mymodel->admin($data_add['username']);
-
-		// else{
-		// // var_dump($data_add);
-		// $tambah = $this->mymodel->tambah_data($data_add);
-		// echo "inserted with object id ".$tambah->getInsertedId();
-		// }
+		
 		if($this->form_validation->run() != false){
-			echo "Form validation oke";
+			$this->mymodel->tambah_data($data_add);
+			$error['danger'] = '<script type="text/javascript">
+			swal({
+			title: "Signup Berhasil",
+			text: "Silahkan login menggunakan Username / Password anda",
+			icon: "success",
+			buttons: "OK",
+			})
+			</script>';
+			$this->load->view('loginbak',$error);
 		}else{
 			$this->load->view('signuperr',$data_add);
 		}

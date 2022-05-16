@@ -30,13 +30,11 @@ class Admin extends CI_Controller {
 	public function index()
 	{
 		$data['planet'] = [
-			'jumlah' => count($this->mymodel->GetData()),
+			'jumlah' => count($this->mymodel->getAdmin()),
+			'jumlah_aset' => count($this->mymodel->getData()),
 			'user' => $this->mymodel->admin($this->session->userdata('username'))
 		];
-		// var_dump($data['planet']['admin']['nama_Admin']);
 		$this->load->view('admin/dashboardbak',$data);
-
-		// $this->load->view('welcome_message');
 
 	}
 
@@ -49,18 +47,11 @@ class Admin extends CI_Controller {
 
 	public function read()
 	{
-		$data['planet'] = $this->mymodel->GetData();
+		$data['planet'] = $this->mymodel->getData();
 		// var_dump($data);
 		$this->load->view('admin/test',$data);
 
 	}
-	// public function testpenduduk()
-	// {
-	// 	//var_dump($result);
-	// 	$data['planet'] = $this->mymodel->TestPenduduk();
-	// 	$this->load->view('test',$data);
-
-	// }
 
 	public function insert()
 	{
@@ -92,9 +83,12 @@ class Admin extends CI_Controller {
 		return header("location:/admin/admin/read");
 	}
 
-	public function test()
+	public function category()
 	{
-		$dat = $this->session->userdata('id_admin');
-		var_dump($dat);
+		$data_add = [
+			'nama_category' => 'elektronik'
+		];
+		$tambah = $this->mymodel->addCategory($data_add);
+		echo "inserted with object id ".$tambah->getInsertedId();
 	}
 }

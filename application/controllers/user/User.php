@@ -31,14 +31,10 @@ class User extends CI_Controller {
 	{
 
 		$data['planet'] = [
-			'jumlah' => count($this->mymodel->GetData()),
+			'jumlah' => count($this->mymodel->getAdmin()),
 			'user' => $this->mymodel->admin($this->session->userdata('username'))
 		];
-		// var_dump($data['planet']['admin']['nama_Admin']);
 		$this->load->view('admin/dashboardbak',$data);
-
-		// $this->load->view('welcome_message');
-
 	}
 
 	public function upload()
@@ -50,15 +46,8 @@ class User extends CI_Controller {
 
 	public function read()
 	{
-		$data['planet'] = $this->mymodel->GetData();
+		$data['planet'] = $this->mymodel->getData();
 		// var_dump($data);
-		$this->load->view('test',$data);
-
-	}
-	public function testpenduduk()
-	{
-		//var_dump($result);
-		$data['planet'] = $this->mymodel->TestPenduduk();
 		$this->load->view('test',$data);
 
 	}

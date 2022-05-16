@@ -1,7 +1,7 @@
 <input type="file" onchange="encodeImageFileAsURL(this)" />
 <!-- <input type="file" onchange="encodeImageFileAsURL(this)" /> -->
 <div >
-<form method="post" action="/welcome/insert">
+<form method="post" action="/admin/admin/insert">
         <input name="text" type="text" value="" id="mydiv" placeholder="enter some text" />
         <input name="text2" type="text" placeholder="enter some text" />
         <input type="submit" value="Save" name="submit">

@@ -33,9 +33,8 @@
 		<div class="main-header" data-background-color="purple">
 			<!-- Logo Header -->
 			<div class="logo-header">
-
 				<a href="index.html" class="logo">
-					<img src="<?= base_url();?>/assets/img/logoazzara.svg" alt="navbar brand" class="navbar-brand">
+					<img src="<?= base_url();?>/assets/img/logo-kecil.png" alt="navbar brand" class="navbar-brand" height="70%">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -556,7 +555,7 @@
 										</div>
 										<div class="col col-stats">
 											<div class="numbers">
-												<p class="card-category">Fitors</p>
+												<p class="card-category">User</p>
 												<h4 class="card-title"><?= $planet['jumlah'];?></h4>
 											</div>
 										</div>
@@ -570,13 +569,13 @@
 									<div class="row">
 										<div class="col-5">
 											<div class="icon-big text-center">
-												<i class="flaticon-interface-6"></i>
+												<i class="flaticon-shapes-1"></i>
 											</div>
 										</div>
 										<div class="col col-stats">
 											<div class="numbers">
-												<p class="card-category">Subscribers</p>
-												<h4 class="card-title">1303</h4>
+												<p class="card-category">Inventory</p>
+												<h4 class="card-title"><?= $planet['jumlah_aset'];?></h4>
 											</div>
 										</div>
 									</div>
@@ -594,7 +593,7 @@
 										</div>
 										<div class="col col-stats">
 											<div class="numbers">
-												<p class="card-category">Sales</p>
+												<p class="card-category">Unconfirmed</p>
 												<h4 class="card-title">$ 1,345</h4>
 											</div>
 										</div>

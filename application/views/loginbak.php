@@ -117,10 +117,17 @@
             </form>
 		</div>
 	</div>
+    
+<script src="<?= base_url();?>/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 	<script src="<?= base_url();?>assets/js/core/jquery.3.2.1.min.js"></script>
 	<script src="<?= base_url();?>assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 	<script src="<?= base_url();?>assets/js/core/popper.min.js"></script>
 	<script src="<?= base_url();?>assets/js/core/bootstrap.min.js"></script>
 	<script src="<?= base_url();?>assets/js/ready.js"></script>
+
+   <?php 
+        error_reporting(0);
+        echo $danger;
+   ?>
 </body>
 </html>
