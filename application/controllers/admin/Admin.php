@@ -34,8 +34,10 @@ class Admin extends CI_Controller {
 			'jumlah_aset' => count($this->mymodel->getData()),
 			'user' => $this->mymodel->admin($this->session->userdata('username'))
 		];
-		$this->load->view('admin/dashboardbak',$data);
 
+		$this->load->view('template/header', $data);
+		$this->load->view('admin/dashboardbak',$data);
+		$this->load->view('template/footer');
 	}
 
 	public function upload()
