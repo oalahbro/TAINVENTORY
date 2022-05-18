@@ -61,7 +61,7 @@
 
 		<div class="container container-signup animated fadeIn">
 			<h3 class="text-center">Sign Up</h3>
-            <form action="/login/addAdmin" method="post">
+            <form action="/login/signup" method="post">
                 <div class="login-form">
                 <div class="form-group form-floating-label">
                         <div class="input-group">
@@ -98,8 +98,8 @@
                     <select class="form-control input-pill" name="level" id="pillSelect">
                         <option></option>
                         <option value="1">Admin</option>
-                        <option value="2">Buyer</option>
-                        <option value="3">User</option>
+                        <option value="2">Guru</option>
+                        <option value="3">Buyer</option>
                     </select>
 					</div>
                     <div class="row form-sub m-0">

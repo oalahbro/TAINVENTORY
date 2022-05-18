@@ -253,10 +253,10 @@
                                                 echo "Administrator";
                                             }
                                             if ($this->session->userdata('level') == 2) {
-                                                echo "Buyer";
+                                                echo "Guru";
                                             }
                                             if ($this->session->userdata('level') == 3) {
-                                                echo "User";
+                                                echo "Buyer";
                                             }
                                         ?>
                                     </span>

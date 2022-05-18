@@ -5,22 +5,33 @@ class login extends CI_Controller {
 
 	function __construct()
 	{
-		parent::__construct();		
+		parent::__construct();
+		
 		$this->load->model('mymodel');
 	}
 
 	public function index()
 	{
-		if(!$this->session->userdata('username')){
-		$this->load->view('loginbak');
+
+		if ($this->session->userdata('level') == 1) {
+			return header("location:/admin/admin");
+		}
+		if ($this->session->userdata('level') == 2) {
+			return header("location:/guru/guru");
+		}
+		if ($this->session->userdata('level') == 3) {
+			return header("location:/buyer/buyer");
 		}
 		else {
-			return header("location:/admin/admin/read");
+		$this->load->view('loginbak');
 		}
+		
 	}
 
 	public function auth()
 	{		
+		if(!$this->session->userdata('username')){
+
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
 		
@@ -41,10 +52,10 @@ class login extends CI_Controller {
 				return header("location:/admin/admin");
 			}
 			if($cariData['level'] == 2){
-				return header("location:/user/user");
+				return header("location:/guru/guru");
 			}
 			if($cariData['level'] == 3){
-				return header("location:/user/user");
+				return header("location:/buyer/buyer");
 			}
 			
 		} else {
@@ -59,17 +70,24 @@ class login extends CI_Controller {
 			</script>';
 			$this->load->view('loginbak',$error);
 		}
+		}
+		else {
+			$this->index();
+		}
 		
 	}
 
 	function logout()
 	{
 		$this->session->sess_destroy();
-		redirect(base_url('login'));
+		$this->index();
 	}
 
-	function addAdmin()
+	function signup()
 	{
+
+		if(!$this->session->userdata('username')){
+			
 		$this->form_validation->set_rules('username','Username','required|min_length[3]|callback_check_username_exists');
 		$this->form_validation->set_rules('nama_Admin','Nama User','required|min_length[3]');
 		$this->form_validation->set_rules('password','Password','required|min_length[5]|matches[cpassword]');
@@ -96,6 +114,11 @@ class login extends CI_Controller {
 			$this->load->view('loginbak',$error);
 		}else{
 			$this->load->view('signuperr',$data_add);
+		}
+		
+		}
+		else {
+			$this->index();
 		}
 	}
 
