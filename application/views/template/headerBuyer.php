@@ -248,17 +248,7 @@
 								<span>
                                 <?= $planet['user']['nama_Admin'];?>
 									<span class="user-level">
-                                        <?php
-                                            if ($this->session->userdata('level') == 1) {
-                                                echo "Administrator";
-                                            }
-                                            if ($this->session->userdata('level') == 2) {
-                                                echo "Guru";
-                                            }
-                                            if ($this->session->userdata('level') == 3) {
-                                                echo "Buyer";
-                                            }
-                                        ?>
+                                        Buyer
                                     </span>
 									<span class="caret"></span>
 								</span>
@@ -303,54 +293,24 @@
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-layer-group"></i>
-								<p>Base</p>
+								<p>Inventory</p>
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="base">
 								<ul class="nav nav-collapse">
-									<li>
+								<li>
 										<a href="components/avatars.html">
-											<span class="sub-item">Avatars</span>
+											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
 									<li>
 										<a href="components/buttons.html">
-											<span class="sub-item">Buttons</span>
+											<span class="sub-item">Didalam</span>
 										</a>
 									</li>
 									<li>
 										<a href="components/gridsystem.html">
-											<span class="sub-item">Grid System</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/panels.html">
-											<span class="sub-item">Panels</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/notifications.html">
-											<span class="sub-item">Notifications</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/sweetalert.html">
-											<span class="sub-item">Sweet Alert</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/font-awesome-icons.html">
-											<span class="sub-item">Font Awesome Icons</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/flaticons.html">
-											<span class="sub-item">Flaticons</span>
-										</a>
-									</li>
-									<li>
-										<a href="components/typography.html">
-											<span class="sub-item">Typography</span>
+											<span class="sub-item">Diluar</span>
 										</a>
 									</li>
 								</ul>

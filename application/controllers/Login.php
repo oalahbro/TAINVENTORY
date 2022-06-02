@@ -1,13 +1,15 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class login extends CI_Controller {
+class login extends CI_Controller
+{
 
 	function __construct()
 	{
 		parent::__construct();
-		
-		$this->load->model('mymodel');
+
+		$this->load->model('M_admin');
+		$this->load->model('M_login');
 	}
 
 	public function index()
@@ -21,44 +23,22 @@ class login extends CI_Controller {
 		}
 		if ($this->session->userdata('level') == 3) {
 			return header("location:/buyer/buyer");
+		} else {
+			$this->load->view('login');
 		}
-		else {
-		$this->load->view('loginbak');
-		}
-		
 	}
 
 	public function auth()
-	{		
-		if(!$this->session->userdata('username')){
+	{
+		if (!$this->session->userdata('username')) {
 
-		$username = $this->input->post('username');
-		$password = $this->input->post('password');
-		
-		$where = [
-			'username' => $username,
-			'password' => md5($password)
-		];
+			$username = $this->input->post('username');
+			$password = $this->input->post('password');
 
-		$cariData = $this->mymodel->cek($where);
-		if ($cariData) {
-			$data_session = [
+			$where = [
 				'username' => $username,
-				'status' => "login",
-				'level' => $cariData['level']
+				'password' => md5($password)
 			];
-			$this->session->set_userdata($data_session);
-			if($cariData['level'] == 1){
-				return header("location:/admin/admin");
-			}
-			if($cariData['level'] == 2){
-				return header("location:/guru/guru");
-			}
-			if($cariData['level'] == 3){
-				return header("location:/buyer/buyer");
-			}
-			
-		} else {
 			$error['danger'] = '<script type="text/javascript">
 			swal({
 			title: "Username / Password Salah !",
@@ -68,42 +48,77 @@ class login extends CI_Controller {
 			dangerMode: true,
 			})
 			</script>';
-			$this->load->view('loginbak',$error);
-		}
-		}
-		else {
+			$status['danger'] = '<script type="text/javascript">
+			swal({
+			title: "User belum aktif",
+			text: "Silahkan hubungi administrator",
+			icon: "warning",
+			buttons: "OK",
+			dangerMode: true,
+			})
+			</script>';
+
+			$cariData = $this->M_login->cek($where);
+			if ($cariData) {
+				$data_session = [
+					'username' => $username,
+					'status' => "login",
+					'level' => $cariData['level']
+				];
+				if ($cariData['level'] == 1 && $cariData['status'] == 1) {
+					$this->session->set_userdata($data_session);
+					return header("location:/admin/admin");
+				} else {
+					$this->load->view('login', $status);
+				}
+				if ($cariData['level'] == 2 && $cariData['status'] == 1) {
+					$this->session->set_userdata($data_session);
+					return header("location:/guru/guru");
+				} else {
+					$this->load->view('login', $status);
+				}
+				if ($cariData['level'] == 3 && $cariData['status'] == 1) {
+					$this->session->set_userdata($data_session);
+					return header("location:/buyer/buyer");
+				} else {
+					$this->load->view('login', $status);
+				}
+			} else {
+
+				$this->load->view('login', $error);
+			}
+		} else {
 			$this->index();
 		}
-		
 	}
 
 	function logout()
 	{
 		$this->session->sess_destroy();
-		$this->index();
+		redirect(base_url('login'));
 	}
 
 	function signup()
 	{
 
-		if(!$this->session->userdata('username')){
-			
-		$this->form_validation->set_rules('username','Username','required|min_length[3]|callback_check_username_exists');
-		$this->form_validation->set_rules('nama_Admin','Nama User','required|min_length[3]');
-		$this->form_validation->set_rules('password','Password','required|min_length[5]|matches[cpassword]');
-		$this->form_validation->set_rules('cpassword','Password','required|min_length[5]');
-		$this->form_validation->set_rules('level','Level','required');
-		
-		$data_add = [
-			'username' => $this->input->post('username'),
-			'nama_Admin' => $this->input->post('nama_Admin'),
-			'password' => $this->input->post('password'),
-			'level' => $this->input->post('level')
-		];
-		
-		if($this->form_validation->run() != false){
-			$this->mymodel->tambah_data($data_add);
-			$error['danger'] = '<script type="text/javascript">
+		if (!$this->session->userdata('username')) {
+
+			$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|callback_check_username_exists');
+			$this->form_validation->set_rules('nama_Admin', 'Nama User', 'required|min_length[3]');
+			$this->form_validation->set_rules('password', 'Password', 'required|min_length[5]|matches[cpassword]');
+			$this->form_validation->set_rules('cpassword', 'Password', 'required|min_length[5]');
+			$this->form_validation->set_rules('level', 'Level', 'required');
+
+			$data_add = [
+				'username' => $this->input->post('username'),
+				'nama_Admin' => $this->input->post('nama_Admin'),
+				'password' => $this->input->post('password'),
+				'level' => $this->input->post('level')
+			];
+
+			if ($this->form_validation->run() != false) {
+				$this->M_admin->tambah_data($data_add);
+				$success['danger'] = '<script type="text/javascript">
 			swal({
 			title: "Signup Berhasil",
 			text: "Silahkan login menggunakan Username / Password anda",
@@ -111,24 +126,22 @@ class login extends CI_Controller {
 			buttons: "OK",
 			})
 			</script>';
-			$this->load->view('loginbak',$error);
-		}else{
-			$this->load->view('signuperr',$data_add);
-		}
-		
-		}
-		else {
+				$this->load->view('login', $success);
+			} else {
+				$this->load->view('signuperr', $data_add);
+			}
+		} else {
 			$this->index();
 		}
 	}
 
 	public function check_username_exists($username)
 	{
-	   if(!$this->mymodel->admin($username)){
-	   return true;
-	   } else {
-		$this->form_validation->set_message('check_username_exists', 'Username Sudah ada. Gunakan username lain');
-	   return false;
-	   }
+		if (!$this->M_admin->admin($username)) {
+			return true;
+		} else {
+			$this->form_validation->set_message('check_username_exists', 'Username Sudah ada. Gunakan username lain');
+			return false;
+		}
 	}
 }

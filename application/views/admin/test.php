@@ -23,19 +23,25 @@ if ($this->session->userdata('level') == 3) {
  ?>
 <div class="container">
     <table class="table table-bordered mt-5">
+    <tr>
     <?php  
     foreach($planet as $temp)
+    
     {        
-        echo '<thead><tr><th scope="col" class="text-break"><img id="img" height="120" src="'.$temp['newcol'].'"><br>'. ' == '. $temp['newcol2'] .'</th></tr></thead>';
+    
+        // echo '<thead><tr><th scope="col" class="text-break"><img id="img" height="120" src="'.$temp['newcol'].'"><br>'. ' == '. $temp['newcol2'] .'</th></tr></thead>';
         // echo '<img id="img" height="120" src="'.$temp['newcol'].'"><br>';
-        // foreach($temp as $temps => $val){
-        //     if (!$val){
-        //         $val = "<b>[KOSONG]</b> ";
-        //     }
-        //     echo '<thead><tr><th scope="col" class="text-break">'. ' == '. $val .'</th></tr></thead>';
-            // echo '<tbody><tr><td>' . $val . '</td></tr></tbody>';
-// }
-} ?>
+        
+        foreach($temp as $temps => $val){
+            // if (!$val){
+            //     $val = "<b>[KOSONG]</b> ";
+            // }
+            // echo '<thead><tr><th scope="col" class="text-break">'. ' == '. $val .'</th></tr></thead>';
+            // echo '<tbody><tr><td><img id="img" height="120" src="'.$temp['newcol'].'"><br> </td></tr></tbody>';
+            }
+        }
+ ?>
+</tr>
     
     </table>
     </div>
