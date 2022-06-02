@@ -1,5 +1,5 @@
 ###################
-APLIKASI INVENTORY SMK 5
+APLIKASI INVENTORY SMK 5 Codeigniter 3 with MongoDB
 ###################
 
 CodeIgniter is an Application Development Framework - a toolkit - for people
