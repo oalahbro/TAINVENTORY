@@ -33,11 +33,11 @@ class Buyer extends CI_Controller
 
 		$data['planet'] = [
 			'jumlah' => count($this->M_admin->getAdmin()),
-			'jumlah_aset' => count($this->M_admin->getData()),
+			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'user' => $this->M_admin->admin($this->session->userdata('username'))
 		];
 
-		$this->load->view('template/header', $data);
+		$this->load->view('template/headerGuru', $data);
 		$this->load->view('buyer/dashboard', $data);
 		$this->load->view('template/footer');
 	}

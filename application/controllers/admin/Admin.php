@@ -38,7 +38,7 @@ class Admin extends CI_Controller
 		$data['planet'] = [
 			'title' => "Dashboard",
 			'jumlah' => count($this->M_admin->getAdmin()),
-			'jumlah_aset' => count($this->M_admin->getData()),
+			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'user' => $this->dataAdmin()
 		];
 
@@ -64,13 +64,13 @@ class Admin extends CI_Controller
 	{
 		$data['planet'] = [
 			'title' => "Inventory Unconfirmed",
-			'jumlah' => count($this->M_admin->getAdmin()),
-			'jumlah_aset' => count($this->M_admin->getData()),
+			'inventory' => $this->M_admin->getInventory(),
 			'user' => $this->dataAdmin()
 		];
-		$this->load->view('template/headerAdmin', $data);
-		$this->load->view('admin/inventory', $data);
-		$this->load->view('template/footer');
+		var_dump($data['planet']['inventory']);
+		// $this->load->view('template/headerAdmin', $data);
+		// $this->load->view('admin/inventory', $data);
+		// $this->load->view('template/footer');
 	}
 
 	public function upload()

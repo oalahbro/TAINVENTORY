@@ -144,4 +144,94 @@ class login extends CI_Controller
 			return false;
 		}
 	}
+	public function apinotif()
+	{
+		$api = '[
+		{
+			"name": "Quyn Mays",
+			"email": "tempus@protonmail.ca",
+			"phone": "1-867-835-6080"
+		},
+		{
+			"name": "Wayne Buchanan",
+			"email": "ornare.placerat@icloud.couk",
+			"phone": "1-582-867-9444"
+		},
+		{
+			"name": "Juliet Burks",
+			"email": "dictum.placerat@outlook.couk",
+			"phone": "1-517-224-9648"
+		},
+		{
+			"name": "Juliet Burks",
+			"email": "dictum.placerat@outlook.couk",
+			"phone": "1-517-224-9648"
+		},
+		{
+			"name": "Wayne Buchanan",
+			"email": "ornare.placerat@icloud.couk",
+			"phone": "1-582-867-9444"
+		},
+		{
+			"name": "Juliet Burks",
+			"email": "dictum.placerat@outlook.couk",
+			"phone": "1-517-224-9648"
+		},
+		{
+			"name": "Juliet Burks",
+			"email": "dictum.placerat@outlook.couk",
+			"phone": "1-517-224-9648"
+		}
+		
+	]';
+
+		$doom = json_decode($api, true);
+		$data = [
+			'jumlah' => count($doom),
+			'get' => $doom
+
+
+		];
+		echo json_encode($data);
+	}
+	public function arra()
+	{
+		$this->load->view('notif');
+
+		// $no = 1;
+		// foreach ($doom as $d) {
+		// 	echo '<form method="post" action="' . base_url() . 'login/arra">
+		// 	<div class="form-row mb-2">
+		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[nama]" value="' . $d['name'] . '"/></div>
+		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[email]" value="' . $d['email'] . '"/></div>
+		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[phone]" value="' . $d['phone'] . '"/></div>
+		// 	</div>
+		// 	';
+		// 	$no++;
+		// }
+		// echo '<button type="submit" class="btn btn-primary mt-2 mx-auto custom d-block">Submit</button></form>';
+		// if ($this->input->post()) {
+		// 	echo '<table class="table">
+		// 		<thead>
+		// 			<tr>
+		// 			<th>Nama</th>
+		// 			<th>Email</th>
+		// 			<th>No Telp</th>
+		// 			</tr>
+		// 		</thead>';
+		// 	foreach ($this->input->post() as $d) {
+		// 		echo '
+		// 		<tr>
+		// 		  <td>' . $d['nama'] . '</td>
+		// 		  <td>' . $d['email'] . '</td>
+		// 		  <td>' . $d['phone'] . '</td>
+		// 		</tr>
+		// 		';
+		// 		// echo $d['nama'];
+		// 	}
+		// 	echo '</table>';
+		// 	// var_dump($this->input->post('nama1'));
+		// }
+		// echo '</div>';
+	}
 }

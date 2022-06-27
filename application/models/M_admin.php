@@ -8,8 +8,7 @@ class M_admin extends CI_Model
 	{
 		parent::__construct();
 	}
-
-	public function getData()
+	public function getInventory()
 	{
 		$table = $this->mongodb->table('aset');
 		$result = $table->find()->toArray();
