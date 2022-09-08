@@ -5,7 +5,7 @@ class welcome extends CI_Controller
 {
     public function index()
     {
-        $data = [
+        $arr = [
             [
                 'nama' => 'sumanto',
                 'deskripsi' => 'loremipsum'
@@ -19,6 +19,6 @@ class welcome extends CI_Controller
                 'deskripsi' => 'loremipsum'
             ]
         ];
-        return view('blade/index', ['post' => $data]);
+        return view('blade/index', ['post' => $arr]);
     }
 }

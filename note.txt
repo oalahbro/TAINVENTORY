@@ -1,0 +1,14 @@
+--- User Level---
+1 = Superadmin
+2 = Admin / GUru
+3 = User / Buyer
+
+--- User Status ---
+0 = Non Aktif
+1 = Aktif
+
+--- Inventory Status ---
+R0 = Request Cancel
+R1 = Request
+0 = Inventory di Luar
+1 = Inventory di Dalam

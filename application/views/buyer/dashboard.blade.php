@@ -1,4 +1,4 @@
-
+@include('template.headerBuyer');
 
 		<div class="main-panel">
 			<div class="content">
@@ -90,3 +90,4 @@
 		</div>
 
 	</div>
+@include('template.footer');

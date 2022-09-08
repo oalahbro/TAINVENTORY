@@ -16,4 +16,17 @@ class M_login extends CI_Model
         ]);
         return $result;
     }
+    function addData($data_add)
+    {
+        $table = $this->mongodb->table('admin');
+        $add = $table->insertOne([
+            'id_admin' => $this->mongodb->id(),
+            'nama_Admin' => $data_add['nama_Admin'],
+            'username' => $data_add['username'],
+            'katasandi' => md5($data_add['password']),
+            'level' => $data_add['level'],
+            'status' => 0
+        ]);
+        return $add;
+    }
 }

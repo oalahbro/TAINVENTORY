@@ -63,7 +63,7 @@
             buttons: false,
           });
           setTimeout(function() {
-            window.location.href = '/login/logout';
+            window.location.href = '<?= base_url() ?>/login/logout';
           }, 1000);
         } else {
 

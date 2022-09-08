@@ -37,13 +37,13 @@
       canvas.toBlob(
         (blob) => {
           // Handle the compressed image. es. upload or save in local state
-          displayInfo('Original file', file);
-          displayInfo('Compressed file', blob);
+          // displayInfo('Original file', file);
+          // displayInfo('Compressed file', blob);
         },
         MIME_TYPE,
         QUALITY
       );
-      document.getElementById("root").append(canvas);
+      // document.getElementById("root").append(canvas);
       var dataURL = canvas.toDataURL();
       document.getElementById('mydiv').value = dataURL;
 
@@ -71,11 +71,11 @@
 
   // Utility functions for demo purpose
 
-  function displayInfo(label, file) {
-    const p = document.createElement('p');
-    p.innerText = `${label} - ${readableBytes(file.size)}`;
-    document.getElementById('root').append(p);
-  }
+  // function displayInfo(label, file) {
+  //   const p = document.createElement('p');
+  //   p.innerText = `${label} - ${readableBytes(file.size)}`;
+  //   document.getElementById('root').append(p);
+  // }
 
   function readableBytes(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(1024)),

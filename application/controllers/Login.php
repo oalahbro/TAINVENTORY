@@ -16,19 +16,20 @@ class login extends CI_Controller
 	{
 
 		if ($this->session->userdata('level') == 1) {
-			return header("location:/admin/admin");
+			redirect(base_url() . "admin/admin");
 		}
 		if ($this->session->userdata('level') == 2) {
-			return header("location:/guru/guru");
+			redirect(base_url() . "guru/guru");
 		}
 		if ($this->session->userdata('level') == 3) {
-			return header("location:/buyer/buyer");
+			redirect(base_url() . "buyer/buyer");
 		} else {
-			$this->load->view('login');
+			// return view('login');
+			return view('login');
 		}
 	}
 
-	public function auth()
+	public function apiAuth()
 	{
 		if (!$this->session->userdata('username')) {
 
@@ -39,56 +40,45 @@ class login extends CI_Controller
 				'username' => $username,
 				'password' => md5($password)
 			];
-			$error['danger'] = '<script type="text/javascript">
-			swal({
-			title: "Username / Password Salah !",
-			text: "Silahkan cek username / password anda kembali",
-			icon: "warning",
-			buttons: "OK",
-			dangerMode: true,
-			})
-			</script>';
-			$status['danger'] = '<script type="text/javascript">
-			swal({
-			title: "User belum aktif",
-			text: "Silahkan hubungi administrator",
-			icon: "warning",
-			buttons: "OK",
-			dangerMode: true,
-			})
-			</script>';
-
+			$salah = ['respon' => 'salah'];
+			$inactive = ['respon' => 'inactive'];
 			$cariData = $this->M_login->cek($where);
 			if ($cariData) {
 				$data_session = [
 					'username' => $username,
 					'status' => "login",
-					'level' => $cariData['level']
+					'level' => $cariData['level'],
+					'id' => $cariData['id_admin']
 				];
 				if ($cariData['level'] == 1 && $cariData['status'] == 1) {
 					$this->session->set_userdata($data_session);
-					return header("location:/admin/admin");
-				} else {
-					$this->load->view('login', $status);
-				}
-				if ($cariData['level'] == 2 && $cariData['status'] == 1) {
+					$benar = [
+						'respon' => 'benar',
+						'link' => 'admin/admin'
+					];
+					echo json_encode($benar);
+				} else if ($cariData['level'] == 2 && $cariData['status'] == 1) {
 					$this->session->set_userdata($data_session);
-					return header("location:/guru/guru");
-				} else {
-					$this->load->view('login', $status);
-				}
-				if ($cariData['level'] == 3 && $cariData['status'] == 1) {
+					$benar = [
+						'respon' => 'benar',
+						'link' => 'guru/guru'
+					];
+					echo json_encode($benar);
+				} else if ($cariData['level'] == 3 && $cariData['status'] == 1) {
 					$this->session->set_userdata($data_session);
-					return header("location:/buyer/buyer");
+					$benar = [
+						'respon' => 'benar',
+						'link' => 'buyer/buyer'
+					];
+					echo json_encode($benar);
 				} else {
-					$this->load->view('login', $status);
+					echo json_encode($inactive);
 				}
 			} else {
-
-				$this->load->view('login', $error);
+				echo json_encode($salah);
 			}
 		} else {
-			$this->index();
+			redirect(base_url('admin/admin'));
 		}
 	}
 
@@ -117,7 +107,7 @@ class login extends CI_Controller
 			];
 
 			if ($this->form_validation->run() != false) {
-				$this->M_admin->tambah_data($data_add);
+				$this->M_login->addData($data_add);
 				$success['danger'] = '<script type="text/javascript">
 			swal({
 			title: "Signup Berhasil",
@@ -126,9 +116,9 @@ class login extends CI_Controller
 			buttons: "OK",
 			})
 			</script>';
-				$this->load->view('login', $success);
+				return view('login', $success);
 			} else {
-				$this->load->view('signuperr', $data_add);
+				return view('login', $data_add);
 			}
 		} else {
 			$this->index();
@@ -194,6 +184,40 @@ class login extends CI_Controller
 		];
 		echo json_encode($data);
 	}
+
+	public function show()
+	{
+		$this->load->view('opo');
+	}
+
+	public function pse()
+	{
+		$get = $_GET['id'];
+		$ch = curl_init();
+
+		// set url 
+		curl_setopt($ch, CURLOPT_URL, "https://pse.kominfo.go.id/static/json-static/LOKAL_TERDAFTAR/" . $get . ".json");
+
+		// return the transfer as a string 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		// $output contains the output string 
+		$output = curl_exec($ch);
+
+		// tutup curl 
+		curl_close($ch);
+		$k =  $output;
+		$m = json_decode($k, true);
+		// print_r($m[0]['data']);
+
+		$lop = $m['data'];
+		// foreach ($lop as $p) {
+		// 	echo $p['id'] . '<br>';
+		// 	echo $p['attributes']['nama'] . '<br><br>';
+		// }
+		echo json_encode($lop);
+	}
+
 	public function arra()
 	{
 		$this->load->view('notif');
@@ -233,5 +257,30 @@ class login extends CI_Controller
 		// 	// var_dump($this->input->post('nama1'));
 		// }
 		// echo '</div>';
+	}
+	public function api()
+	{
+		$url = 'http://127.0.0.1:3000/kirim';
+		$data = [
+			'pesan' => 'ahahahah',
+			'nomer' => '62895338221298',
+			// 'link' => base_url() . 'assets/ss.png'
+			'link' => 'https://picsum.photos/720/800'
+		];
+
+		// use key 'http' even if you send the request to https://...
+		$options = array(
+			'http' => array(
+				'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method'  => 'POST',
+				'content' => http_build_query($data)
+			)
+		);
+		$context  = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		if ($result === FALSE) { /* Handle error */
+		}
+
+		var_dump($result);
 	}
 }
