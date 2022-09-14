@@ -283,4 +283,9 @@ class login extends CI_Controller
 
 		var_dump($result);
 	}
+
+	function info()
+	{
+		phpinfo();
+	}
 }

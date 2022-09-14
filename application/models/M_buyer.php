@@ -16,14 +16,14 @@ class M_buyer extends CI_Model
 	}
 	public function getAdmin()
 	{
-		$table = $this->mongodb->table('admin');
+		$table = $this->mongodb->table('user');
 		$result = $table->find()->toArray();
 		return $result;
 	}
 
 	public function getTuser()
 	{
-		$table = $this->mongodb->table('admin');
+		$table = $this->mongodb->table('user');
 		$result = $table->find(['level' => '1'])->toArray();
 		return $result;
 	}
@@ -60,13 +60,13 @@ class M_buyer extends CI_Model
 				['$match' => ['id_aset_tmp' => $asetid]],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
-					'from' => 'admin',
+					'from' => 'user',
 					'localField' => 'id_user_tujuan',
 					'foreignField' => 'id_admin',
 					'as' => 'tujuan_info'
 				]],
 				['$lookup' => [
-					'from' => 'admin',
+					'from' => 'user',
 					'localField' => 'id_user_asal',
 					'foreignField' => 'id_admin',
 					'as' => 'user_info'
@@ -107,13 +107,13 @@ class M_buyer extends CI_Model
 				// ['$match' => ['status' => 'R']],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
-					'from' => 'admin',
+					'from' => 'user',
 					'localField' => 'id_user_tujuan',
 					'foreignField' => 'id_admin',
 					'as' => 'tujuan_info'
 				]],
 				['$lookup' => [
-					'from' => 'admin',
+					'from' => 'user',
 					'localField' => 'id_user_asal',
 					'foreignField' => 'id_admin',
 					'as' => 'user_info'
@@ -124,7 +124,7 @@ class M_buyer extends CI_Model
 	}
 	public function dropdwn()
 	{
-		$admin = $this->mongodb->table('admin');
+		$admin = $this->mongodb->table('user');
 		$resadm = $admin->findOne(['id_admin' => $this->input->post('tujuan')]);
 		$cat = $this->mongodb->table('category');
 		$rescat = $cat->findOne(['id_kategori' => $this->input->post('kategori')]);
@@ -220,6 +220,21 @@ class M_buyer extends CI_Model
 		return $tambah;
 	}
 
+	public function descTmp()
+	{
+		$iduser = $this->session->userdata('id');
+		$table = $this->mongodb->table('aset_tmp');
+		$aset = $this->mongodb->table('aset');
+		$result = $table->findOne(['id_user_asal' => $iduser], ['sort' => ['_id' => -1]]);
+		if ($result) {
+			$aset->insertOne($result);
+			$table->deleteOne(
+				['id_aset_tmp' => $result['id_aset_tmp']]
+			);
+		}
+		return $result;
+	}
+
 	public function update($datanya)
 	{
 		$table = $this->mongodb->table('aset');
@@ -234,58 +249,11 @@ class M_buyer extends CI_Model
 		return $updateResult;
 	}
 
-	function addAdmin($data_add)
-	{
-		$table = $this->mongodb->table('admin');
-		$add = $table->insertOne([
-			'id_admin' => $this->mongodb->id(),
-			'nama_Admin' => $data_add['nama_Admin'],
-			'username' => $data_add['username'],
-			'katasandi' => md5($data_add['password']),
-			'level' => $data_add['level']
-		]);
-		return $add;
-	}
 
 	function admin($where)
 	{
-		$table = $this->mongodb->table('admin');
+		$table = $this->mongodb->table('user');
 		$result = $table->findOne(['username' => $where]);
 		return $result;
-	}
-
-	function addCategory($data_add)
-	{
-		$table = $this->mongodb->table('category');
-		$add = $table->insertOne([
-			'id_kategori' => $this->mongodb->id(),
-			'nama_kategori' => $data_add['nama_kategori'],
-			'status' => $data_add['status']
-		]);
-		return $add;
-	}
-
-	public function updateCat($datanya)
-	{
-		$table = $this->mongodb->table('category');
-		$updateResult = $table->updateOne(
-			['id_kategori' => $datanya['id_kategori']],
-			[
-				'$set' => [
-					'nama_kategori' => $datanya['nama_kategori'],
-					'status' => $datanya['status']
-				]
-			]
-		);
-		return $updateResult;
-	}
-
-	public function deleteCat($datanya)
-	{
-		$table = $this->mongodb->table('category');
-		$updateResult = $table->deleteOne(
-			['id_kategori' => $datanya['id_kategori']]
-		);
-		return $updateResult;
 	}
 }

@@ -40,7 +40,6 @@ class Buyer extends CI_Controller
 
 		return view('buyer/dashboard', $data);
 	}
-
 	public function addInvt()
 	{
 		if (!$this->input->post()) {
@@ -98,6 +97,22 @@ class Buyer extends CI_Controller
 		$this->M_buyer->insInvt();
 	}
 
+	public function reqInvt()
+	{
+		$data = $this->M_buyer->descTmp();
+
+		if (!$data) {
+			$respon = [
+				'respon' => 'habis'
+			];
+		} else {
+			$respon = [
+				'respon' => 'masih'
+			];
+		}
+		echo json_encode($respon);
+	}
+
 	public function aggregate()
 	{
 		$resultt = $this->M_buyer->invtTmp();
@@ -115,39 +130,5 @@ class Buyer extends CI_Controller
 		$data['planet'] = $this->M_buyer->getData();
 
 		$this->load->view('test', $data);
-	}
-
-	public function insert()
-	{
-		$text = $this->input->post('text');
-		$text2 = $this->input->post('text2');
-		if (!$text && !$text2) {
-			echo "kosong";
-		} else {
-			$datanya = [
-				'newcol' => $text,
-				'newcol2' => $text2
-			];
-			$this->M_buyer->add($datanya);
-
-			// echo "inserted with object id ".$tambah->getInsertedId();
-			return header("location:/welcome/read");
-		}
-	}
-
-	public function update()
-	{
-		$text2 = $this->input->post('text2');
-		$datanya = [
-			'newcol2' => $text2
-		];
-		$this->M_buyer->update($datanya);
-		return header("location:/welcome/read");
-	}
-
-	public function test()
-	{
-		$dat = $this->session->userdata('id_admin');
-		var_dump($dat);
 	}
 }

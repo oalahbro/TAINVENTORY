@@ -9,7 +9,7 @@ class M_login extends CI_Model
     }
     function cek($where)
     {
-        $table = $this->mongodb->table('admin');
+        $table = $this->mongodb->table('user');
         $result = $table->findOne([
             'username' => $where['username'],
             'katasandi' => $where['password']
@@ -18,7 +18,7 @@ class M_login extends CI_Model
     }
     function addData($data_add)
     {
-        $table = $this->mongodb->table('admin');
+        $table = $this->mongodb->table('user');
         $add = $table->insertOne([
             'id_admin' => $this->mongodb->id(),
             'nama_Admin' => $data_add['nama_Admin'],

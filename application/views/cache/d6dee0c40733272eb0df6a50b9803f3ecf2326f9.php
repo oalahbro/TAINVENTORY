@@ -31,7 +31,7 @@
                         <div class="card-header">
                             <div class="card-title">Masukkan Data Inventory</div>
                         </div>
-                        
+                        <form onsubmit="return pass()" action="">
                         <div class="card-body">
 
                             <div class="form-group">
@@ -56,31 +56,30 @@
                             </div>
                             <div class="form-group">
                                 <label for="email2">Code Inventory</label>
-                                <input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory">                                
+                                <input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory" required>                                
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlFile1">Masukkan Gambar Inventory</label>
                                 <input name="img" type="text" id="putbase" hidden>
                                 <input  type="file" class="form-control-file resize" id="img1">
+                                <br>
                                 <img id="bla" src="#" alt="your image" style="max-width: 20rem;" hidden/>
                                 
                             </div>
                             <div class="form-group">
                                 <label for="comment">Spesifikasi</label>
-                                <textarea name="spesifikasi" type="text" class="form-control" id="spek" rows="5">
-                                </textarea>
+                                <textarea name="spesifikasi" class="form-control" id="spek" rows="5" ></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="comment">Deskripsi</label>
-                                <textarea name="deskripsi" type="text" class="form-control" id="des" rows="5">
-                                </textarea>
+                                <textarea name="deskripsi" class="form-control" id="des" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="card-action">
-                            <button class="btn btn-success subm" onclick="pass()">Submit</button>
+                            <button class="btn btn-success subm">Submit</button>
                             <button class="btn btn-success btn-primary is-loading load" style="display: none">button</button>
                         </div>
-                        
+                        </form>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -92,7 +91,7 @@
                             
                         </div>
                         <div class="card-action">
-                            <button class="btn btn-success btn-block">Submit</button>
+                            <button class="btn btn-success btn-block" onclick="insert()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -158,12 +157,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="comment">Spesifikasi</label>
-                                            <textarea id="spesifikasi" name="spesifikasi" type="text" class="form-control"  rows="5">
+                                            <textarea id="spesifikasi" name="spesifikasi" class="form-control"  rows="5">
                                             </textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="comment">Deskripsi</label>
-                                            <textarea id="deskripsi" name="deskripsi" type="text" class="form-control" rows="5">
+                                            <textarea id="deskripsi" name="deskripsi" class="form-control" rows="5">
                                             </textarea>
                                         </div>
                                     </div>

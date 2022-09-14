@@ -33,7 +33,7 @@
     <div class="wrapper wrapper-login">
         <div class="container container-login animated fadeIn">
             <h3 class="text-center">Sign In To Admin</h3>
-            {{-- <form action="<?= base_url() ?>login/auth" method="post"> --}}
+            <form onsubmit="return login()">
                 <div class="login-form">
                     <div class="form-group form-floating-label">
                         <input id="username" name="username" type="text" class="form-control input-border-bottom" required>
@@ -51,21 +51,20 @@
                             <input type="checkbox" class="custom-control-input" id="rememberme">
                             <label class="custom-control-label" for="rememberme">Remember Me</label>
                         </div>
-
                         <a href="#" class="link float-right">Forget Password ?</a>
                     </div>
                     <div class="form-action mb-3">
-                        <button onclick="login()" type="submit" class="btn btn-primary btn-rounded btn-login subm">Log in</button>
+                        <button id="enter" type="submit" class="btn btn-primary btn-rounded btn-login subm">Log in</button>
                         <button disabled class="btn btn-primary btn-rounded btn-login is-loading load" style="display: none">button</button>
                     </div>
-            {{-- </form> --}}
-            <div class="login-account">
-                <span class="msg">Don't have an account yet ?</span>
-                <a href="#" id="show-signup" class="link">Sign Up</a>
-            </div>
+                </div>
+            </form>
+                <div class="login-account">
+                    <span class="msg">Don't have an account yet ?</span>
+                    <a href="#" id="show-signup" class="link">Sign Up</a>
+                </div>
         </div>
     </div>
-
     <div class="container container-signup animated fadeIn">
         <h3 class="text-center">Sign Up</h3>
         <form action="<?=base_url()?>/login/signup" method="post">
@@ -143,6 +142,7 @@
       $('.load').show()
       $.post(api_url,data, function(data, status){
         show(JSON.parse(data))
+        
       })
       function show(data){
           let respon = data.respon
@@ -168,6 +168,7 @@
         $('.subm').show()
         $('.load').hide()
       }
+      return false
     }
     </script>
     
