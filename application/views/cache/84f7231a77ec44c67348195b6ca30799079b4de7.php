@@ -333,7 +333,7 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="components/avatars.html">
+										<a href="<?= base_url()?>buyer/buyer/unconfirmed">
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
@@ -351,7 +351,7 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="components/gridsystem.html">
+										<a href="<?= base_url()?>buyer/buyer/request">
 											<span class="sub-item">Request</span>
 										</a>
 									</li>

@@ -1,3 +1,12 @@
+
+  $(document).ready(function(){
+    if(document.title.includes("Masukkan")){
+      showTmp();
+    }else{
+      dataTable();
+    }
+  });
+  
 $(".logout").click(function() {
     swal({
         title: "Anda yakin keluar?",
@@ -13,7 +22,7 @@ $(".logout").click(function() {
             buttons: false,
           });
           setTimeout(function() {
-            window.location.href = '/login/logout';
+            window.location.origin + '/login/logout';
           }, 1000);
         } else {
 
@@ -104,13 +113,18 @@ $(".logout").click(function() {
   };
   
   function showTmp(){
+    
     const api_url = "getTmp";
     async function getapi(url) {
           const response = await fetch(url);
-
           var dat = await response.json();
-          
           show(dat);
+          if (!dat.length){
+            $("#btn-insert").prop('disabled', true);
+          }else{
+            $("#btn-insert").prop('disabled', false);
+          }
+          
       }
     getapi(api_url);
     function show(dat) {
@@ -129,6 +143,7 @@ $(".logout").click(function() {
             }
             // Setting innerHTML as tab variable
             document.getElementById("tmp").innerHTML = tab;
+            
         }
   }
 
@@ -151,26 +166,35 @@ $(".logout").click(function() {
               delay: 1100
           });      
       }else{
-        $('.subm').hide()
+      $('.subm').hide()
       $('.load').show()
 
       $.post(url,data, function(data, status){
         
-        if(status == 'success'){
-          $.notify({
-              message: 'Sukses Menambah Inventory semenatara'
-          }, {
-              type: 'info',
-              delay: 1100
-          });
-
-          $('.subm').show()
-          $('.load').hide()
-        
-        showTmp()
-        }
-      })
+          if(status == 'success'){
+            $.notify({
+                message: 'Sukses Menambah Inventory semenatara'
+            }, {
+                type: 'info',
+                delay: 1100
+            });
+  
+            $('.subm').show()
+            $('.load').hide()
+          
+          showTmp()
+          clearTimeout(gum);
+          }
+        })
       }
+      var gum = setTimeout(function() {
+        $.notify({
+          message: 'Pastikan koneksi anda lancar, atau reload halaman'
+      }, {
+          type: 'warning',
+          delay: 1100
+      });
+        }, 10000);
     return false
   }
 
@@ -195,21 +219,16 @@ $(".logout").click(function() {
 	          timer: 800,
             buttons: false
           });
-          console.log(data)        
         showTmp()
         }
       })
   }
 
-  $(document).ready(function(){
-  // we call the function
-  showTmp();
-  });
-
   function modl(id_aset){
-    $('#modaledit').modal('toggle');
+    // $('#modaledit').modal('toggle');
     $('#modaledit').modal('show');
-    $('#modaledit').modal('hide');
+    
+    // $('#modaledit').modal('hide');
       // get data from button edit
       const id_aset_tmp = id_aset
       $('#id_aset_tmp').val(id_aset_tmp);
@@ -240,6 +259,12 @@ $(".logout").click(function() {
         $('#spesifikasi').val(data[0]['spesifikasi']);
         $('#deskripsi').val(data[0]['deskripsi']);
       }
+      if (!$('.modal').hasClass("show")){
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('fupdate').style.display = 'none';
+      }
+      
+      
   }
 
   function delTmp(id_aset){
@@ -250,19 +275,20 @@ $(".logout").click(function() {
     $.post(url,data, function(data, status){
         
         if(status == 'success'){
+        showTmp()
           $.notify({
-              message: 'Inventory semenatara telah dihapus'
+              message: 'Inventory sementara telah dihapus'
           }, {
               type: 'info',
               delay: 1100
           });
-        
-        showTmp()
         }
       })
   }
 
   function insert(){
+    $('.allin').hide()
+    $('.allload').show()
     const api_url = "reqInvt";
     async function getapi(url) {
         const response = await fetch(url);
@@ -278,8 +304,11 @@ $(".logout").click(function() {
               type: 'info',
               delay: 1100
           });
+          $('.allin').show()
+          $('.allload').hide()
         }
         else{
+          $('.allin').hide()
           setTimeout(function() {
             getapi(api_url);
             showTmp()
@@ -287,6 +316,97 @@ $(".logout").click(function() {
         }
     }
   }
+
+  function delReq(id_aset){
+    var url = "delReq"
+    const data = {
+        id_aset : id_aset
+    }
+    $.post(url,data, function(data, status){
+        
+        if(status == 'success'){
+          $.notify({
+              message: 'Inventory request telah dihapus'
+          }, {
+              type: 'info',
+              delay: 1100
+          });
+          dataTable();
+        }
+      })
+  }
+
+  function dataTable() {
+    const api_url = link
+    async function getapi(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          let kp = dat
+          merg(kp)
+      }
+    getapi(api_url);
+    function merg(kp){
+      ok = []
+      for(let i of kp) {
+          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'] , `<div class="form-button-action">
+      <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+        <i class="fa fa-edit"></i>
+      </button>
+      <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>`];
+          ok.push(obj);
+      }
+      $('#basic-datatables').DataTable({
+              "pageLength": 5,
+              "bDestroy": true,
+              data: ok
+            });
+    }
+};
+  function addReq(){
+    const url = "<?= base_url('buyer/Buyer/addReq')?>"
+    const data = {
+      tujuan : document.getElementById('tuj').value,
+      kategori : document.getElementById('kat').value,
+      nama : document.getElementById('nam').value,
+      code : document.getElementById('cod').value,
+      img : document.getElementById('putbase').value,
+      spesifikasi : document.getElementById('spek').value,
+      deskripsi : document.getElementById('des').value,
+    }
+    if(!data.code){
+      $.notify({
+            message: 'Gagal Menambah Inventory semenatara, code inventory tidak boleh kosong'
+        }, {
+            type: 'danger',
+            delay: 1100
+        });      
+    }else{
+      $('.subm').hide()
+    $('.load').show()
+
+    $.post(url,data, function(data, status){
+      
+      if(status == 'success'){
+        $.notify({
+            message: 'Sukses Menambah Inventory semenatara'
+        }, {
+            type: 'info',
+            delay: 1100
+        });
+
+        $('.subm').show()
+        $('.load').hide()
+      
+        dataTable();
+        $('#modaladd').modal('hide')
+      }
+    })
+    }
+  return false
+}
 
   function calculateSize(img, maxWidth, maxHeight) {
     let width = img.width;

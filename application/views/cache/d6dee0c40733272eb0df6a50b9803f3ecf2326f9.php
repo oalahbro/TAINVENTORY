@@ -77,7 +77,7 @@
                         </div>
                         <div class="card-action">
                             <button class="btn btn-success subm">Submit</button>
-                            <button class="btn btn-success btn-primary is-loading load" style="display: none">button</button>
+                            <button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
                         </div>
                         </form>
                     </div>
@@ -91,7 +91,8 @@
                             
                         </div>
                         <div class="card-action">
-                            <button class="btn btn-success btn-block" onclick="insert()">Submit</button>
+                            <button id="btn-insert" class="allin btn btn-success btn-block" onclick="insert()">Submit</button>
+                            <button class="allload btn btn-success btn-block is-loading" style="display: none" disabled>button</button>
                         </div>
                     </div>
                 </div>

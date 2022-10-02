@@ -125,10 +125,60 @@ class Buyer extends CI_Controller
 		$this->load->view('upload');
 	}
 
-	public function read()
+	public function unconfirmed()
 	{
-		$data['planet'] = $this->M_buyer->getData();
+		$data['planet'] = [
+			'jumlah' => count($this->M_buyer->getAdmin()),
+			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'user' => $this->M_buyer->admin($this->session->userdata('username')),
+			'title' => 'Inventory Unconfirmed'
+		];
 
-		$this->load->view('test', $data);
+		return view('buyer/inventory', $data);
+	}
+
+	public function apiReq()
+	{
+		$data =  $this->M_buyer->invtReq();
+		echo json_encode($data);
+	}
+	public function invtAll()
+	{
+		$data =  $this->M_buyer->invtAll();
+		echo json_encode($data);
+	}
+	public function request()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_buyer->getAdmin()),
+			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'kategori' => $this->M_buyer->getCategory(),
+			'tuser' => $this->M_buyer->getTuser(),
+			'user' => $this->M_buyer->admin($this->session->userdata('username')),
+			'inventory' => $this->M_buyer->invtReq(),
+			'link' => 'apiReq',
+			'title' => 'Inventory Request'
+		];
+		return view('buyer/request', $data);
+	}
+	public function delReq()
+	{
+		$this->M_buyer->delReq();
+	}
+	public function addReq()
+	{
+		$this->M_buyer->addReq();
+	}
+	public function aset()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_buyer->getAdmin()),
+			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'user' => $this->M_buyer->admin($this->session->userdata('username')),
+			'inventory' => $this->M_buyer->invtReq(),
+			'link' => 'invtAll',
+			'title' => 'Inventory Request'
+		];
+		return view('buyer/request', $data);
 	}
 }
