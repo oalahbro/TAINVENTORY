@@ -366,7 +366,7 @@ $(".logout").click(function() {
     }
 };
   function addReq(){
-    const url = "<?= base_url('buyer/Buyer/addReq')?>"
+    const url = "addReq"
     const data = {
       tujuan : document.getElementById('tuj').value,
       kategori : document.getElementById('kat').value,

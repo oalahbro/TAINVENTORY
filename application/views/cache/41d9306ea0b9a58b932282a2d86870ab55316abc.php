@@ -29,7 +29,7 @@
 					<div class="card">
 						<div class="card-header">
 							<div class="d-flex align-items-center">
-								<h4 class="card-title">Add Row</h4>
+								<h4 class="card-title">Tambah aset baru</h4>
 								<button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#modaladd">
 									<i class="fa fa-plus"></i>
 									Add Row
