@@ -112,8 +112,8 @@ $(".logout").click(function() {
     };
   };
   
+  // ON INS
   function showTmp(){
-    
     const api_url = "getTmp";
     async function getapi(url) {
           const response = await fetch(url);
@@ -134,16 +134,14 @@ $(".logout").click(function() {
             // Loop to access all rows
             for (let r of dat) {
                 tab += `<div class="row alert alert-info px-2 mx-0" role="alert"><div class="col-10 px-0 tom edit-tmp" onclick="modl('${r.id_aset_tmp}')">
-       ${r.nama_aset}<b>, Code :</b>&nbsp;${r.code}</div>
-       <div class="col-2 pl-0">
-                                <button type="button" class="close text-danger" onclick="delTmp('${r.id_aset_tmp}')" aria-label="Close">
-                                    <span >&times;</span>
-                                </button>
-                                </div></div>`;
+                ${r.nama_aset}<b>, Code :</b>&nbsp;${r.code}</div>
+                <div class="col-2 pl-0">
+                <button type="button" class="close text-danger" onclick="delTmp('${r.id_aset_tmp}')" aria-label="Close">
+                    <span >&times;</span>
+                </button>
+                </div></div>`;
             }
-            // Setting innerHTML as tab variable
             document.getElementById("tmp").innerHTML = tab;
-            
         }
   }
 
@@ -225,11 +223,7 @@ $(".logout").click(function() {
   }
 
   function modl(id_aset){
-    // $('#modaledit').modal('toggle');
     $('#modaledit').modal('show');
-    
-    // $('#modaledit').modal('hide');
-      // get data from button edit
       const id_aset_tmp = id_aset
       $('#id_aset_tmp').val(id_aset_tmp);
       var api_url = "api?asetid=" + id_aset_tmp;
@@ -263,8 +257,6 @@ $(".logout").click(function() {
         document.getElementById('loading').style.display = 'block';
         document.getElementById('fupdate').style.display = 'none';
       }
-      
-      
   }
 
   function delTmp(id_aset){
@@ -316,7 +308,8 @@ $(".logout").click(function() {
         }
     }
   }
-
+// END INS
+// ON REQ
   function delReq(id_aset){
     var url = "delReq"
     const data = {
@@ -349,13 +342,13 @@ $(".logout").click(function() {
       ok = []
       for(let i of kp) {
           let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'] , `<div class="form-button-action">
-      <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-        <i class="fa fa-edit"></i>
-      </button>
-      <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>`];
+            <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>`];
           ok.push(obj);
       }
       $('#basic-datatables').DataTable({
@@ -378,7 +371,7 @@ $(".logout").click(function() {
     }
     if(!data.code){
       $.notify({
-            message: 'Gagal Menambah Inventory semenatara, code inventory tidak boleh kosong'
+            message: 'Gagal Menambah Inventory request, code inventory tidak boleh kosong'
         }, {
             type: 'danger',
             delay: 1100
@@ -391,7 +384,7 @@ $(".logout").click(function() {
       
       if(status == 'success'){
         $.notify({
-            message: 'Sukses Menambah Inventory semenatara'
+            message: 'Sukses Menambah Inventory request'
         }, {
             type: 'info',
             delay: 1100
@@ -407,6 +400,67 @@ $(".logout").click(function() {
     }
   return false
 }
+function updtReq(id_aset){
+  $('#modaledit').modal('show');
+    const id_aset_tmp = id_aset
+    $('#id_aset').val(id_aset_tmp);
+    var api_url = "getReq?asetid=" + id_aset_tmp;
+    
+    async function getapi(url) {
+        const response = await fetch(url);
+        var data = await response.json();
+        if (response) {
+            hideloader();
+        }
+        show(data);
+    }
+    getapi(api_url);
+    function hideloader() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('fupdate').style.display = 'block';
+    }
+    function show(data) {
+      $('#kategori').val(data[0]['id_category']);
+      $('#kategori').html(data[0]['kategori_info'][0]['nama_kategori']);
+      $('#tujuan').val(data[0]['id_user_tujuan']);
+      $('#tujuan').html(data[0]['tujuan_info'][0]['nama_Admin']);
+      $('#nama_aset').val(data[0]['nama_aset']);
+      $('#code').val(data[0]['code']);
+      $('#blah').attr('src',data[0]['img']);
+      $('#spesifikasi').val(data[0]['spesifikasi']);
+      $('#deskripsi').val(data[0]['deskripsi']);
+    }
+    if (!$('.modal').hasClass("show")){
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('fupdate').style.display = 'none';
+    }
+  }
+  function updateReq(){
+    const url = "updateReq"
+    const data = {
+      id_aset : document.getElementById('id_aset').value,
+      tujuan : document.getElementById('tujuan').value,
+      kategori : document.getElementById('kategori').value,
+      nama : document.getElementById('nama_aset').value,
+      code : document.getElementById('code').value,
+      img : document.getElementById('putbas').value,
+      spesifikasi : document.getElementById('spesifikasi').value,
+      deskripsi : document.getElementById('deskripsi').value,
+}
+console.log(data)
+    $.post(url,data, function(data, status){
+      console.log(data)
+      if(status == 'success'){
+        swal('Berhasil update data', {
+          icon : "info",
+          timer: 800,
+          buttons: false
+        });
+        dataTable();
+      }
+    })
+}
+// END REQ
 
   function calculateSize(img, maxWidth, maxHeight) {
     let width = img.width;

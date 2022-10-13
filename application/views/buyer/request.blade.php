@@ -130,11 +130,10 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form id="fupdate" method="POST" class="pt-0">
+						<form id="fadd" method="POST" class="pt-0">
 							<div class="row">
 									<div class="card-body pt-0">
 											<div class="form-group">
-												<input type="text" id="id_aset_tmp" hidden/>
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
 												<select name="kategori" class="form-control"  id="kat">
 													@foreach($planet['kategori'] as $kat)
@@ -186,7 +185,7 @@
 				</div>
 			</div>
 		</div>
-		{{-- modal edit --}}
+		{{-- modal add --}}
 		<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -210,7 +209,7 @@
 							<div class="row">
 									<div class="card-body pt-0">
 											<div class="form-group">
-												<input type="text" id="id_aset_tmp" hidden/>
+												<input type="text" id="id_aset" hidden/>
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
 												<select name="kategori" class="form-control" id="exampleFormControlSelect1">
 													<option id="kategori" selected></option>
@@ -239,7 +238,8 @@
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar</label>
 												<input type="text" id="putbas" hidden>
-												<input id="imgInp" name="img" type="file" class="form-control-file resize" ><br/>
+												<input id="imgInp" name="img" type="file" class="form-control-file resize" hidden ><br/>
+												<input type="button" value="Browse..." onclick="document.getElementById('imgInp').click();" /><br>
 												<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
 												
 											</div>
@@ -259,7 +259,7 @@
 					</div>
 					<div class="modal-footer no-bd">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary" onclick="passUp()">Edit</button>
+						<button type="submit" class="btn btn-primary" onclick="updateReq()">Edit</button>
 					</div>
 				</div>
 			</div>

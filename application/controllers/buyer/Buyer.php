@@ -40,6 +40,7 @@ class Buyer extends CI_Controller
 
 		return view('buyer/dashboard', $data);
 	}
+
 	public function addInvt()
 	{
 		if (!$this->input->post()) {
@@ -66,6 +67,7 @@ class Buyer extends CI_Controller
 			// var_dump($data['planet']['drop']['rescat']['nama_kategori']);
 		}
 	}
+
 	public function api()
 	{
 		$asetid = $_GET['asetid'];
@@ -133,7 +135,6 @@ class Buyer extends CI_Controller
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
 			'title' => 'Inventory Unconfirmed'
 		];
-
 		return view('buyer/inventory', $data);
 	}
 
@@ -142,11 +143,13 @@ class Buyer extends CI_Controller
 		$data =  $this->M_buyer->invtReq();
 		echo json_encode($data);
 	}
+
 	public function invtAll()
 	{
 		$data =  $this->M_buyer->invtAll();
 		echo json_encode($data);
 	}
+
 	public function request()
 	{
 		$data['planet'] = [
@@ -161,14 +164,30 @@ class Buyer extends CI_Controller
 		];
 		return view('buyer/request', $data);
 	}
+
 	public function delReq()
 	{
 		$this->M_buyer->delReq();
 	}
+
 	public function addReq()
 	{
 		$this->M_buyer->addReq();
 	}
+
+	public function getReq()
+	{
+		$asetid = $_GET['asetid'];
+		$data = $this->M_buyer->getReq($asetid);
+		echo json_encode($data);
+	}
+
+	public function updateReq()
+	{
+		$data = $this->M_buyer->updateReq();
+		echo json_encode($data);
+	}
+
 	public function aset()
 	{
 		$data['planet'] = [

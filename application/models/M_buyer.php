@@ -312,8 +312,87 @@ class M_buyer extends CI_Model
 
 		return $add;
 	}
+	public function getReq($asetid)
+	{
 
-
+		$table = $this->mongodb->table('aset');
+		$result = $table->aggregate(
+			[
+				['$match' => ['id_aset' => $asetid]],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset_tmp' => 1,
+					'id_user_asal' => 1,
+					'id_user_tujuan' => 1,
+					'id_category' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'spesifikasi' => 1,
+					'deskripsi' => 1,
+					'img' => 1,
+					'status' => 1,
+					'tujuan_info.nama_Admin' => 1,
+					'user_info.nama_Admin' => 1,
+					'kategori_info.nama_kategori' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function updateReq()
+	{
+		$table = $this->mongodb->table('aset');
+		if (!$this->input->post('img')) {
+			$add = $table->updateOne(
+				['id_aset' => $this->input->post('id_aset')],
+				[
+					'$set' => [
+						'id_user_tujuan' => $this->input->post('tujuan'),
+						'id_category' => $this->input->post('kategori'),
+						'nama_aset' => $this->input->post('nama'),
+						'code' => $this->input->post('code'),
+						'spesifikasi' => $this->input->post('spesifikasi'),
+						'deskripsi' => $this->input->post('deskripsi')
+					]
+				]
+			);
+		} else {
+			$add = $table->updateOne(
+				['id_aset' => $this->input->post('id_aset')],
+				[
+					'$set' => [
+						'id_user_tujuan' => $this->input->post('tujuan'),
+						'id_category' => $this->input->post('kategori'),
+						'nama_aset' => $this->input->post('nama'),
+						'code' => $this->input->post('code'),
+						'spesifikasi' => $this->input->post('spesifikasi'),
+						'deskripsi' => $this->input->post('deskripsi'),
+						'img' => $this->input->post('img')
+					]
+				]
+			);
+		}
+		$test = $this->input->post();
+		return $test;
+	}
 	public function invtAll()
 	{
 		$iduser = $this->session->userdata('id');
