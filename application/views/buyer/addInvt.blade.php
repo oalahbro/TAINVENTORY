@@ -136,8 +136,7 @@
                                         <div class="form-group">
                                             <input type="text" id="id_aset_tmp" hidden/>
                                             <label for="exampleFormControlSelect1">Pilih Kategori</label>
-                                            <select name="kategori" class="form-control" id="exampleFormControlSelect1">
-                                                <option id="kategori" selected></option>
+                                            <select name="kategori" class="form-control" id="kategori">
                                                 @foreach($planet['kategori'] as $kat)
                                                 <option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
                                                 @endforeach
@@ -145,8 +144,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Pilih Tujuan</label>
-                                            <select name="tujuan" class="form-control" id="exampleFormControlSelect1">
-                                                <option id="tujuan" selected></option>
+                                            <select name="tujuan" class="form-control" id="tujuan">
                                                 @foreach($planet['tuser'] as $tus)
                                                 <option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }}</option>
                                                 @endforeach

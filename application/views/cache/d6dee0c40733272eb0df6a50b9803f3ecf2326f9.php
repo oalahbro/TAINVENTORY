@@ -125,8 +125,7 @@
                                         <div class="form-group">
                                             <input type="text" id="id_aset_tmp" hidden/>
                                             <label for="exampleFormControlSelect1">Pilih Kategori</label>
-                                            <select name="kategori" class="form-control" id="exampleFormControlSelect1">
-                                                <option id="kategori" selected></option>
+                                            <select name="kategori" class="form-control" id="kategori">
                                                 <?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -134,8 +133,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Pilih Tujuan</label>
-                                            <select name="tujuan" class="form-control" id="exampleFormControlSelect1">
-                                                <option id="tujuan" selected></option>
+                                            <select name="tujuan" class="form-control" id="tujuan">
                                                 <?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

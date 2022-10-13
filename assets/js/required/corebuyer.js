@@ -6,6 +6,9 @@
       dataTable();
     }
   });
+  $('select').on('change', function() {
+    console.log( this.value );
+  });
   
 $(".logout").click(function() {
     swal({
@@ -244,9 +247,7 @@ $(".logout").click(function() {
       }
       function show(data) {
         $('#kategori').val(data[0]['id_category']);
-        $('#kategori').html(data[0]['kategori_info'][0]['nama_kategori']);
         $('#tujuan').val(data[0]['id_user_tujuan']);
-        $('#tujuan').html(data[0]['tujuan_info'][0]['nama_Admin']);
         $('#nama_aset').val(data[0]['nama_aset']);
         $('#code').val(data[0]['code']);
         $('#blah').attr('src',data[0]['img']);
@@ -254,6 +255,7 @@ $(".logout").click(function() {
         $('#deskripsi').val(data[0]['deskripsi']);
       }
       if (!$('.modal').hasClass("show")){
+        console.log("tutup")
         document.getElementById('loading').style.display = 'block';
         document.getElementById('fupdate').style.display = 'none';
       }
@@ -413,6 +415,7 @@ function updtReq(id_aset){
             hideloader();
         }
         show(data);
+        console.log(data);
     }
     getapi(api_url);
     function hideloader() {
@@ -420,10 +423,8 @@ function updtReq(id_aset){
         document.getElementById('fupdate').style.display = 'block';
     }
     function show(data) {
-      $('#kategori').val(data[0]['id_category']);
-      $('#kategori').html(data[0]['kategori_info'][0]['nama_kategori']);
-      $('#tujuan').val(data[0]['id_user_tujuan']);
-      $('#tujuan').html(data[0]['tujuan_info'][0]['nama_Admin']);
+      $('#katup').val(data[0]['id_category']);
+      $('#tujup').val(data[0]['id_user_tujuan']);
       $('#nama_aset').val(data[0]['nama_aset']);
       $('#code').val(data[0]['code']);
       $('#blah').attr('src',data[0]['img']);
@@ -439,8 +440,8 @@ function updtReq(id_aset){
     const url = "updateReq"
     const data = {
       id_aset : document.getElementById('id_aset').value,
-      tujuan : document.getElementById('tujuan').value,
-      kategori : document.getElementById('kategori').value,
+      tujuan : document.getElementById('tujup').value,
+      kategori : document.getElementById('katup').value,
       nama : document.getElementById('nama_aset').value,
       code : document.getElementById('code').value,
       img : document.getElementById('putbas').value,
