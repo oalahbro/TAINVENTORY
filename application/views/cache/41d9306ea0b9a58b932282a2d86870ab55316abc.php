@@ -29,24 +29,28 @@
 					<div class="card">
 						<div class="card-header">
 							<div class="d-flex align-items-center">
-								<h4 class="card-title">Tambah aset baru</h4>
+								<h4 class="card-title">Request Inventory</h4>
 								<button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#modaladd">
 									<i class="fa fa-plus"></i>
-									Add Row
+									Tambah Baru
+								</button>
+								<button class="btn btn-primary btn-round ml-2" data-toggle="modal" data-target="#modalback">
+									<i class="fa fa-plus"></i>
+									Aset Kembali
 								</button>
 							</div>
 						</div>
 						<div class="card-body">
 							<!-- Modal -->
-							<div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal fade" id="modalback" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										<div class="modal-header no-bd">
 											<h5 class="modal-title">
 												<span class="fw-mediumbold">
-													New</span>
+													Pilih</span>
 												<span class="fw-light">
-													Row
+													Aset Kembali
 												</span>
 											</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -54,33 +58,38 @@
 											</button>
 										</div>
 										<div class="modal-body">
-											<p class="small">Create a new row using this form, make sure you fill them all</p>
-											<form>
+											<form onsubmit="return backReq()" action="">
 												<div class="row">
 													<div class="col-sm-12">
-														<div class="form-group form-group-default">
-															<label>Name</label>
-															<input id="addName" type="text" class="form-control" placeholder="fill name">
+														<div class="form-group" id="list">
+															<label for="exampleFormControlSelect1">Pilih Aset Kembali</label><br>
+															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset kembali...">
+																<?php $__currentLoopData = $planet['back']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $back): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+																<option value="<?php echo e($back['id_aset']); ?>" data-tokens="<?php echo e($back['id_aset']); ?>" data-subtext="<?php echo e($back['code']); ?>"><?php echo e($back['nama_aset']); ?></option>
+																<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+															  </select> 
+															  
 														</div>
+													<div class="form-group">
+														<label for="exampleFormControlSelect1">Pilih Tujuan</label>
+														<select name="tujuan" class="form-control" id="tujback">
+															<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+															<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
+															<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+														</select>
 													</div>
-													<div class="col-md-6 pr-0">
-														<div class="form-group form-group-default">
-															<label>Position</label>
-															<input id="addPosition" type="text" class="form-control" placeholder="fill position">
+														<div class="form-group">
+															<label for="comment">Keterangan</label>
+															<textarea  name="deskripsi" class="form-control" id="descback" rows="5" required></textarea>
 														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group form-group-default">
-															<label>Office</label>
-															<input id="addOffice" type="text" class="form-control" placeholder="fill office">
-														</div>
-													</div>
+												</div>
+												</div>
+												<div class="modal-footer no-bd">
+													<button class="btn btn-success subm">Submit</button>
+													<button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
+													<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 												</div>
 											</form>
-										</div>
-										<div class="modal-footer no-bd">
-											<button type="button" id="addRowButton" class="btn btn-primary">Add</button>
-											<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 										</div>
 									</div>
 								</div>
@@ -170,7 +179,7 @@
 												<textarea name="spesifikasi" class="form-control" id="spek" rows="5" ></textarea>
 											</div>
 											<div class="form-group">
-												<label for="comment">Deskripsi</label>
+												<label for="comment">Keterangan</label>
 												<textarea  name="deskripsi" class="form-control" id="des" rows="5"></textarea>
 											</div>
 										</div>

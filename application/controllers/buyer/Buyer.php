@@ -135,7 +135,7 @@ class Buyer extends CI_Controller
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
 			'title' => 'Inventory Unconfirmed'
 		];
-		return view('buyer/inventory', $data);
+		return view('buyer/unconfirmed', $data);
 	}
 
 	public function apiReq()
@@ -153,8 +153,7 @@ class Buyer extends CI_Controller
 	public function request()
 	{
 		$data['planet'] = [
-			'jumlah' => count($this->M_buyer->getAdmin()),
-			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'back' => $this->M_buyer->getBack(),
 			'kategori' => $this->M_buyer->getCategory(),
 			'tuser' => $this->M_buyer->getTuser(),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
@@ -164,7 +163,11 @@ class Buyer extends CI_Controller
 		];
 		return view('buyer/request', $data);
 	}
-
+	public function dataBack()
+	{
+		$data = $this->M_buyer->getBack();
+		echo json_encode($data);
+	}
 	public function delReq()
 	{
 		$this->M_buyer->delReq();
@@ -188,6 +191,11 @@ class Buyer extends CI_Controller
 		echo json_encode($data);
 	}
 
+	public function backReq()
+	{
+		$this->M_buyer->updateBack();
+	}
+
 	public function aset()
 	{
 		$data['planet'] = [
@@ -199,5 +207,10 @@ class Buyer extends CI_Controller
 			'title' => 'Inventory Request'
 		];
 		return view('buyer/request', $data);
+	}
+
+	public function cek()
+	{
+		var_dump($this->M_buyer->getBack());
 	}
 }

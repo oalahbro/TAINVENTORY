@@ -7,7 +7,6 @@
     }
   });
   $('select').on('change', function() {
-    console.log( this.value );
   });
   
 $(".logout").click(function() {
@@ -255,7 +254,6 @@ $(".logout").click(function() {
         $('#deskripsi').val(data[0]['deskripsi']);
       }
       if (!$('.modal').hasClass("show")){
-        console.log("tutup")
         document.getElementById('loading').style.display = 'block';
         document.getElementById('fupdate').style.display = 'none';
       }
@@ -415,7 +413,6 @@ function updtReq(id_aset){
             hideloader();
         }
         show(data);
-        console.log(data);
     }
     getapi(api_url);
     function hideloader() {
@@ -448,9 +445,7 @@ function updtReq(id_aset){
       spesifikasi : document.getElementById('spesifikasi').value,
       deskripsi : document.getElementById('deskripsi').value,
 }
-console.log(data)
     $.post(url,data, function(data, status){
-      console.log(data)
       if(status == 'success'){
         swal('Berhasil update data', {
           icon : "info",
@@ -458,8 +453,54 @@ console.log(data)
           buttons: false
         });
         dataTable();
+        $('#modaledit').modal('hide')
       }
     })
+}
+
+function getBack(){
+    const id_aset_tmp = $('#asetback').val();
+    var api_url = "getReq?asetid=" + id_aset_tmp;
+    
+    async function getapi(url) {
+        const response = await fetch(url);
+        var data = await response.json();
+        show(data);
+    }
+    getapi(api_url);
+    function show(data) {
+      $('#descback').val(data[0]['deskripsi']);
+    }
+  }
+function backReq(){
+  const url = "backReq"
+  const dat = {
+    id_aset : document.getElementById('asetback').value,
+    tujuan : document.getElementById('tujback').value,
+    deskripsi : document.getElementById('descback').value,
+  }
+  $('.subm').hide()
+  $('.load').show()
+  $.post(url,dat, function(data, status){
+      if(status == 'success'){
+        $.notify({
+            message: 'Sukses Menambah request aset kembali'
+        }, {
+            type: 'info',
+            delay: 1100
+        });
+
+        $('.subm').show()
+        $('.load').hide()
+      
+        dataTable();
+          $('#asetback').find(`[value=${dat.id_aset}]`).remove();
+          $('#asetback').selectpicker('refresh');
+          document.getElementById('descback').value = ''
+      }
+    })
+  
+return false
 }
 // END REQ
 

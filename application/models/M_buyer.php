@@ -283,7 +283,39 @@ class M_buyer extends CI_Model
 		)->toArray();
 		return $result;
 	}
+	public function getBack()
+	{
+		$iduser = $this->session->userdata('id');
+		$table = $this->mongodb->table('aset');
+		$result = $table->aggregate(
+			[
+				['$match' => ['id_user_asal' => $iduser, 'status' => '0']],
+				['$sort' => ['_id' => -1]],
+				['$project' => [
+					'id_aset' => 1,
+					'nama_aset' => 1,
+					'code' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
 
+	public function updateBack()
+	{
+		$table = $this->mongodb->table('aset');
+		$add = $table->updateOne(
+			['id_aset' => $this->input->post('id_aset')],
+			[
+				'$set' => [
+					'id_user_tujuan' => $this->input->post('tujuan'),
+					'deskripsi' => $this->input->post('deskripsi'),
+					'status' => "R1"
+				]
+			]
+		);
+		return $add;
+	}
 	public function delReq()
 	{
 		$table = $this->mongodb->table('aset');
@@ -312,6 +344,7 @@ class M_buyer extends CI_Model
 
 		return $add;
 	}
+
 	public function getReq($asetid)
 	{
 
@@ -390,8 +423,7 @@ class M_buyer extends CI_Model
 				]
 			);
 		}
-		$test = $this->input->post();
-		return $test;
+		return $add;
 	}
 	public function invtAll()
 	{

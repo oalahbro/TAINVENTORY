@@ -50,6 +50,7 @@
   var link = "<?= base_url('buyer/Buyer/'.$planet['link'])?>";
 </script>
 <script src="<?= base_url(); ?>/assets/js/required/corebuyer.js"></script>
+<script src="<?= base_url(); ?>/assets/js/bootstrap-select.js"></script>
 
 
 <?php
