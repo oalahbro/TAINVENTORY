@@ -94,7 +94,6 @@
 									</div>
 								</div>
 							</div>
-
 							<div class="table-responsive">
 								<table id="basic-datatables" class="display table table-striped table-hover">
 									<thead>
@@ -239,7 +238,7 @@
 											</div>
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
-												<input id="code" name="code" type="text" class="form-control" placeholder="Masukkan code invemtory">                                
+												<input id="code" name="code" type="text" class="form-control" disabled placeholder="Masukkan code inventory">                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar</label>
@@ -255,7 +254,7 @@
 												</textarea>
 											</div>
 											<div class="form-group">
-												<label for="comment">Deskripsi</label>
+												<label for="comment">Keterangan</label>
 												<textarea id="deskripsi" name="deskripsi" class="form-control" rows="5">
 												</textarea>
 											</div>
@@ -270,7 +269,45 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header no-bd">
+						<h5 class="modal-title">
+							<span class="fw-mediumbold">
+								Detail</span>
+							<span class="fw-light">
+								Inventory
+							</span>
+						</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="d-flex justify-content-center">
+							<div class="loader loader-lg" id="loadhis"></div>
+						</div>
+						<div class="col-md-12" style="display : none;" id="stephis">
+							<div class="card">
+								<div class="card-header">
+									<div id="hisheader" class="card-title d-flex"></div>
+								</div>
+								<div class="card-body">
+									<ol class="activity-feed" id="history">
+									</ol>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer no-bd">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
-@include('template.footer');
+@include('template.footerBuyer');

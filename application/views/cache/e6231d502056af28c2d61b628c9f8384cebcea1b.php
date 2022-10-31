@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+<?php echo $__env->make('template.headerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
@@ -36,12 +36,12 @@
 								</button>
 								<button class="btn btn-primary btn-round ml-2" data-toggle="modal" data-target="#modalback">
 									<i class="fa fa-plus"></i>
-									Aset Kembali
+									Aset Teruskan
 								</button>
 							</div>
 						</div>
 						<div class="card-body">
-							<!-- Modal -->
+							<!-- Modal teruskan -->
 							<div class="modal fade" id="modalback" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
@@ -50,7 +50,7 @@
 												<span class="fw-mediumbold">
 													Pilih</span>
 												<span class="fw-light">
-													Aset Kembali
+													Aset Teruskan
 												</span>
 											</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -62,8 +62,8 @@
 												<div class="row">
 													<div class="col-sm-12">
 														<div class="form-group" id="list">
-															<label for="exampleFormControlSelect1">Pilih Aset Kembali</label><br>
-															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset kembali...">
+															<label for="exampleFormControlSelect1">Pilih Aset yang ingin diteruskan</label><br>
+															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset yang ingin diteruskan...">
 																<?php $__currentLoopData = $planet['back']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $back): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 																<option value="<?php echo e($back['id_aset']); ?>" data-tokens="<?php echo e($back['id_aset']); ?>" data-subtext="<?php echo e($back['code']); ?>"><?php echo e($back['nama_aset']); ?></option>
 																<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -74,7 +74,12 @@
 														<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 														<select name="tujuan" class="form-control" id="tujback">
 															<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-															<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
+															<?php if($tus['level'] == 2): ?>
+																<?php $tus['level'] = '( Guru )' ?>
+															<?php else: ?>
+																<?php $tus['level'] = '( Buyer )' ?>
+															<?php endif; ?>
+															<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
 															<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 														</select>
 													</div>
@@ -85,9 +90,9 @@
 												</div>
 												</div>
 												<div class="modal-footer no-bd">
-													<button class="btn btn-success subm">Submit</button>
-													<button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
 													<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+													<button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
+													<button class="btn btn-success subm">Submit</button>
 												</div>
 											</form>
 										</div>
@@ -98,9 +103,10 @@
 								<table id="basic-datatables" class="display table table-striped table-hover">
 									<thead>
 										<tr>
-											<th style="width: 30%">Nama Inventory</th>
+											<th style="width: 25%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th style="width: 15%">Status Request</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>
@@ -109,6 +115,7 @@
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th>Request</th>
 											<th>Action</th>
 										</tr>
 									</tfoot>
@@ -153,7 +160,7 @@
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 												<select name="tujuan" class="form-control" id="tuj">
 													<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
+													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
 													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 												</select>
 											</div>
@@ -228,7 +235,7 @@
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 												<select name="tujuan" class="form-control" id="tujup">
 													<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
+													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
 													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 												</select>
 											</div>
@@ -269,7 +276,7 @@
 				</div>
 			</div>
 		</div>
-
+		
 		<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -310,4 +317,4 @@
 	</div>
 </div>
 
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/request.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('template.footerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/admin/request.blade.php ENDPATH**/ ?>

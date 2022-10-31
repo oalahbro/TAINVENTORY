@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title><?php echo e($planet['title']); ?> | Inventory SMK 5 MADIUN</title>
+	<title>{{ $planet['title'] }} | Inventory SMK 5 MADIUN</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="<?php echo e(base_url()); ?>/assets/img/icon.ico" type="image/x-icon"/>
+	<link rel="icon" href="{{ base_url() }}/assets/img/icon.ico" type="image/x-icon"/>
 
 	<!-- Fonts and icons -->
-	<script src="<?php echo e(base_url()); ?>/assets/js/plugin/webfont/webfont.min.js"></script>
+	<script src="{{ base_url() }}/assets/js/plugin/webfont/webfont.min.js"></script>
 	<script>
 		WebFont.load({
 			google: {"families":["Open+Sans:300,400,600,700"]},
-			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"], urls: ['<?php echo e(base_url()); ?>/assets/css/fonts.css']},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"], urls: ['{{ base_url() }}/assets/css/fonts.css']},
 			active: function() {
 				sessionStorage.fonts = true;
 			}
@@ -19,12 +19,12 @@
 	</script>
 
 	<!-- CSS Files -->
-	<link rel="stylesheet" href="<?php echo e(base_url()); ?>/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="<?php echo e(base_url()); ?>/assets/css/azzara.min.css">
-	<link rel="stylesheet" href="<?php echo e(base_url()); ?>/assets/css/bootstrap-select.css">
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.min.css">
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap-select.css">
 
 	<!-- CSS Just for demo purpose, don't include it in your project -->
-	<link rel="stylesheet" href="<?php echo e(base_url()); ?>/assets/css/demo.css">
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/demo.css">
 	<style type="text/css">
 		.tom:hover {
 		 cursor:pointer;
@@ -40,7 +40,7 @@
 			<!-- Logo Header -->
 			<div class="logo-header">
 				<a href="index.html" class="logo">
-					<img src="<?php echo e(base_url()); ?>/assets/img/logo-kecil.png" alt="navbar brand" class="navbar-brand" height="70%">
+					<img src="{{ base_url() }}/assets/img/logo-kecil.png" alt="navbar brand" class="navbar-brand" height="70%">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -94,7 +94,7 @@
 										<div class="notif-center">
 											<a href="#">
 												<div class="notif-img">
-													<img src="<?php echo e(base_url()); ?>/assets/img/jm_denis.jpg" alt="Img Profile">
+													<img src="{{ base_url() }}/assets/img/jm_denis.jpg" alt="Img Profile">
 												</div>
 												<div class="notif-content">
 													<span class="subject">Jimmy Denis</span>
@@ -106,7 +106,7 @@
 											</a>
 											<a href="#">
 												<div class="notif-img">
-													<img src="<?php echo e(base_url()); ?>/assets/img/chadengle.jpg" alt="Img Profile">
+													<img src="{{ base_url() }}/assets/img/chadengle.jpg" alt="Img Profile">
 												</div>
 												<div class="notif-content">
 													<span class="subject">Chad</span>
@@ -118,7 +118,7 @@
 											</a>
 											<a href="#">
 												<div class="notif-img">
-													<img src="<?php echo e(base_url()); ?>/assets/img/mlane.jpg" alt="Img Profile">
+													<img src="{{ base_url() }}/assets/img/mlane.jpg" alt="Img Profile">
 												</div>
 												<div class="notif-content">
 													<span class="subject">Jhon Doe</span>
@@ -130,7 +130,7 @@
 											</a>
 											<a href="#">
 												<div class="notif-img">
-													<img src="<?php echo e(base_url()); ?>/assets/img/talha.jpg" alt="Img Profile">
+													<img src="{{ base_url() }}/assets/img/talha.jpg" alt="Img Profile">
 												</div>
 												<div class="notif-content">
 													<span class="subject">Talha</span>
@@ -151,15 +151,15 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="<?php echo e(base_url()); ?>/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+									<img src="{{ base_url() }}/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<li>
 									<div class="user-box">
-										<div class="avatar-lg"><img src="<?php echo e(base_url()); ?>/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
+										<div class="avatar-lg"><img src="{{ base_url() }}/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
 										<div class="u-text">
-											<h4><?php echo e($planet['user']['nama_Admin']); ?></h4>
+											<h4>{{  $planet['user']['nama_Admin'] }}</h4>
 											<p class="text-muted">hello@example.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
 										</div>
 									</div>
@@ -191,15 +191,14 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="<?php echo e(base_url()); ?>assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+							<img src="{{ base_url() }}assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-                                <?php echo e($planet['user']['nama_Admin']); ?>
-
+                                {{  $planet['user']['nama_Admin'] }}
 									<span class="user-level">
-                                        Buyer
+                                        Superadmin
                                     </span>
 									<span class="caret"></span>
 								</span>
@@ -228,12 +227,12 @@
 						</div>
 					</div>
 					<ul class="nav">
-						<?php if($planet['title'] !== "Dashboard"): ?> 
+						@if ($planet['title'] !== "Dashboard") 
 							<li class="nav-item">
-						<?php else: ?> 
+						@else 
 							<li class="nav-item active">
-						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>buyer/buyer">
+						@endif
+							<a href="{{ base_url() }}admin/admin">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
 								<span class="badge badge-count">5</span>
@@ -245,17 +244,17 @@
 							</span>
 							<h4 class="text-section">Components</h4>
 						</li>
-						<?php if($planet['title'] !== "Masukkan"): ?> 
+						@if ($planet['title'] !== "Masukkan") 
 							<li class="nav-item">
-						<?php else: ?> 
+						@else 
 							<li class="nav-item active">
-						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>buyer/Buyer/addInvt">
+						@endif
+							<a href="{{ base_url() }}admin/Admin/addInvt">
 								<i class="fas fa-plus-circle"></i>
 								<p>Masukkan Inventory</p>								
 							</a>
 						</li>
-						<?php if(strpos($planet['title'], "Inventory") === FALSE): ?>
+						@if (strpos($planet['title'], "Inventory") === FALSE)
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#inventory">
 								<i class="fas fa-layer-group"></i>
@@ -263,7 +262,7 @@
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="inventory">
-						<?php else: ?> 
+						@else 
 						<li class="nav-item active submenu">
 							<a data-toggle="collapse" href="#inventory">
 								<i class="fas fa-layer-group"></i>
@@ -271,44 +270,44 @@
 								<span class="caret"></span>
 							</a>
 							<div class="collapse show" id="inventory">
-						<?php endif; ?>
+						@endif
 								<ul class="nav nav-collapse">
-								<?php if($planet['title'] !== "Inventory Unconfirmed"): ?>
+								@if ($planet['title'] !== "Inventory Unconfirmed")
 									<li>
-								<?php else: ?>
+								@else
 									<li class="active">
-								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/unconfirmed">
+								@endif
+										<a href="<?= base_url()?>admin/admin/unconfirmed">
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
-								<?php if($planet['title'] !== "Inventory"): ?>
+								@if ($planet['title'] !== "Inventory")
 									<li>
-								<?php else: ?>
+								@else
 									<li class="active">
-								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/aset">
+								@endif
+										<a href="components/buttons.html">
 											<span class="sub-item">Inventory</span>
 										</a>
 									</li>
-								<?php if($planet['title'] !== "Inventory Request"): ?>
+								@if ($planet['title'] !== "Inventory Request")
 									<li>
-								<?php else: ?>
+								@else
 									<li class="active">
-								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/request">
+								@endif
+										<a href="<?= base_url()?>admin/admin/request">
 											<span class="sub-item">Request</span>
 										</a>
 									</li>
 								</ul>
 							</div>
 						</li>
-						<?php if($planet['title'] !== "Input Inventory"): ?> 
+						@if ($planet['title'] !== "Input Inventory") 
 							<li class="nav-item">
-						<?php else: ?> 
+						@else 
 							<li class="nav-item active">
-						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>inputInventory">
+						@endif
+							<a href="{{ base_url() }}inputInventory">
 								<i class="fas fa-pen-square"></i>
 								<p>Laporan</p>								
 							</a>
@@ -317,4 +316,4 @@
 				</div>
 			</div>
 		</div>
-		<!-- End Sidebar --><?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/template/headerBuyer.blade.php ENDPATH**/ ?>
+		<!-- End Sidebar -->

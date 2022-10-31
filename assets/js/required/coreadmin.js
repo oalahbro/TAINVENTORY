@@ -356,16 +356,46 @@ $(".logout").click(function() {
     function merg(kp){
       ok = []
       for(let i of kp) {
-          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'] , `<div class="form-button-action">
-          <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
-            <i class="fa fa-info-circle"></i>
-          </button>  
-          <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+        if(i.status == 'R1'){
+         i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
+          <span class="btn-label">
+            <i class="fas fa-arrow-alt-circle-down"></i>
+          </span>
+          <b>Masuk</b>
+        </div>`
+        }else if(i.status == '1R1N'){
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
+           <span class="btn-label">
+             <i class="fas fa-arrow-alt-circle-down"></i>
+           </span>
+           <b>Masuk Ditolak</b>
+         </div>`
+         }
+        else if(i.status == 'R0'){
+          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm">
+          <span class="btn-label">
+            <i class="fas fa-arrow-alt-circle-up"></i>
+          </span>
+          <b>Keluar</b>
+        </div>`
+        }else{
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
+          <span class="btn-label">
+            <i class="fas fa-arrow-alt-circle-up"></i>
+          </span>
+          <b>Keluar Ditolak</b>
+        </div>`
+        }
+          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status, `<div class="form-button-action">
+            <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
               <i class="fa fa-edit"></i>
-          </button>
-          <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-            <i class="fa fa-times"></i>
-          </button>
+            </button>
+            <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+            <i class="fa fa-info-circle"></i>
+            </button>
+            <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
+              <i class="fa fa-times"></i>
+            </button>
           </div>`];
           ok.push(obj);
       }
@@ -486,6 +516,7 @@ function updtReq(id_aset){
       deskripsi : document.getElementById('deskripsi').value,
 }
     $.post(url,data, function(data, status){
+      let k = JSON.parse(data)
       if(status == 'success'){
         swal('Berhasil update data', {
           icon : "info",
@@ -557,7 +588,23 @@ function unTable() {
     ok = []
     for(let i of kp) {
       if(!i.asal_info[0] ){ i.asal_info[0]  = {nama_Admin : 'User dihapus'}}
-        let obj = [i.nama_aset , i.code , i.asal_info[0]['nama_Admin'] , `<div class="form-button-action">
+      if(i.status == 'R1'){
+        i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
+         <span class="btn-label">
+           <i class="fas fa-arrow-alt-circle-down"></i>
+         </span>
+         <b>Masuk</b>
+       </div>`
+       }
+       else{
+         i.status = `<div class="btn btn-warning btn-border btn-round btn-sm">
+         <span class="btn-label">
+           <i class="fas fa-arrow-alt-circle-up"></i>
+         </span>
+         <b>Keluar</b>
+       </div>`
+       }
+        let obj = [i.nama_aset , i.code , i.asal_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="unDetail('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
             <i class="fa fa-edit"></i>
           </button>
@@ -593,10 +640,22 @@ function unDetail(id_aset){
     }
     getapi(api_url);
     function hideloader() {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('fupdate').style.display = 'block';
+        $('#fupdate').show()
+        $('#loading').hide()
     }
     function show(data) {
+      if(data[0]['status'] == 'R0'){
+        $('#terima').hide()
+        $("#tujuan1").hide()
+        $("#tujuan0").show()
+      }else{
+        $('#terima').show()
+        $("#tujuan0").hide()
+        $("#tujuan1").show()
+      }
+      if(!data[0].user_info[0] ){ data[0].user_info[0]  = {nama_Admin : 'User dihapus'}}
+      if(!data[0].kategori_info[0] ){ data[0].kategori_info[0]  = {nama_kategori : 'Kategori dihapus'}}
+      
       $('#katup').html(data[0].kategori_info[0]['nama_kategori']);
       $('#tujup').html(data[0].user_info[0]['nama_Admin']);
       $('#nama_aset').html(data[0]['nama_aset']);
@@ -604,15 +663,66 @@ function unDetail(id_aset){
       $('#blah').attr('src',data[0]['img']);
       $('#id_asal').val(data[0]['id_user_asal']);
       $('#spesifikasi').val(data[0]['spesifikasi']);
-      $('#deskripsi').val(data[0]['deskripsi']);
+      $('.deskripsi').val(data[0]['deskripsi']);
+      $('#stts').val(data[0]['status']);
     }
+
     if (!$('.modal').hasClass("show")){
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('fupdate').style.display = 'none';
+      $('#loading').show()
+      $('#fupdate').hide()
+      $('.container-login').show()
+      $('.container-signup').hide()
     }
   }
+  function forward(){
+    const url = "backReq"
+    if($('#stts').val() == 'R0'){ tujuan = $('#tujuan0').val() }else { tujuan = $('#tujuan1').val() }
+    const dat = {
+    id_aset : $('#id_aset').val(),
+    tujuan : tujuan,
+    deskripsi : $('#deskripsi').val(),
+    }
+    $('.subm').hide()
+    $('.load').show()
+    $.post(url,dat, function(data, status){
+        if(status == 'success'){
+          $.notify({
+              message: 'Sukses Menambah request aset kembali'
+          }, {
+              type: 'info',
+              delay: 1100
+          });
+
+          $('.subm').show()
+          $('.load').hide()
+        
+          unTable()
+          $('#modaledit').modal('hide');
+        }
+      })
+  }
+
   function unAction(action){
     let url = "actionUnc"
+    let dat = {
+      button : action,
+      id_aset : document.getElementById('id_aset').value,
+      id_asal : document.getElementById('id_asal').value
+    }
+    $.post(url,dat, function(data, status){
+      if(data == 1){
+        swal('Berhasil konfirmasi', {
+          icon : "info",
+          timer: 800,
+          buttons: false
+        });
+        unTable()
+        $('#modaledit').modal('hide')
+      }
+      })
+  }
+  function unForward(){
+    let url = "forwardUn"
     let dat = {
       button : action,
       id_aset : document.getElementById('id_aset').value,
@@ -638,29 +748,29 @@ function inventory() {
         const response = await fetch(url);
         var dat = await response.json();
         let kp = dat
-        merg(kp,kp.pop())
+        merg(kp)
     }
   getapi(api_url);
-  function merg(kp,sesid){
+  function merg(kp){
     ok = []
     for(let i of kp) {
-      if(i.id_user_asal == sesid['sesid']){
-          del = `<button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
-          edt = `<button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
-        }else{
-          del = ``
-          edt = `<button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg"><i class="fa fa-eye"></i></button>`
-        }
+      // if(){}
       if(i.status == '1'){
         i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Didalam</b></div>`
        }else{
          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Diluar</b></div>`
        }
-        let obj = [i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">${edt}<button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
-                  <i class="fa fa-info-circle"></i>
-                  </button>
-                  ${del}`
-                ];
+        let obj = [i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
+          <button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="info" class="btn btn-link btn-icon btn-primary btn-lg">
+            <i class="fa fa-eye"></i>
+          </button>
+          <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+            <i class="fa fa-info-circle"></i>
+          </button>
+          <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>`];
         ok.push(obj);
     }
     $('#asetall').DataTable({
@@ -711,7 +821,7 @@ function inDetail(id_aset){
       async function getapi(url) {
           const response = await fetch(url);
           var data = await response.json();
-          // console.log(data)
+          console.log(data)
           if (response) {
               hideloader();
           }

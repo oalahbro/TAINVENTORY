@@ -90,4 +90,4 @@
 		</div>
 
 	</div>
-@include('template.footer');
+@include('template.footerBuyer');

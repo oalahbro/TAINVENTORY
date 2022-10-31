@@ -41,12 +41,61 @@ class Admin extends CI_Controller
 			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'user' => $this->dataAdmin()
 		];
-
-		$this->load->view('template/headerAdmin', $data);
-		$this->load->view('admin/dashboard', $data);
-		$this->load->view('template/footer');
+		// print_r($data);
+		return view('admin/dashboard', $data);
 	}
+	public function addInvt()
+	{
+		$data['planet'] = [
+			'invt_tmp' => $this->M_admin->invtTmp(),
+			'kategori' => $this->M_admin->getCategory(),
+			'tuser' => $this->M_admin->getTuser(),
+			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'title' => 'Masukkan'
+		];
+		// print_r($data['planet']['tuser']);
+		return view('admin/addInvt', $data);
+	}
+	public function getTmp()
+	{
+		$data = $this->M_admin->invtTmp();
+		echo json_encode($data);
+	}
+	public function pass()
+	{
+		$data = $this->M_admin->insInvt();
+		echo json_encode($data);
+		// var_dump($data);
+	}
+	public function api()
+	{
+		$asetid = $_GET['asetid'];
+		$data = $this->M_admin->getTmp($asetid);
+		echo json_encode($data);
+	}
+	public function delTmp()
+	{
+		$this->M_admin->delTmp();
+	}
+	public function updateTmp()
+	{
+		$this->M_admin->updateTmp();
+	}
+	public function reqInvt()
+	{
+		$data = $this->M_admin->descTmp();
 
+		if (!$data) {
+			$respon = [
+				'respon' => 'habis'
+			];
+		} else {
+			$respon = [
+				'respon' => 'masih'
+			];
+		}
+		echo json_encode($respon);
+	}
 	public function user()
 	{
 		$data['planet'] = [
@@ -68,58 +117,78 @@ class Admin extends CI_Controller
 			'user' => $this->dataAdmin()
 		];
 		var_dump($data['planet']['inventory']);
-		// $this->load->view('template/headerAdmin', $data);
-		// $this->load->view('admin/inventory', $data);
-		// $this->load->view('template/footer');
 	}
 
-	public function upload()
+	public function request()
 	{
 		$data['planet'] = [
-			'title' => "Dashboard",
-			'user' => $this->dataAdmin()
+			'back' => $this->M_admin->getBack(),
+			'kategori' => $this->M_admin->getCategory(),
+			'tuser' => $this->M_admin->getTuser(),
+			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'inventory' => $this->M_admin->invtReq(),
+			'link' => 'apiReq',
+			'title' => 'Inventory Request'
 		];
-
-		$this->load->view('template/headerAdmin', $data);
-		$this->load->view('uploadbak', $data);
-		$this->load->view('template/footer');
+		return view('admin/request', $data);
 	}
-
-	public function read()
+	public function apiReq()
 	{
-		$data['planet'] = $this->M_admin->getData();
-		// var_dump($data);
-		$this->load->view('admin/test', $data);
+		$data =  $this->M_admin->invtReq();
+		echo json_encode($data);
 	}
-
-	public function insert()
+	public function backReq()
 	{
-		$text = $this->input->post('text');
-		$text2 = $this->input->post('text2');
-		if (!$text && !$text2) {
-			echo "kosong";
+		$this->M_admin->updateBack();
+	}
+	public function getReq()
+	{
+		$asetid = $_GET['asetid'];
+		$data = $this->M_admin->getReq($asetid);
+		echo json_encode($data);
+	}
+	public function addReq()
+	{
+		$data = $this->M_admin->addReq();
+		echo json_encode($data);
+	}
+	public function updateReq()
+	{
+		$data = $this->M_admin->updateReq();
+		echo json_encode($data);
+	}
+	public function gethis()
+	{
+		$asetid = $_GET['asetid'];
+		$data = $this->M_admin->getHis($asetid);
+		echo json_encode($data);
+	}
+	public function unconfirmed()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_admin->getAdmin()),
+			'jumlah_aset' => count($this->M_admin->getInventory()),
+			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'tuser' => $this->M_admin->getTuser(),
+			'title' => 'Inventory Unconfirmed',
+			'link' => 'apiUnc'
+		];
+		return view('admin/unconfirmed', $data);
+	}
+	public function apiUnc()
+	{
+		$data =  $this->M_admin->invtUnc();
+		echo json_encode($data);
+	}
+	public function actionUnc()
+	{
+		if ($this->input->post('button') == 'accept') {
+			$data =  $this->M_admin->unAccept();
 		} else {
-			$datanya = [
-				'newcol' => $text,
-				'newcol2' => $text2
-			];
-			$this->M_admin->add($datanya);
-
-			// echo "inserted with object id ".$tambah->getInsertedId();
-			return header("location:/admin/admin/read");
+			$data =  $this->M_admin->unDecline();
 		}
+		echo json_encode($data);
 	}
-
-	public function update()
-	{
-		$text2 = $this->input->post('text2');
-		$datanya = [
-			'newcol2' => $text2
-		];
-		$this->M_admin->update($datanya);
-		return header("location:/admin/admin/read");
-	}
-
 	public function addCategory()
 	{
 		$data_add = [

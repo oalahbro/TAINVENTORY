@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+@include('template.headerAdmin');
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
@@ -36,12 +36,12 @@
 								</button>
 								<button class="btn btn-primary btn-round ml-2" data-toggle="modal" data-target="#modalback">
 									<i class="fa fa-plus"></i>
-									Aset Kembali
+									Aset Teruskan
 								</button>
 							</div>
 						</div>
 						<div class="card-body">
-							<!-- Modal -->
+							<!-- Modal teruskan -->
 							<div class="modal fade" id="modalback" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
@@ -50,7 +50,7 @@
 												<span class="fw-mediumbold">
 													Pilih</span>
 												<span class="fw-light">
-													Aset Kembali
+													Aset Teruskan
 												</span>
 											</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -62,20 +62,25 @@
 												<div class="row">
 													<div class="col-sm-12">
 														<div class="form-group" id="list">
-															<label for="exampleFormControlSelect1">Pilih Aset Kembali</label><br>
-															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset kembali...">
-																<?php $__currentLoopData = $planet['back']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $back): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-																<option value="<?php echo e($back['id_aset']); ?>" data-tokens="<?php echo e($back['id_aset']); ?>" data-subtext="<?php echo e($back['code']); ?>"><?php echo e($back['nama_aset']); ?></option>
-																<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+															<label for="exampleFormControlSelect1">Pilih Aset yang ingin diteruskan</label><br>
+															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset yang ingin diteruskan...">
+																@foreach($planet['back'] as $back)
+																<option value="{{ $back['id_aset'] }}" data-tokens="{{ $back['id_aset'] }}" data-subtext="{{ $back['code'] }}">{{ $back['nama_aset'] }}</option>
+																@endforeach
 															  </select> 
 															  
 														</div>
 													<div class="form-group">
 														<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 														<select name="tujuan" class="form-control" id="tujback">
-															<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-															<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
-															<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+															@foreach($planet['tuser'] as $tus)
+															@if ($tus['level'] == 2)
+																@php $tus['level'] = '( Guru )' @endphp
+															@else
+																@php $tus['level'] = '( Buyer )' @endphp
+															@endif
+															<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
+															@endforeach
 														</select>
 													</div>
 														<div class="form-group">
@@ -85,9 +90,9 @@
 												</div>
 												</div>
 												<div class="modal-footer no-bd">
-													<button class="btn btn-success subm">Submit</button>
-													<button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
 													<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+													<button class="btn btn-success btn-primary is-loading load" style="display: none" disabled>button</button>
+													<button class="btn btn-success subm">Submit</button>
 												</div>
 											</form>
 										</div>
@@ -98,9 +103,10 @@
 								<table id="basic-datatables" class="display table table-striped table-hover">
 									<thead>
 										<tr>
-											<th style="width: 30%">Nama Inventory</th>
+											<th style="width: 25%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th style="width: 15%">Status Request</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>
@@ -109,6 +115,7 @@
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th>Request</th>
 											<th>Action</th>
 										</tr>
 									</tfoot>
@@ -121,7 +128,7 @@
 				</div>
 			</div>
 		</div>
-		
+		{{-- MODAL ADD --}}
 		<div class="modal fade bd-example-modal-lg" id="modaladd" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -144,17 +151,17 @@
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
 												<select name="kategori" class="form-control"  id="kat">
-													<?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
-													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+													@foreach($planet['kategori'] as $kat)
+													<option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
+													@endforeach
 												</select>
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 												<select name="tujuan" class="form-control" id="tuj">
-													<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
-													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+													@foreach($planet['tuser'] as $tus)
+													<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
+													@endforeach
 												</select>
 											</div>
 											<div class="form-group">
@@ -192,7 +199,7 @@
 				</div>
 			</div>
 		</div>
-		
+		{{-- modal edit --}}
 		<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -219,17 +226,17 @@
 												<input type="text" id="id_aset" hidden/>
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
 												<select name="kategori" class="form-control" id="katup">
-													<?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
-													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+													@foreach($planet['kategori'] as $kat)
+													<option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
+													@endforeach
 												</select>
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
 												<select name="tujuan" class="form-control" id="tujup">
-													<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
-													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+													@foreach($planet['tuser'] as $tus)
+													<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
+													@endforeach
 												</select>
 											</div>
 											<div class="form-group">
@@ -269,7 +276,7 @@
 				</div>
 			</div>
 		</div>
-
+		{{-- modal history --}}
 		<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -310,4 +317,4 @@
 	</div>
 </div>
 
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/request.blade.php ENDPATH**/ ?>
+@include('template.footerAdmin');

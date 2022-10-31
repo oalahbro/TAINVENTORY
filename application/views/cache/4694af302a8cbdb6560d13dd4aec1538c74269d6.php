@@ -199,7 +199,7 @@
                                 <?php echo e($planet['user']['nama_Admin']); ?>
 
 									<span class="user-level">
-                                        Buyer
+                                        Superadmin
                                     </span>
 									<span class="caret"></span>
 								</span>
@@ -233,7 +233,7 @@
 						<?php else: ?> 
 							<li class="nav-item active">
 						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>buyer/buyer">
+							<a href="<?php echo e(base_url()); ?>admin/admin">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
 								<span class="badge badge-count">5</span>
@@ -250,7 +250,7 @@
 						<?php else: ?> 
 							<li class="nav-item active">
 						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>buyer/Buyer/addInvt">
+							<a href="<?php echo e(base_url()); ?>admin/Admin/addInvt">
 								<i class="fas fa-plus-circle"></i>
 								<p>Masukkan Inventory</p>								
 							</a>
@@ -278,7 +278,7 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/unconfirmed">
+										<a href="<?= base_url()?>admin/admin/unconfirmed">
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
@@ -287,7 +287,7 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/aset">
+										<a href="components/buttons.html">
 											<span class="sub-item">Inventory</span>
 										</a>
 									</li>
@@ -296,7 +296,7 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="<?= base_url()?>buyer/buyer/request">
+										<a href="<?= base_url()?>admin/admin/request">
 											<span class="sub-item">Request</span>
 										</a>
 									</li>
@@ -317,4 +317,4 @@
 				</div>
 			</div>
 		</div>
-		<!-- End Sidebar --><?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/template/headerBuyer.blade.php ENDPATH**/ ?>
+		<!-- End Sidebar --><?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/template/headerAdmin.blade.php ENDPATH**/ ?>

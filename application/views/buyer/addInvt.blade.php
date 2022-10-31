@@ -71,8 +71,8 @@
                                 <textarea name="spesifikasi" class="form-control" id="spek" rows="5" ></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="comment">Deskripsi</label>
-                                <textarea name="deskripsi" class="form-control" id="des" rows="5"></textarea>
+                                <label for="comment">Keterangan</label>
+                                <textarea name="deskripsi" class="form-control" id="des" rows="5">ASET BARU</textarea>
                             </div>
                         </div>
                         <div class="card-action">
@@ -88,18 +88,6 @@
                             <div class="card-title">Data Sementara</div>
                         </div>
                         <div id="tmp" class="card-body">
-                            {{-- @foreach ($planet['invt_tmp'] as $invtmp)
-                            <div class="row alert alert-info px-2 mx-0" role="alert">
-                                <div class="col-10 px-0 tom edit-tmp" data-id-aset="{{ $invtmp['id_aset_tmp'] }}">
-                                    {{ $invtmp['nama_aset'] }}<b>, Code :</b>&nbsp;{{ $invtmp['code'] }}
-                                </div>
-                                <div class="col-2 pl-0">
-                                <button type="button" class="close text-danger" aria-label="Close">
-                                    <span >&times;</span>
-                                </button>
-                                </div>
-                            </div>
-                            @endforeach --}}
                         </div>
                         <div class="card-action">
                             <button id="btn-insert" class="allin btn btn-success btn-block" onclick="insert()">Submit</button>
@@ -171,7 +159,7 @@
                                             </textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="comment">Deskripsi</label>
+                                            <label for="comment">Keterangan</label>
                                             <textarea id="deskripsi" name="deskripsi" class="form-control" rows="5">
                                             </textarea>
                                         </div>
@@ -188,4 +176,4 @@
     </div>
 </div>
 
-@include('template.footer');
+@include('template.footerBuyer');

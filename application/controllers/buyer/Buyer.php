@@ -1,4 +1,7 @@
 <?php
+
+use SebastianBergmann\Environment\Console;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Buyer extends CI_Controller
@@ -43,29 +46,14 @@ class Buyer extends CI_Controller
 
 	public function addInvt()
 	{
-		if (!$this->input->post()) {
-			$data['planet'] = [
-				'invt_tmp' => $this->M_buyer->invtTmp(),
-				'kategori' => $this->M_buyer->getCategory(),
-				'tuser' => $this->M_buyer->getTuser(),
-				'user' => $this->M_buyer->admin($this->session->userdata('username')),
-				'title' => 'Masukkan'
-			];
-			return view('buyer/addInvt', $data);
-		} else {
-			$this->M_buyer->insInvt();
-			$data['planet'] = [
-				'drop' => $this->M_buyer->dropdwn(),
-				'value' => $this->input->post(),
-				'invt_tmp' => $this->M_buyer->invtTmp(),
-				'kategori' => $this->M_buyer->getCategory(),
-				'tuser' => $this->M_buyer->getTuser(),
-				'user' => $this->M_buyer->admin($this->session->userdata('username')),
-				'title' => 'Masukkan'
-			];
-			return view('buyer/addAgn', $data);
-			// var_dump($data['planet']['drop']['rescat']['nama_kategori']);
-		}
+		$data['planet'] = [
+			'invt_tmp' => $this->M_buyer->invtTmp(),
+			'kategori' => $this->M_buyer->getCategory(),
+			'tuser' => $this->M_buyer->getTuser(),
+			'user' => $this->M_buyer->admin($this->session->userdata('username')),
+			'title' => 'Masukkan'
+		];
+		return view('buyer/addInvt', $data);
 	}
 
 	public function api()
@@ -87,7 +75,8 @@ class Buyer extends CI_Controller
 
 	public function pass()
 	{
-		$this->M_buyer->insInvt();
+		$data = $this->M_buyer->insInvt();
+		echo json_encode($data);
 	}
 
 	public function delTmp()
@@ -118,8 +107,6 @@ class Buyer extends CI_Controller
 	public function aggregate()
 	{
 		$resultt = $this->M_buyer->invtTmp();
-
-		var_dump($resultt);
 	}
 
 	public function upload()
@@ -133,11 +120,25 @@ class Buyer extends CI_Controller
 			'jumlah' => count($this->M_buyer->getAdmin()),
 			'jumlah_aset' => count($this->M_buyer->getInventory()),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
-			'title' => 'Inventory Unconfirmed'
+			'title' => 'Inventory Unconfirmed',
+			'link' => 'apiUnc'
 		];
 		return view('buyer/unconfirmed', $data);
 	}
-
+	public function apiUnc()
+	{
+		$data =  $this->M_buyer->invtUnc();
+		echo json_encode($data);
+	}
+	public function actionUnc()
+	{
+		if ($this->input->post('button') == 'accept') {
+			$data =  $this->M_buyer->unAccept();
+		} else {
+			$data =  $this->M_buyer->unDecline();
+		}
+		echo json_encode($data);
+	}
 	public function apiReq()
 	{
 		$data =  $this->M_buyer->invtReq();
@@ -147,6 +148,7 @@ class Buyer extends CI_Controller
 	public function invtAll()
 	{
 		$data =  $this->M_buyer->invtAll();
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
 		echo json_encode($data);
 	}
 
@@ -175,7 +177,8 @@ class Buyer extends CI_Controller
 
 	public function addReq()
 	{
-		$this->M_buyer->addReq();
+		$data = $this->M_buyer->addReq();
+		echo json_encode($data);
 	}
 
 	public function getReq()
@@ -196,17 +199,24 @@ class Buyer extends CI_Controller
 		$this->M_buyer->updateBack();
 	}
 
+	public function gethis()
+	{
+		$asetid = $_GET['asetid'];
+		$data = $this->M_buyer->getHis($asetid);
+		echo json_encode($data);
+	}
+
 	public function aset()
 	{
 		$data['planet'] = [
 			'jumlah' => count($this->M_buyer->getAdmin()),
 			'jumlah_aset' => count($this->M_buyer->getInventory()),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
-			'inventory' => $this->M_buyer->invtReq(),
+			'Inventory' => $this->M_buyer->invtReq(),
 			'link' => 'invtAll',
-			'title' => 'Inventory Request'
+			'title' => 'Inventory'
 		];
-		return view('buyer/request', $data);
+		return view('buyer/inventory', $data);
 	}
 
 	public function cek()

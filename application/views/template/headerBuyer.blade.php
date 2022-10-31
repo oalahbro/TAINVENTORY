@@ -286,7 +286,7 @@
 								@else
 									<li class="active">
 								@endif
-										<a href="components/buttons.html">
+										<a href="<?= base_url()?>buyer/buyer/aset">
 											<span class="sub-item">Inventory</span>
 										</a>
 									</li>

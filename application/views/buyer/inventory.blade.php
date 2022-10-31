@@ -29,70 +29,18 @@
 					<div class="card">
 						<div class="card-header">
 							<div class="d-flex align-items-center">
-								<h4 class="card-title">Add Row</h4>
-								<button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#addRowModal">
-									<i class="fa fa-plus"></i>
-									Add Row
-								</button>
+								<h4 class="card-title">Semua Inventory</h4>
 							</div>
 						</div>
 						<div class="card-body">
-							<!-- Modal -->
-							<div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header no-bd">
-											<h5 class="modal-title">
-												<span class="fw-mediumbold">
-													New</span>
-												<span class="fw-light">
-													Row
-												</span>
-											</h5>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-										<div class="modal-body">
-											<p class="small">Create a new row using this form, make sure you fill them all</p>
-											<form>
-												<div class="row">
-													<div class="col-sm-12">
-														<div class="form-group form-group-default">
-															<label>Name</label>
-															<input id="addName" type="text" class="form-control" placeholder="fill name">
-														</div>
-													</div>
-													<div class="col-md-6 pr-0">
-														<div class="form-group form-group-default">
-															<label>Position</label>
-															<input id="addPosition" type="text" class="form-control" placeholder="fill position">
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group form-group-default">
-															<label>Office</label>
-															<input id="addOffice" type="text" class="form-control" placeholder="fill office">
-														</div>
-													</div>
-												</div>
-											</form>
-										</div>
-										<div class="modal-footer no-bd">
-											<button type="button" id="addRowButton" class="btn btn-primary">Add</button>
-											<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-										</div>
-									</div>
-								</div>
-							</div>
-
 							<div class="table-responsive">
-								<table id="add-row" class="display table table-striped table-hover">
+								<table id="asetall" class="display table table-striped table-hover">
 									<thead>
 										<tr>
-											<th>Nama Inventory</th>
+											<th style="width: 30%">Nama Inventory</th>
 											<th>Code</th>
-											<th>Asal</th>
+											<th>Penanggung Jawab</th>
+											<th>Status</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>
@@ -100,27 +48,12 @@
 										<tr>
 											<th>Nama Inventory</th>
 											<th>Code</th>
-											<th>Asal</th>
+											<th>Penanggung Jawab</th>
+											<th>Status</th>
 											<th>Action</th>
 										</tr>
 									</tfoot>
-									<tbody>
-										<tr>
-											<td>Tiger Nixon</td>
-											<td>System Architect</td>
-											<td>Edinburgh</td>
-											<td>
-												<div class="form-button-action">
-													<button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-														<i class="fa fa-edit"></i>
-													</button>
-													<button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-														<i class="fa fa-times"></i>
-													</button>
-												</div>
-											</td>
-										</tr>
-
+									<tbody id="request">
 									</tbody>
 								</table>
 							</div>
@@ -128,7 +61,120 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header no-bd">
+							<h5 class="modal-title">
+								<span class="fw-mediumbold">
+									Detail</span>
+								<span class="fw-light">
+									Inventory
+								</span>
+							</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="d-flex justify-content-center">
+								<div class="loader loader-lg" id="loading"></div>
+							</div>
+							<form id="fupdate" method="POST" style="display : none;" class="pt-0">
+								<div class="row">
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<label for="email2">Nama Inventory</label>
+														<p id="nama_aset" class="mb-1"></p>                           
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<label for="email2">Code Inventory</label>
+														<p id="code" class="mb-1"></p>                        
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<input type="text" id="id_aset" hidden/>
+														<label for="exampleFormControlSelect1">Kategori</label>
+														<p id="katup"class="mb-1"></p>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<input type="text" id="id_asal" hidden/>
+														<label for="exampleFormControlSelect1">Penanggung Jawab</label>
+														<p id="tujup" class="mb-1"></p>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<div class="form-group">
+														<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<label for="comment">Spesifikasi</label>
+														<textarea id="spesifikasi" name="spesifikasi" class="form-control"  rows="5">
+														</textarea>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
+														<label for="comment">Keterangan</label>
+														<textarea id="deskripsi" name="deskripsi" class="form-control" rows="5">
+														</textarea>
+													</div>
+												</div>
+										</div>    
+							</form>
+						</div>
+						<div class="modal-footer no-bd">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header no-bd">
+							<h5 class="modal-title">
+								<span class="fw-mediumbold">
+									Detail</span>
+								<span class="fw-light">
+									Inventory
+								</span>
+							</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="d-flex justify-content-center">
+								<div class="loader loader-lg" id="loadhis"></div>
+							</div>
+							<div class="col-md-12" style="display : none;" id="stephis">
+								<div class="card">
+									<div class="card-header">
+										<div id="hisheader" class="card-title d-flex"></div>
+									</div>
+									<div class="card-body">
+										<ol class="activity-feed" id="history">
+										</ol>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer no-bd">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-@include('template.footer');
+@include('template.footerBuyer');
