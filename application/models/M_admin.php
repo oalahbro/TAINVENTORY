@@ -248,8 +248,12 @@ class M_admin extends CI_Model
 			]
 		)->toArray();
 		if (!$resultast and !$resulttmp) {
-			// $result = $this->tabel('user')->findOne(['id_admin' => $this->input->post('tujuan')]);
-			// if(){}
+			$cektuj = $this->table('user')->findOne(['id_admin' => $this->input->post('tujuan')]);
+			if ($cektuj['level'] !== '3') {
+				$stts = 'R1';
+			} else {
+				$stts = 'R0';
+			}
 			$this->table('aset_tmp')->insertOne([
 				'id_aset_tmp' => $this->mongodb->id(),
 				'id_user_asal' => $this->session->userdata('id'),
@@ -260,7 +264,7 @@ class M_admin extends CI_Model
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
-				'status' => 'R1'
+				'status' => $stts
 			]);
 			$add = [
 				'set' => 'sukses'
