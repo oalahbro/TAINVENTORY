@@ -286,9 +286,9 @@
 								@else
 									<li class="active">
 								@endif
-										<a href="components/buttons.html">
-											<span class="sub-item">Inventory</span>
-										</a>
+								<a href="<?= base_url()?>admin/admin/aset">
+									<span class="sub-item">Inventory</span>
+								</a>
 									</li>
 								@if ($planet['title'] !== "Inventory Request")
 									<li>

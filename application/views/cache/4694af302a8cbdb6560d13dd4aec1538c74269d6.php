@@ -287,9 +287,9 @@
 								<?php else: ?>
 									<li class="active">
 								<?php endif; ?>
-										<a href="components/buttons.html">
-											<span class="sub-item">Inventory</span>
-										</a>
+								<a href="<?= base_url()?>admin/admin/aset">
+									<span class="sub-item">Inventory</span>
+								</a>
 									</li>
 								<?php if($planet['title'] !== "Inventory Request"): ?>
 									<li>

@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+@include('template.headerAdmin');
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
@@ -63,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-
+			{{-- modal detail --}}
 			<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -113,7 +113,7 @@
 												</div>
 												<div class="col-md-12">
 													<div class="form-group">
-														<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
+														<img id="blah_det" src="#" alt="your image" style="max-width: 20rem;" />
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -139,7 +139,7 @@
 					</div>
 				</div>
 			</div>
-
+			{{-- modal history --}}
 			<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -177,7 +177,7 @@
 					</div>
 				</div>
 			</div>
-
+			{{-- modal update --}}
 			<div class="modal fade bd-example-modal-lg" id="modalupdate" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -204,9 +204,9 @@
 													<input type="text" id="id_aset_u" hidden/>
 													<label for="exampleFormControlSelect1">Pilih Kategori</label>
 													<select name="kategori" class="form-control" id="katup_u">
-														<?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-														<option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
-														<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+														@foreach($planet['kategori'] as $kat)
+														<option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
+														@endforeach
 													</select>
 												</div>
 												<div class="form-group">
@@ -250,4 +250,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/inventory.blade.php ENDPATH**/ ?>
+@include('template.footerAdmin');

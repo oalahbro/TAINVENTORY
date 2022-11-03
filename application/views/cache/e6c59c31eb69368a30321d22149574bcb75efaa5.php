@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+<?php echo $__env->make('template.headerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
@@ -63,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-
+			
 			<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -113,7 +113,7 @@
 												</div>
 												<div class="col-md-12">
 													<div class="form-group">
-														<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
+														<img id="blah_det" src="#" alt="your image" style="max-width: 20rem;" />
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -139,7 +139,7 @@
 					</div>
 				</div>
 			</div>
-
+			
 			<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -177,7 +177,7 @@
 					</div>
 				</div>
 			</div>
-
+			
 			<div class="modal fade bd-example-modal-lg" id="modalupdate" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -250,4 +250,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/inventory.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('template.footerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/admin/inventory.blade.php ENDPATH**/ ?>

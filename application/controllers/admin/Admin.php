@@ -145,6 +145,9 @@ class Admin extends CI_Controller
 	{
 		$asetid = $_GET['asetid'];
 		$data = $this->M_admin->getReq($asetid);
+		if (!$data) {
+			$data = ['respon' => 'kosong'];
+		}
 		echo json_encode($data);
 	}
 	public function addReq()
@@ -188,6 +191,34 @@ class Admin extends CI_Controller
 			$data =  $this->M_admin->unDecline();
 		}
 		echo json_encode($data);
+	}
+	public function aset()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_admin->getAdmin()),
+			'jumlah_aset' => count($this->M_admin->getInventory()),
+			'kategori' => $this->M_admin->getCategory(),
+			'tuser' => $this->M_admin->getTuser(),
+			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'link' => 'invtAll',
+			'title' => 'Inventory'
+		];
+		return view('admin/inventory', $data);
+	}
+	public function invtAll()
+	{
+		$data =  $this->M_admin->invtAll();
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
+		echo json_encode($data);
+	}
+	public function updateInv()
+	{
+		$data = $this->M_admin->updateInv();
+		echo json_encode($data);
+	}
+	public function delReq()
+	{
+		$this->M_admin->delReq();
 	}
 	public function addCategory()
 	{
@@ -245,10 +276,14 @@ class Admin extends CI_Controller
 		$data = $this->M_admin->deleteCat($datanya);
 		return header("location:/admin/admin/kategori");
 	}
+	public function tabel($title)
+	{
+		$table = $this->mongodb->table($title);
+		return $table;
+	}
 	public function opo()
 	{
-
-		$data['boom'] = $this->input->post('text');
-		$this->load->view('opo', $data);
+		$result =  $this->M_admin->getCategory();
+		var_dump($result);
 	}
 }

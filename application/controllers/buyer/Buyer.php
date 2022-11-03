@@ -211,14 +211,18 @@ class Buyer extends CI_Controller
 		$data['planet'] = [
 			'jumlah' => count($this->M_buyer->getAdmin()),
 			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'kategori' => $this->M_buyer->getCategory(),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
-			'Inventory' => $this->M_buyer->invtReq(),
 			'link' => 'invtAll',
 			'title' => 'Inventory'
 		];
 		return view('buyer/inventory', $data);
 	}
-
+	public function updateInv()
+	{
+		$data = $this->M_buyer->updateInv();
+		echo json_encode($data);
+	}
 	public function cek()
 	{
 		var_dump($this->M_buyer->getBack());
