@@ -38,6 +38,7 @@
 								<table id="untables" class="display table table-striped table-hover">
 									<thead>
 										<tr>
+											<th style="width: 5%">No</th>
 											<th style="width: 30%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Asal</th>
@@ -47,6 +48,7 @@
 									</thead>
 									<tfoot>
 										<tr>
+											<th>No</th>
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Asal</th>

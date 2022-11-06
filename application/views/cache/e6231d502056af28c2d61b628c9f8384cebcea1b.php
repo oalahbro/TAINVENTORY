@@ -103,6 +103,7 @@
 								<table id="basic-datatables" class="display table table-striped table-hover">
 									<thead>
 										<tr>
+											<th style="width: 5%">No</th>
 											<th style="width: 25%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
@@ -112,6 +113,7 @@
 									</thead>
 									<tfoot>
 										<tr>
+											<th>No</th>
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>

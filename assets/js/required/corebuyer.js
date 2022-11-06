@@ -9,8 +9,6 @@
       inventory()
     }
   });
-  $('select').on('change', function() {
-  });
   
 $(".logout").click(function() {
     swal({
@@ -58,7 +56,14 @@ $(".logout").click(function() {
     img.onerror = function() {
       URL.revokeObjectURL(this.src);
       // Handle the failure properly
+      swal('Gagal memuat gambar', {
+        icon : "error",
+        text: "File harus berupa gambar, jpg atau png!",
+        timer: 2000,
+        buttons: false
+      });
       console.log("Cannot load image");
+      $('#bla').attr('src',"https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png");
     };
     img.onload = function() {
       URL.revokeObjectURL(this.src);
@@ -96,7 +101,14 @@ $(".logout").click(function() {
     img.onerror = function() {
       URL.revokeObjectURL(this.src);
       // Handle the failure properly
+      swal('Gagal memuat gambar', {
+        icon : "error",
+        text: "File harus berupa gambar, jpg atau png!",
+        timer: 2000,
+        buttons: false
+      });
       console.log("Cannot load image");
+      $('#blah').attr('src',"https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png");
     };
     img.onload = function() {
       URL.revokeObjectURL(this.src);
@@ -325,6 +337,17 @@ $(".logout").click(function() {
   }
 // END INS
 // ON REQ
+$('.modal').on('hidden.bs.modal', function (e) {
+  console.log('reset');
+  $('#kat').val("");
+  $('#tuj').val("");
+  $('#nam').val("");
+  $('#cod').val("");
+  $('#img1').val("");
+  $('#bla').attr("hidden",true);
+  $('#spek').val("");
+  $('#des').val("");
+})
   function delReq(id_aset){
     var url = "delReq"
     const data = {
@@ -356,7 +379,22 @@ $(".logout").click(function() {
     function merg(kp){
       ok = []
       for(let i of kp) {
-          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'] , `<div class="form-button-action">
+        if(i.status == 'R1'){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
+           <span class="btn-label">
+             <i class="fas fa-arrow-alt-circle-down"></i>
+           </span>
+           <b>Masuk</b>
+         </div>`
+         }else{
+           i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
+            <span class="btn-label">
+              <i class="fas fa-arrow-alt-circle-down"></i>
+            </span>
+            <b>Masuk Ditolak</b>
+          </div>`
+          }
+          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
             <i class="fa fa-info-circle"></i>
           </button>  
@@ -564,9 +602,6 @@ function unTable() {
           <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
             <i class="fa fa-info-circle"></i>
           </button>
-          <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-            <i class="fa fa-times"></i>
-          </button>
         </div>`];
         ok.push(obj);
     }
@@ -744,7 +779,7 @@ function inDetail(id_aset){
       $('#tujup').html(data[0].user_info[0]['nama_Admin']);
       $('#nama_aset').html(data[0]['nama_aset']);
       $('#code').html(data[0]['code']);
-      $('#blah').attr('src',data[0]['img']);
+      $('#blah_det').attr('src',data[0]['img']);
       $('#id_asal').val(data[0]['id_user_asal']);
       $('#spesifikasi').val(data[0]['spesifikasi']);
       $('#deskripsi').val(data[0]['deskripsi']);
@@ -779,7 +814,7 @@ function inDetail(id_aset){
         const d = new Date(`${r.date}`)
         r.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'full', timeStyle: 'short' }).format(d);
         if(!r.tujuan_info[0]){ r.tujuan_info[0] = {'nama_Admin':''}}
-        if(r.status.indexOf("E") !== 1){r.deskripsi = ''}
+        if(r.status.includes("E") == false){r.deskripsi = ''}
         if(r.status == 'R1'){ r.status = 'Request Masuk dari'; color = 'feed-item-secondary' }
         if(r.status == 'R0'){ r.status = 'Request Keluar dari'; color = 'feed-item-secondary'}
         if(r.status == 'R1F'){ r.status = 'Diteruskan Masuk oleh'; color = 'feed-item-primary'}
@@ -788,11 +823,11 @@ function inDetail(id_aset){
         if(r.status == 'R0Y'){ r.status = 'Request Keluar Diterima oleh'; color = 'feed-item-success'}
         if(r.status == 'R1N'){ r.status = 'Request Masuk Ditolak oleh'; color = 'feed-item-danger'}
         if(r.status == 'R1Y'){ r.status = 'Request Masuk Diterima oleh'; color = 'feed-item-success'}
-        if(r.status.indexOf("E") == 1){ r.status = 'Diedit oleh'; color = 'feed-item-warning';}
+        if(r.status.includes("E") == true){ r.status = 'Diedit oleh'; color = 'feed-item-warning';}
 
         tab += `<li class="feed-item ${color}">
                     <time class="date">${r.date}</time>
-                    <span class="text">${r.status} <b>${r.user_info[0].nama_Admin}</b> - <b>${r.tujuan_info[0].nama_Admin}</b><i>${r.deskripsi}</i></span>
+                    <span class="text">${r.status} <b>${r.user_info[0].nama_Admin}</b> - <b>${r.tujuan_info[0].nama_Admin} </b><i>${r.deskripsi}</i></span>
                     </li>`;
         }
         document.getElementById("history").innerHTML = tab;

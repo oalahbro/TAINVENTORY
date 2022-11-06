@@ -1,15 +1,9 @@
   $(document).ready(function(){
-    if(document.title.includes("Masukkan")){
-      showTmp();
-    }else if(document.title.includes("Request")){
-      dataTable();
-    }else if(document.title.includes("Unconfirmed")){
-      unTable();
-    }else{
-      inventory()
-    }
-  });
-  $('select').on('change', function() {
+    if(document.title.includes("Masukkan")){ showTmp(); }
+    if(document.title.includes("Request")){ dataTable(); }
+    if(document.title.includes("Unconfirmed")){ unTable(); }
+    if(document.title.includes("Semua")){ inventory() }
+    if(document.title.includes("Kategori")){ kategori() }
   });
   
 $(".logout").click(function() {
@@ -59,7 +53,14 @@ $(".logout").click(function() {
     img.onerror = function() {
       URL.revokeObjectURL(this.src);
       // Handle the failure properly
+      swal('Gagal memuat gambar', {
+        icon : "error",
+        text: "File harus berupa gambar, jpg atau png!",
+        timer: 2000,
+        buttons: false
+      });
       console.log("Cannot load image");
+      $('#bla').attr('src',"https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png");
     };
     img.onload = function() {
       URL.revokeObjectURL(this.src);
@@ -97,6 +98,12 @@ $(".logout").click(function() {
     img.onerror = function() {
       URL.revokeObjectURL(this.src);
       // Handle the failure properly
+      swal('Gagal memuat gambar', {
+        icon : "error",
+        text: "File harus berupa gambar, jpg atau png!",
+        timer: 2000,
+        buttons: false
+      });
       console.log("Cannot load image");
     };
     img.onload = function() {
@@ -116,11 +123,137 @@ $(".logout").click(function() {
       // document.getElementById("root").append(canvas);
       var dataURL = canvas.toDataURL();
       document.getElementById('putbas').value = dataURL;
-
     };
   };
-  
-  // ON INS
+  // SECTION CATEGORIES
+  function kategori() {
+    const api_url = link
+    async function getapi(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          merg(dat)
+      }
+    getapi(api_url);
+    function merg(dat){
+      ok = []
+      let no = 0
+      for(let i of dat) {
+        if(i.status == 1){
+          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Aktif&nbsp;</p></td>`
+        }else{
+          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-danger btn-round'>Non Aktif</p></td>`
+        }
+        no += 1
+          let obj = [no, i.nama_kategori , i.status , `<div class="form-button-action">
+          <button type="button" data-toggle="tooltip" onclick="upCat('${i.id_kategori}')" title="" class="btn btn-link btn-primary btn-lg">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button type="button" data-toggle="tooltip" onclick="delCat('${i.id_kategori}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
+            <i class="fa fa-times""></i>
+          </button>
+        </div>`];
+          ok.push(obj);
+      }
+      $('#tabelkat').DataTable({
+              "pageLength": 5,
+              "bDestroy": true,
+              data: ok
+            });
+    }
+  };
+  function upCat(id_kategori){
+    $('#modaledit').modal('show');
+      const id_category = id_kategori
+      $('#id_kategori').val(id_category);
+      var api_url = "detailkat?id=" + id_category;
+      
+      async function getapi(url) {
+          const response = await fetch(url);
+          var data = await response.json();
+          if (response) {
+              hideloader();
+          }
+          show(data);
+      }
+      getapi(api_url);
+      function hideloader() {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('fupdate').style.display = 'block';
+      }
+      function show(data) {
+        $('#nama_kat').val(data['nama_kategori']);
+        $('#status').val(data['status']);
+      }
+      if (!$('.modal').hasClass("show")){
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('fupdate').style.display = 'none';
+      }
+  }
+  function kategoriUp(){
+    const url = "updateCategory"
+    const data = {
+      id_kategori : $('#id_kategori').val(),
+      nama_kategori : $('#nama_kat').val(),
+      status : $('#status').val()
+
+    }
+    $.post(url,data, function(data, status){
+      
+      if(status == 'success'){
+        swal('Berhasil update data', {
+          icon : "info",
+          timer: 800,
+          buttons: false
+        });
+        kategori()
+        $('#modaledit').modal('hide');
+      }
+    })
+    return false
+}
+function delCat(id_kategori){
+  var url = "delKategori"
+  const data = {
+      id_kategori : id_kategori
+  }
+  $.post(url,data, function(data, status){
+      if(status == 'success'){
+        kategori()
+        $.notify({
+            message: 'Kategori telah dihapuss'
+        }, {
+            type: 'info',
+            delay: 1100
+        });
+      }
+    })
+}
+
+function kategoriAdd(){
+  const url = "addCategory"
+  const data = {
+    nama_kategori : $('#addName').val(),
+    status : $('#statusadd').val()
+
+  }
+  console.log(data);
+  $.post(url,data, function(data, status){
+    
+    if(status == 'success'){
+      swal('Berhasil tambah kategori', {
+        icon : "info",
+        timer: 800,
+        buttons: false
+      });
+      kategori()
+      $('#addRowModal').modal('hide');
+    }
+  })
+  return false
+}
+  // END CATEGORIES
+
+  // SECTION INS
   function showTmp(){
     const api_url = "getTmp";
     async function getapi(url) {
@@ -325,7 +458,17 @@ $(".logout").click(function() {
     }
   }
 // END INS
-// ON REQ
+// SECTION REQ
+  $('.modal').on('hidden.bs.modal', function (e) {
+    console.log('reset');
+    $('#kat').val("");
+    $('#tuj').val("");
+    $('#nam').val("");
+    $('#cod').val("");
+    $('#bla').attr("hidden",true);
+    $('#spek').val("");
+    $('#des').val("");
+  })
   function delReq(id_aset){
     var url = "delReq"
     const data = {
@@ -356,7 +499,9 @@ $(".logout").click(function() {
     getapi(api_url);
     function merg(kp){
       ok = []
+      let no = 0
       for(let i of kp) {
+        no += 1
         if(i.status == 'R1'){
          i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
           <span class="btn-label">
@@ -387,7 +532,7 @@ $(".logout").click(function() {
           <b>Keluar Ditolak</b>
         </div>`
         }
-          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status, `<div class="form-button-action">
+          let obj = [no, i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status, `<div class="form-button-action">
             <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
               <i class="fa fa-edit"></i>
             </button>
@@ -587,7 +732,9 @@ function unTable() {
   getapi(api_url);
   function merg(kp){
     ok = []
+    let no = 0
     for(let i of kp) {
+      no += 1
       if(!i.asal_info[0] ){ i.asal_info[0]  = {nama_Admin : 'User dihapus'}}
       if(i.status == 'R1'){
         i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
@@ -605,15 +752,12 @@ function unTable() {
          <b>Keluar</b>
        </div>`
        }
-        let obj = [i.nama_aset , i.code , i.asal_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
+        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="unDetail('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
             <i class="fa fa-edit"></i>
           </button>
           <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
             <i class="fa fa-info-circle"></i>
-          </button>
-          <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-            <i class="fa fa-times"></i>
           </button>
         </div>`];
         ok.push(obj);
@@ -756,15 +900,15 @@ function inventory() {
     ok = []
     let no = 0 
     for(let i of kp) {
-      no = no + 1
+      no += 1
       if(i.id_user_asal == sesid['sesid']){
-        del = `<button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
+        del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
         edt = `<button type="button" data-toggle="tooltip" onclick="updtInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
       }else{
         del = ``
         edt = `<button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg"><i class="fa fa-eye"></i></button>`
       }
-      if(i.status == '1'){
+      if(i.status == '1' || i.status == 'R0N' ){
           i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Didalam</b></div>`
         }else{
           i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Diluar</b></div>`
@@ -871,7 +1015,6 @@ function inDetail(id_aset){
       async function getapi(url) {
           const response = await fetch(url);
           var data = await response.json();
-          console.log(data)
           if (response) {
               hideloader();
           }
@@ -890,7 +1033,7 @@ function inDetail(id_aset){
         const d = new Date(`${r.date}`)
         r.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'full', timeStyle: 'short' }).format(d);
         if(!r.tujuan_info[0]){ r.tujuan_info[0] = {'nama_Admin':''}}
-        if(r.status.indexOf("E") !== 1){r.deskripsi = ''}
+        if(r.status.includes("E") == false){r.deskripsi = ''}
         if(r.status == 'R1'){ r.status = 'Request Masuk dari'; color = 'feed-item-secondary' }
         if(r.status == 'R0'){ r.status = 'Request Keluar dari'; color = 'feed-item-secondary'}
         if(r.status == 'R1F'){ r.status = 'Diteruskan Masuk oleh'; color = 'feed-item-primary'}
@@ -899,12 +1042,12 @@ function inDetail(id_aset){
         if(r.status == 'R0Y'){ r.status = 'Request Keluar Diterima oleh'; color = 'feed-item-success'}
         if(r.status == 'R1N'){ r.status = 'Request Masuk Ditolak oleh'; color = 'feed-item-danger'}
         if(r.status == 'R1Y'){ r.status = 'Request Masuk Diterima oleh'; color = 'feed-item-success'}
-        if(r.status.indexOf("E") == 1){ r.status = 'Diedit oleh'; color = 'feed-item-warning';}
+        if(r.status.includes("E") == true){ r.status = 'Diedit oleh'; color = 'feed-item-warning';}
         // if(r.status.indexOf("D") == 1){ r.status = 'Inventory Dihapus oleh'; color = 'feed-item-danger'}
 
        tab += `<li class="feed-item ${color}">
                     <time class="date">${r.date}</time>
-                    <span class="text">${r.status} <b>${r.user_info[0].nama_Admin}</b> - <b>${r.tujuan_info[0].nama_Admin}</b><i>${r.deskripsi}</i></span>
+                    <span class="text">${r.status} <b>${r.user_info[0].nama_Admin}</b> - <b>${r.tujuan_info[0].nama_Admin} </b><i>${r.deskripsi}</i></span>
                     </li>`;
         }
         document.getElementById("history").innerHTML = tab;
@@ -926,7 +1069,6 @@ function updateInv(){
   }
     $.post(url,data, function(data, status){
       let k = JSON.parse(data)
-      console.log(k)
       if(k.respon == 'sukses'){
         swal('Berhasil update data', {
           icon : "info",

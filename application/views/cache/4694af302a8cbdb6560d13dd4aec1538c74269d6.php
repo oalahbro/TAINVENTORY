@@ -243,7 +243,7 @@
 							<span class="sidebar-mini-icon">
 								<i class="fa fa-ellipsis-h"></i>
 							</span>
-							<h4 class="text-section">Components</h4>
+							<h4 class="text-section">Menu Dashboard</h4>
 						</li>
 						<?php if($planet['title'] !== "Masukkan"): ?> 
 							<li class="nav-item">
@@ -253,6 +253,16 @@
 							<a href="<?php echo e(base_url()); ?>admin/Admin/addInvt">
 								<i class="fas fa-plus-circle"></i>
 								<p>Masukkan Inventory</p>								
+							</a>
+						</li>
+						<?php if($planet['title'] !== "Kategori"): ?> 
+							<li class="nav-item">
+						<?php else: ?> 
+							<li class="nav-item active">
+						<?php endif; ?>
+							<a href="<?php echo e(base_url()); ?>admin/Admin/kategori">
+								<i class="fas fa-cube"></i>
+								<p>Kategori</p>								
 							</a>
 						</li>
 						<?php if(strpos($planet['title'], "Inventory") === FALSE): ?>
@@ -282,7 +292,7 @@
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
-								<?php if($planet['title'] !== "Inventory"): ?>
+								<?php if($planet['title'] !== "Semua Inventory"): ?>
 									<li>
 								<?php else: ?>
 									<li class="active">

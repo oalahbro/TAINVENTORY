@@ -242,7 +242,7 @@
 							<span class="sidebar-mini-icon">
 								<i class="fa fa-ellipsis-h"></i>
 							</span>
-							<h4 class="text-section">Components</h4>
+							<h4 class="text-section">Menu Dashboard</h4>
 						</li>
 						@if ($planet['title'] !== "Masukkan") 
 							<li class="nav-item">
@@ -252,6 +252,16 @@
 							<a href="{{ base_url() }}admin/Admin/addInvt">
 								<i class="fas fa-plus-circle"></i>
 								<p>Masukkan Inventory</p>								
+							</a>
+						</li>
+						@if ($planet['title'] !== "Kategori") 
+							<li class="nav-item">
+						@else 
+							<li class="nav-item active">
+						@endif
+							<a href="{{ base_url() }}admin/Admin/kategori">
+								<i class="fas fa-cube"></i>
+								<p>Kategori</p>								
 							</a>
 						</li>
 						@if (strpos($planet['title'], "Inventory") === FALSE)
@@ -281,7 +291,7 @@
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
-								@if ($planet['title'] !== "Inventory")
+								@if ($planet['title'] !== "Semua Inventory")
 									<li>
 								@else
 									<li class="active">

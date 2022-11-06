@@ -201,7 +201,7 @@ class Admin extends CI_Controller
 			'tuser' => $this->M_admin->getTuser(),
 			'user' => $this->M_admin->admin($this->session->userdata('username')),
 			'link' => 'invtAll',
-			'title' => 'Inventory'
+			'title' => 'Semua Inventory'
 		];
 		return view('admin/inventory', $data);
 	}
@@ -222,59 +222,47 @@ class Admin extends CI_Controller
 	}
 	public function addCategory()
 	{
-		$data_add = [
-			'nama_kategori' => ucwords($this->input->post('nama_kategori')),
-			'status' => $this->input->post('status')
-		];
-		$data = "<script type='text/javascript'>$.notify({
-            message: 'Sukses Menambah Kategori'
-        }, {
-            type: 'info',
-            delay: 10000
-        });
-		</script>";
-		$this->M_admin->addCategory($data_add);
-		$this->session->set_flashdata('success', $data);
-		return header("location:/admin/admin/kategori");
-		// echo $this->session->flashdata('success');
+		$data = $this->M_admin->addCategory();
+		echo json_encode($data);
 	}
 	public function updateCategory()
-
 	{
-		$datanya = [
-			'id_kategori' => $this->input->post('id_kategori'),
-			'nama_kategori' => ucwords($this->input->post('nama_kategori')),
-			'status' => $this->input->post('status')
-		];
-		$this->M_admin->updateCat($datanya);
-		return header("location:/admin/admin/kategori");
+		$data = $this->M_admin->updateCat();
+		echo json_encode($data);
 	}
-
-	public function kategori()
-	{
-		$data['planet'] = [
-			'user' => $this->dataAdmin(),
-			'kategori' => $this->M_admin->getCategory(),
-			'title' => "Kategori"
-		];
-		$this->load->view('template/headerAdmin', $data);
-		$this->load->view('admin/category', $data);
-		$this->load->view('template/footer');
-	}
-
 	public function getKategori()
 	{
 		$data = $this->M_admin->getCategory();
 		echo json_encode($data);
 	}
-
+	public function kategori()
+	{
+		$data['planet'] = [
+			'user' => $this->dataAdmin(),
+			'kategori' => $this->M_admin->getCategory(),
+			'title' => "Kategori",
+			'link' => "apiKat"
+		];
+		return view('admin/category', $data);
+	}
+	public function apiKat()
+	{
+		$data = $this->M_admin->apiCat();
+		echo json_encode($data);
+	}
+	public function detailkat()
+	{
+		$catid = $_GET['id'];
+		$data = $this->M_admin->detailCat($catid);
+		if (!$data) {
+			$data = ['respon' => 'kosong'];
+		}
+		echo json_encode($data);
+	}
 	public function delKategori()
 	{
-		$datanya = [
-			'id_kategori' => $this->input->post('id_kategori')
-		];
-		$data = $this->M_admin->deleteCat($datanya);
-		return header("location:/admin/admin/kategori");
+		$data = $this->M_admin->deleteCat();
+		echo json_encode($data);
 	}
 	public function tabel($title)
 	{

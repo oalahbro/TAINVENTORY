@@ -291,7 +291,7 @@ class M_buyer extends CI_Model
 		$table = $this->mongodb->table('aset');
 		$result = $table->aggregate(
 			[
-				['$match' => ['id_user_asal' => $iduser, 'status' => 'R1']],
+				['$match' => ['id_user_asal' => $iduser, '$or' => [['status' => 'R1'],  ['status' => 'R1N']]]],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
 					'from' => 'user',
@@ -315,6 +315,7 @@ class M_buyer extends CI_Model
 					'id_aset' => 1,
 					'nama_aset' => 1,
 					'code' => 1,
+					'status' => 1,
 					'tujuan_info.nama_Admin' => 1,
 				]]
 			]
@@ -611,74 +612,81 @@ class M_buyer extends CI_Model
 		$table = $this->mongodb->table('aset');
 		$history = $this->mongodb->table('history');
 		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
+		if ($result['status'] == 'R1N') {
+			$result['status'] = 'R1';
+		}
+		$resultast = $table->aggregate(
+			[
+				['$match' => ['id_aset' => $this->input->post('id_aset')]],
+				['$project' => [
+					'_id' => 0,
+					'id_user_tujuan' => 1,
+					'id_category' => 1,
+					'nama_aset' => 1,
+					'spesifikasi' => 1,
+					'deskripsi' => 1,
+					'status' => 1,
+				]]
+			]
+		)->toArray();
 		if (!$this->input->post('img')) {
-			$resultast = $table->aggregate(
-				[
-					['$match' => ['id_aset' => $this->input->post('id_aset')]],
-					['$project' => [
-						'_id' => 0,
-						'id_user_tujuan' => 1,
-						'id_category' => 1,
-						'nama_aset' => 1,
-						'spesifikasi' => 1,
-						'deskripsi' => 1
-					]]
-				]
-			)->toArray();
-			$noimg = [
+			$dataup = [
 				'id_user_tujuan' => $this->input->post('tujuan'),
 				'id_category' => $this->input->post('kategori'),
 				'nama_aset' => $this->input->post('nama'),
 				'spesifikasi' => $this->input->post('spesifikasi'),
-				'deskripsi' => $this->input->post('deskripsi')
+				'deskripsi' => $this->input->post('deskripsi'),
+				'status' => $result['status']
 			];
-
-			$arr = iterator_to_array($resultast[0]);
-			$addd = array_diff_assoc($noimg, $arr);
-			$kol = [];
-			foreach ($addd as $key => $item) {
-				if ($key == 'nama_aset') {
-					$key = "nama aset";
-				} elseif ($key == 'id_user_tujuan') {
-					$key = "tujuan";
-				} elseif ($key == 'id_category') {
-					$key = "kategori";
-				}
-				$kol[] = $key;
-			}
-			$data = [
-				'id_history' =>  $this->mongodb->id(),
-				'id_aset' => $result['id_aset'],
-				'id_user_asal' => $result['id_user_asal'],
-				'id_user_tujuan' => $this->input->post('tujuan'),
-				'id_category' => $this->input->post('kategori'),
-				'nama_aset' => $this->input->post('nama'),
-				'code' => $result['code'],
-				'status' => $result['status'] . "E " . join(", ", $kol),
-				'date' => date("Y-m-d H:i:s"),
-			];
-			$history->insertOne($data);
 			$add =  $table->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				[
-					'$set' => $noimg
+					'$set' => $dataup
 				]
 			);
 		} else {
+			$dataup = [
+				'id_user_tujuan' => $this->input->post('tujuan'),
+				'id_category' => $this->input->post('kategori'),
+				'nama_aset' => $this->input->post('nama'),
+				'spesifikasi' => $this->input->post('spesifikasi'),
+				'deskripsi' => $this->input->post('deskripsi'),
+				'img' => $this->input->post('img'),
+				'status' => $result['status']
+			];
 			$add = $table->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				[
-					'$set' => [
-						'id_user_tujuan' => $this->input->post('tujuan'),
-						'id_category' => $this->input->post('kategori'),
-						'nama_aset' => $this->input->post('nama'),
-						'spesifikasi' => $this->input->post('spesifikasi'),
-						'deskripsi' => $this->input->post('deskripsi'),
-						'img' => $this->input->post('img')
-					]
+					'$set' => $dataup
 				]
 			);
 		}
+		$arr = iterator_to_array($resultast[0]);
+		$addd = array_diff_assoc($dataup, $arr);
+		$kol = [];
+		foreach ($addd as $key => $item) {
+			if ($key == 'nama_aset') {
+				$key = "nama aset";
+			} elseif ($key == 'id_user_tujuan') {
+				$key = "tujuan";
+			} elseif ($key == 'id_category') {
+				$key = "kategori";
+			}
+			$kol[] = $key;
+		}
+		$data = [
+			'id_history' =>  $this->mongodb->id(),
+			'id_aset' => $result['id_aset'],
+			'id_user_asal' => $result['id_user_asal'],
+			'id_user_tujuan' => $this->input->post('tujuan'),
+			'id_category' => $this->input->post('kategori'),
+			'nama_aset' => $this->input->post('nama'),
+			'code' => $result['code'],
+			'status' => $result['status'] . "E",
+			'date' => date("Y-m-d H:i:s"),
+			'deskripsi' => join(", ", $kol)
+		];
+		$history->insertOne($data);
 		return $add;
 	}
 	public function invtUnc()
@@ -795,7 +803,7 @@ class M_buyer extends CI_Model
 			['id_aset' => $this->input->post('id_aset')],
 			[
 				'$set' => [
-					'status' => "1" . $result['status'] . "N",
+					'status' => $result['status'] . "N",
 					'date' => date("Y-m-d H:i:s")
 				]
 			]
@@ -825,7 +833,9 @@ class M_buyer extends CI_Model
 					'$match' => [
 						'$or' => [
 							['status' => '1'],
-							['status' => '0']
+							['status' => '0'],
+							['status' => 'R1N'],
+							['status' => 'R0N']
 						]
 					]
 				],

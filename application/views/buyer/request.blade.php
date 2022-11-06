@@ -101,6 +101,7 @@
 											<th style="width: 30%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th>Status Request</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>
@@ -109,6 +110,7 @@
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
+											<th>Status Request</th>
 											<th>Action</th>
 										</tr>
 									</tfoot>

@@ -113,7 +113,7 @@
 												</div>
 												<div class="col-md-12">
 													<div class="form-group">
-														<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
+														<img id="blah_det" src="#" alt="your image" style="max-width: 20rem;" />
 													</div>
 												</div>
 												<div class="col-md-6">
