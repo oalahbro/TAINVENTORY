@@ -378,7 +378,9 @@ $('.modal').on('hidden.bs.modal', function (e) {
     getapi(api_url);
     function merg(kp){
       ok = []
+      let no = 0
       for(let i of kp) {
+        no += 1
         if(i.status == 'R1'){
           i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
            <span class="btn-label">
@@ -394,7 +396,7 @@ $('.modal').on('hidden.bs.modal', function (e) {
             <b>Masuk Ditolak</b>
           </div>`
           }
-          let obj = [i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
+          let obj = [no, i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
             <i class="fa fa-info-circle"></i>
           </button>  
@@ -593,9 +595,11 @@ function unTable() {
   getapi(api_url);
   function merg(kp){
     ok = []
+    let no = 0
     for(let i of kp) {
+      no += 1
       if(!i.asal_info[0] ){ i.asal_info[0]  = {nama_Admin : 'User dihapus'}}
-        let obj = [i.nama_aset , i.code , i.asal_info[0]['nama_Admin'] , `<div class="form-button-action">
+        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'] , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="unDetail('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
             <i class="fa fa-edit"></i>
           </button>

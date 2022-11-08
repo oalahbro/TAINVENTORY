@@ -37,6 +37,7 @@ class Buyer extends CI_Controller
 		$data['planet'] = [
 			'jumlah' => count($this->M_buyer->getAdmin()),
 			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'jumlah_unconfirmed' => count($this->M_buyer->getUnconfirmed()),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
 			'title' => 'Dashboard'
 		];

@@ -8,37 +8,48 @@ class M_buyer extends CI_Model
 	{
 		parent::__construct();
 	}
+	public function table($title)
+	{
+		$table = $this->table($title);
+		return $table;
+	}
 	public function getInventory()
 	{
-		$table = $this->mongodb->table('aset');
-		$result = $table->find()->toArray();
+		$result = $this->table('aset')->find(['$or' => [
+			['status' => '1'],
+			['status' => '0'],
+			['status' => 'R1N'],
+			['status' => 'R0N']
+		]])->toArray();
 		return $result;
 	}
+	public function getUnconfirmed()
+	{
+		$result = $this->table('aset')->find(['id_user_tujuan' => $this->session->userdata('id'), 'status' => 'R0'])->toArray();
+		return $result;
+	}
+
 	public function getAdmin()
 	{
-		$table = $this->mongodb->table('user');
-		$result = $table->find()->toArray();
+		$result = $this->table('user')->find(['status' => '1'])->toArray();
 		return $result;
 	}
 
 	public function getTuser()
 	{
-		$table = $this->mongodb->table('user');
-		$result = $table->find(['level' => '1', 'status' => '1'])->toArray();
+		$result = $this->table('user')->find(['level' => '1', 'status' => '1'])->toArray();
 		return $result;
 	}
 
 	public function getCategory()
 	{
-		$table = $this->mongodb->table('category');
-		$result = $table->find(['status' => '1'])->toArray();
+		$result = $this->table('category')->find(['status' => '1'])->toArray();
 		return $result;
 	}
 	public function invtTmp()
 	{
 		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset_tmp');
-		$result = $table->aggregate(
+		$result = $this->table('aset_tmp')->aggregate(
 			[
 				['$match' => ['id_user_asal' => $iduser]],
 				['$sort' => ['_id' => -1]],
@@ -53,9 +64,7 @@ class M_buyer extends CI_Model
 	}
 	public function getTmp($asetid)
 	{
-
-		$table = $this->mongodb->table('aset_tmp');
-		$result = $table->aggregate(
+		$result = $this->table('aset_tmp')->aggregate(
 			[
 				['$match' => ['id_aset_tmp' => $asetid]],
 				['$sort' => ['_id' => -1]],
@@ -98,11 +107,9 @@ class M_buyer extends CI_Model
 	}
 	public function agg()
 	{
-
-		$table = $this->mongodb->table('aset_tmp');
 		// $result = $table->find([], ['sort' => ['_id' => -1]])
 		// 	->toArray();
-		$result = $table->aggregate(
+		$result = $this->table('aset_tmp')->aggregate(
 			[
 				// ['$match' => ['status' => 'R']],
 				['$sort' => ['_id' => -1]],
@@ -124,10 +131,8 @@ class M_buyer extends CI_Model
 	}
 	public function dropdwn()
 	{
-		$admin = $this->mongodb->table('user');
-		$resadm = $admin->findOne(['id_admin' => $this->input->post('tujuan')]);
-		$cat = $this->mongodb->table('category');
-		$rescat = $cat->findOne(['id_kategori' => $this->input->post('kategori')]);
+		$resadm = $this->table('user')->findOne(['id_admin' => $this->input->post('tujuan')]);
+		$rescat = $this->table('category')->findOne(['id_kategori' => $this->input->post('kategori')]);
 		$result = [
 			'resadm' => $resadm,
 			'rescat' => $rescat
@@ -136,9 +141,7 @@ class M_buyer extends CI_Model
 	}
 	public function insInvt()
 	{
-		$table = $this->mongodb->table('aset_tmp');
-		$tableaset = $this->mongodb->table('aset');
-		$resulttmp = $table->aggregate(
+		$resulttmp = $this->table('aset_tmp')->aggregate(
 			[
 				['$match' => ['code' => $this->input->post('code')]],
 				['$sort' => ['_id' => -1]],
@@ -149,7 +152,7 @@ class M_buyer extends CI_Model
 				]]
 			]
 		)->toArray();
-		$resultast = $tableaset->aggregate(
+		$resultast = $this->table('aset')->aggregate(
 			[
 				['$match' => ['code' => $this->input->post('code')]],
 				['$sort' => ['_id' => -1]],
@@ -161,7 +164,7 @@ class M_buyer extends CI_Model
 			]
 		)->toArray();
 		if (!$resultast and !$resulttmp) {
-			$table->insertOne([
+			$this->table('aset_tmp')->insertOne([
 				'id_aset_tmp' => $this->mongodb->id(),
 				'id_user_asal' => $this->session->userdata('id'),
 				'id_user_tujuan' => $this->input->post('tujuan'),
@@ -194,9 +197,8 @@ class M_buyer extends CI_Model
 
 	public function updateTmp()
 	{
-		$table = $this->mongodb->table('aset_tmp');
 		if (!$this->input->post('img')) {
-			$add = $table->updateOne(
+			$add = $this->table('aset_tmp')->updateOne(
 				['id_aset_tmp' => $this->input->post('id_aset')],
 				[
 					'$set' => [
@@ -210,7 +212,7 @@ class M_buyer extends CI_Model
 				]
 			);
 		} else {
-			$add = $table->updateOne(
+			$add = $this->table('aset_tmp')->updateOne(
 				['id_aset_tmp' => $this->input->post('id_aset')],
 				[
 					'$set' => [
@@ -231,26 +233,21 @@ class M_buyer extends CI_Model
 
 	public function delTmp()
 	{
-		$table = $this->mongodb->table('aset_tmp');
-		$updateResult = $table->deleteOne(
+		$updateResult = $this->table('aset_tmp')->deleteOne(
 			['id_aset_tmp' => $this->input->post('id_aset_tmp')]
 		);
 		return $updateResult;
 	}
 	public function add($datanya)
 	{
-		$table = $this->mongodb->table('aset');
-		$tambah = $table->insertOne($datanya);
+		$tambah = $this->table('aset')->insertOne($datanya);
 		return $tambah;
 	}
 
 	public function descTmp()
 	{
 		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset_tmp');
-		$aset = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_user_asal' => $iduser], ['sort' => ['_id' => -1]]);
+		$result = $this->table('aset_tmp')->findOne(['id_user_asal' => $iduser], ['sort' => ['_id' => -1]]);
 
 		if ($result) {
 			$data = [
@@ -266,8 +263,8 @@ class M_buyer extends CI_Model
 				'status' => $result['status'],
 				'date' => date("Y-m-d H:i:s")
 			];
-			$aset->insertOne($data);
-			$history->insertOne([
+			$this->table('aset')->insertOne($data);
+			$this->table('history')->insertOne([
 				'id_history' => $this->mongodb->id(),
 				'id_aset' => $result['id_aset_tmp'],
 				'id_user_asal' => $result['id_user_asal'],
@@ -278,7 +275,7 @@ class M_buyer extends CI_Model
 				'status' => $result['status'],
 				'date' => date("Y-m-d H:i:s"),
 			]);
-			$table->deleteOne(
+			$this->table('aset_tmp')->deleteOne(
 				['id_aset_tmp' => $result['id_aset_tmp']]
 			);
 		}
@@ -288,8 +285,7 @@ class M_buyer extends CI_Model
 	public function invtReq()
 	{
 		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_user_asal' => $iduser, '$or' => [['status' => 'R1'],  ['status' => 'R1N']]]],
 				['$sort' => ['_id' => -1]],
@@ -325,8 +321,7 @@ class M_buyer extends CI_Model
 	public function getBack()
 	{
 		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_user_asal' => $iduser, 'status' => '0']],
 				['$sort' => ['_id' => -1]],
@@ -342,11 +337,8 @@ class M_buyer extends CI_Model
 
 	public function updateBack()
 	{
-		$table = $this->mongodb->table('aset');
-		$user = $this->mongodb->table('user');
-		$history = $this->mongodb->table('history');
-		$resultusr = $user->findOne(['id_admin' => $this->input->post('tujuan')]);
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$resultusr = $this->table('user')->findOne(['id_admin' => $this->input->post('tujuan')]);
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
 		$iduser = $this->session->userdata('id');
 
 		if ($resultusr['level'] == 1) {
@@ -356,7 +348,7 @@ class M_buyer extends CI_Model
 				'deskripsi' => $this->input->post('deskripsi'),
 				'status' => "R1"
 			];
-			$add = $table->updateOne(
+			$add = $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				['$set' => $set]
 			);
@@ -367,7 +359,7 @@ class M_buyer extends CI_Model
 				'deskripsi' => $this->input->post('deskripsi'),
 				'status' => "R0"
 			];
-			$add = $table->updateOne(
+			$add = $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				['$set' => $set]
 			);
@@ -384,14 +376,12 @@ class M_buyer extends CI_Model
 			'status' => $set['status'] . "F",
 			'date' => date("Y-m-d H:i:s")
 		];
-		$history->insertOne($data);
+		$this->table('history')->insertOne($data);
 		return $add;
 	}
 	public function delReq()
 	{
-		$table = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
 		$data = [
 			'id_history' =>  $this->mongodb->id(),
 			'id_aset' => $result['id_aset'],
@@ -403,19 +393,16 @@ class M_buyer extends CI_Model
 			'status' => $result['status'] . "D",
 			'date' => date("Y-m-d H:i:s")
 		];
-		$history->insertOne($data);
+		$this->table('history')->insertOne($data);
 
-		$updateResult = $table->deleteOne(
+		$updateResult = $this->table('aset')->deleteOne(
 			['id_aset' => $this->input->post('id_aset')]
 		);
 		return $updateResult;
 	}
 	public function addReq()
 	{
-		$table = $this->mongodb->table('aset_tmp');
-		$tableaset = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$resulttmp = $table->aggregate(
+		$resulttmp = $this->table('aset_tmp')->aggregate(
 			[
 				['$match' => ['code' => $this->input->post('code')]],
 				['$sort' => ['_id' => -1]],
@@ -426,7 +413,7 @@ class M_buyer extends CI_Model
 				]]
 			]
 		)->toArray();
-		$resultast = $tableaset->aggregate(
+		$resultast = $this->table('aset')->aggregate(
 			[
 				['$match' => ['code' => $this->input->post('code')]],
 				['$sort' => ['_id' => -1]],
@@ -451,8 +438,8 @@ class M_buyer extends CI_Model
 				'status' => 'R1',
 				'date' => date("Y-m-d H:i:s")
 			];
-			$tableaset->insertOne($data);
-			$history->insertOne([
+			$this->table('aset')->insertOne($data);
+			$this->table('history')->insertOne([
 				'id_history' =>  $this->mongodb->id(),
 				'id_aset' => $data['id_aset'],
 				'id_user_asal' => $this->session->userdata('id'),
@@ -484,9 +471,7 @@ class M_buyer extends CI_Model
 
 	public function getReq($asetid)
 	{
-
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_aset' => $asetid]],
 				['$sort' => ['_id' => -1]],
@@ -529,10 +514,8 @@ class M_buyer extends CI_Model
 	}
 	public function updateInv()
 	{
-		$table = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
-		$resultast = $table->aggregate(
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$resultast = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_aset' => $this->input->post('id_aset')]],
 				['$project' => [
@@ -553,7 +536,7 @@ class M_buyer extends CI_Model
 					'spesifikasi' => $this->input->post('spesifikasi'),
 					'deskripsi' => $this->input->post('deskripsi')
 				];
-				$table->updateOne(
+				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
 					[
 						'$set' => $dataup
@@ -567,7 +550,7 @@ class M_buyer extends CI_Model
 					'deskripsi' => $this->input->post('deskripsi'),
 					'img' => $this->input->post('img')
 				];
-				$table->updateOne(
+				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
 					[
 						'$set' => $dataup
@@ -599,7 +582,7 @@ class M_buyer extends CI_Model
 				'date' => date("Y-m-d H:i:s"),
 				'deskripsi' => join(", ", $kol)
 			];
-			$history->insertOne($data);
+			$this->table('history')->insertOne($data);
 			$add = ['respon' => 'sukses'];
 		} else {
 			$add = ['respon' => 'gagal'];
@@ -609,13 +592,11 @@ class M_buyer extends CI_Model
 	}
 	public function updateReq()
 	{
-		$table = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
 		if ($result['status'] == 'R1N') {
 			$result['status'] = 'R1';
 		}
-		$resultast = $table->aggregate(
+		$resultast = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_aset' => $this->input->post('id_aset')]],
 				['$project' => [
@@ -638,7 +619,7 @@ class M_buyer extends CI_Model
 				'deskripsi' => $this->input->post('deskripsi'),
 				'status' => $result['status']
 			];
-			$add =  $table->updateOne(
+			$add =  $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				[
 					'$set' => $dataup
@@ -654,7 +635,7 @@ class M_buyer extends CI_Model
 				'img' => $this->input->post('img'),
 				'status' => $result['status']
 			];
-			$add = $table->updateOne(
+			$add = $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
 				[
 					'$set' => $dataup
@@ -686,14 +667,13 @@ class M_buyer extends CI_Model
 			'date' => date("Y-m-d H:i:s"),
 			'deskripsi' => join(", ", $kol)
 		];
-		$history->insertOne($data);
+		$this->table('history')->insertOne($data);
 		return $add;
 	}
 	public function invtUnc()
 	{
 		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_user_tujuan' => $iduser, 'status' => 'R0']],
 				['$sort' => ['_id' => -1]],
@@ -727,9 +707,7 @@ class M_buyer extends CI_Model
 	}
 	public function getUnc($asetid)
 	{
-
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				['$match' => ['id_aset' => $asetid]],
 				['$sort' => ['_id' => -1]],
@@ -765,10 +743,8 @@ class M_buyer extends CI_Model
 	}
 	public function unAccept()
 	{
-		$table = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
-		$add = $table->updateOne(
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$add = $this->table('aset')->updateOne(
 			['id_aset' => $this->input->post('id_aset')],
 			[
 				'$set' => [
@@ -790,16 +766,14 @@ class M_buyer extends CI_Model
 			'status' => $result['status'] . "Y",
 			'date' => date("Y-m-d H:i:s"),
 		];
-		$history->insertOne($data);
+		$this->table('history')->insertOne($data);
 		$respon = $add->getModifiedCount();
 		return $respon;
 	}
 	public function unDecline()
 	{
-		$table = $this->mongodb->table('aset');
-		$history = $this->mongodb->table('history');
-		$result = $table->findOne(['id_aset' => $this->input->post('id_aset')]);
-		$add = $table->updateOne(
+		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
+		$add = $this->table('aset')->updateOne(
 			['id_aset' => $this->input->post('id_aset')],
 			[
 				'$set' => [
@@ -819,15 +793,13 @@ class M_buyer extends CI_Model
 			'status' => $result['status'] . "N",
 			'date' => date("Y-m-d H:i:s"),
 		];
-		$history->insertOne($data);
+		$this->table('history')->insertOne($data);
 		$respon = $add->getModifiedCount();
 		return $respon;
 	}
 	public function invtAll()
 	{
-		$iduser = $this->session->userdata('id');
-		$table = $this->mongodb->table('aset');
-		$result = $table->aggregate(
+		$result = $this->table('aset')->aggregate(
 			[
 				[
 					'$match' => [
@@ -873,9 +845,7 @@ class M_buyer extends CI_Model
 
 	public function getHis($asetid)
 	{
-
-		$table = $this->mongodb->table('history');
-		$result = $table->aggregate(
+		$result = $this->table('history')->aggregate(
 			[
 				['$match' => ['id_aset' => $asetid]],
 				['$sort' => ['_id' => -1]],
@@ -918,8 +888,7 @@ class M_buyer extends CI_Model
 
 	function admin($where)
 	{
-		$table = $this->mongodb->table('user');
-		$result = $table->findOne(['username' => $where]);
+		$result = $this->table('user')->findOne(['username' => $where]);
 		return $result;
 	}
 }

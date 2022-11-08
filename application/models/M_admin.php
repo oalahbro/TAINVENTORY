@@ -30,18 +30,26 @@ class M_admin extends CI_Model
 	}
 	public function getTuser()
 	{
-		$table = $this->table('user');
-		$result = $table->find(['$or' => [
-			['level' => '3'],
-			['level' => '2'],
-			['level' => '1']
-		], 'status' => '1'])->toArray();
+		$result = $this->table('user')->find()->toArray();
 		return $result;
 	}
 
 	public function getInventory()
 	{
-		$result = $this->table('aset')->find()->toArray();
+		$result = $this->table('aset')->find(['$or' => [
+			['status' => '1'],
+			['status' => '0'],
+			['status' => 'R1N'],
+			['status' => 'R0N']
+		]])->toArray();
+		return $result;
+	}
+	public function getUnconfirmed()
+	{
+		$result = $this->table('aset')->find(['id_user_tujuan' => $this->session->userdata('id'), '$or' => [
+			['status' => 'R0'],
+			['status' => 'R1']
+		]])->toArray();
 		return $result;
 	}
 	public function updateInv()
@@ -757,7 +765,7 @@ class M_admin extends CI_Model
 	}
 	public function getAdmin()
 	{
-		$result = $this->table('user')->find()->toArray();
+		$result = $this->table('user')->find(['status' => '1'])->toArray();
 		return $result;
 	}
 	public function getCategoryall()

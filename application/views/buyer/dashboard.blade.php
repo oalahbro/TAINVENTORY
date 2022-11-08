@@ -19,7 +19,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">User</p>
-												<h4 class="card-title"><?= $planet['jumlah'];?></h4>
+												<h4 class="card-title">{{ $planet['jumlah'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -38,7 +38,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">Inventory</p>
-												<h4 class="card-title"><?= $planet['jumlah_aset'];?></h4>
+												<h4 class="card-title">{{ $planet['jumlah_aset'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -57,7 +57,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">Unconfirmed</p>
-												<h4 class="card-title">$ 1,345</h4>
+												<h4 class="card-title">{{ $planet['jumlah_unconfirmed'] }}</h4>
 											</div>
 										</div>
 									</div>

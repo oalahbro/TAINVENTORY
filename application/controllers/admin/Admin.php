@@ -4,21 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Admin extends CI_Controller
 {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/userguide3/general/urls.html
-	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -39,9 +24,9 @@ class Admin extends CI_Controller
 			'title' => "Dashboard",
 			'jumlah' => count($this->M_admin->getAdmin()),
 			'jumlah_aset' => count($this->M_admin->getInventory()),
+			'jumlah_unconfirmed' => count($this->M_admin->getUnconfirmed()),
 			'user' => $this->dataAdmin()
 		];
-		// print_r($data);
 		return view('admin/dashboard', $data);
 	}
 	public function addInvt()
@@ -50,7 +35,7 @@ class Admin extends CI_Controller
 			'invt_tmp' => $this->M_admin->invtTmp(),
 			'kategori' => $this->M_admin->getCategory(),
 			'tuser' => $this->M_admin->getTuser(),
-			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'user' => $this->dataAdmin(),
 			'title' => 'Masukkan'
 		];
 		// print_r($data['planet']['tuser']);
@@ -125,7 +110,7 @@ class Admin extends CI_Controller
 			'back' => $this->M_admin->getBack(),
 			'kategori' => $this->M_admin->getCategory(),
 			'tuser' => $this->M_admin->getTuser(),
-			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'user' => $this->dataAdmin(),
 			'inventory' => $this->M_admin->invtReq(),
 			'link' => 'apiReq',
 			'title' => 'Inventory Request'
@@ -171,7 +156,7 @@ class Admin extends CI_Controller
 		$data['planet'] = [
 			'jumlah' => count($this->M_admin->getAdmin()),
 			'jumlah_aset' => count($this->M_admin->getInventory()),
-			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'user' => $this->dataAdmin(),
 			'tuser' => $this->M_admin->getTuser(),
 			'title' => 'Inventory Unconfirmed',
 			'link' => 'apiUnc'
@@ -199,7 +184,7 @@ class Admin extends CI_Controller
 			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'kategori' => $this->M_admin->getCategory(),
 			'tuser' => $this->M_admin->getTuser(),
-			'user' => $this->M_admin->admin($this->session->userdata('username')),
+			'user' => $this->dataAdmin(),
 			'link' => 'invtAll',
 			'title' => 'Semua Inventory'
 		];
