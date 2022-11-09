@@ -30,10 +30,14 @@ class M_admin extends CI_Model
 	}
 	public function getTuser()
 	{
-		$result = $this->table('user')->find()->toArray();
+		$result = $this->table('user')->find(['status' => '1'])->toArray();
 		return $result;
 	}
-
+	public function detailUsr()
+	{
+		$result = $this->table('user')->findOne(['id_admin' => $_GET['id']]);
+		return $result;
+	}
 	public function getInventory()
 	{
 		$result = $this->table('aset')->find(['$or' => [
@@ -768,23 +772,85 @@ class M_admin extends CI_Model
 		$result = $this->table('user')->find(['status' => '1'])->toArray();
 		return $result;
 	}
+	public function getUser()
+	{
+		$result = $this->table('user')->aggregate([['$sort' => ['_id' => -1]]])->toArray();
+		return $result;
+	}
+	function addUser()
+	{
+		$add = $this->table('user')->insertOne([
+			'id_admin' => $this->mongodb->id(),
+			'nama_Admin' => ucwords($this->input->post('nama_Admin')),
+			'username' => strtolower($this->input->post('username')),
+			'password' => md5($this->input->post('password')),
+			'level' => $this->input->post('level'),
+			'status' => '1'
+		]);
+		return $add;
+	}
+	public function cekusername()
+	{
+		$result = $this->table('user')->findOne(['username' => $_GET['username']]);
+		return $result;
+	}
+	public function deleteUser()
+	{
+		$updateResult = $this->table('user')->deleteOne(
+			['id_admin' => $this->input->post('id_admin')]
+		);
+		return $updateResult;
+	}
+	public function updatUsr()
+	{
+		if (!$this->input->post('password')) {
+			$updateResult = $this->table('user')->updateOne(
+				['id_admin' => $this->input->post('id_user')],
+				[
+					'$set' => [
+						'nama_Admin' => ucwords($this->input->post('nama_Admin')),
+						'username' => strtolower($this->input->post('username')),
+						'level' => $this->input->post('level'),
+						'status' => $this->input->post('status')
+					]
+				]
+			);
+		} else {
+			$updateResult = $this->table('user')->updateOne(
+				['id_admin' => $this->input->post('id_user')],
+				[
+					'$set' => [
+						'nama_Admin' => ucwords($this->input->post('nama_Admin')),
+						'username' => strtolower($this->input->post('username')),
+						'password' => md5($this->input->post('password')),
+						'level' => $this->input->post('level'),
+						'status' => $this->input->post('status')
+					]
+				]
+			);
+		}
+		return $updateResult;
+	}
 	public function getCategoryall()
 	{
 		$result = $this->table('category')->find()->toArray();
 		return $result;
 	}
 
-	public function add($datanya)
-	{
-		$tambah = $this->table('aset')->insertOne($datanya);
-		return $tambah;
-	}
 	public function invtUnc()
 	{
 		$iduser = $this->session->userdata('id');
 		$result = $this->table('aset')->aggregate(
 			[
-				['$match' => ['id_user_tujuan' => $iduser, '$or' => [['status' => 'R1'], ['status' => 'R0']]]],
+				[
+					'$match' => [
+						'id_user_tujuan' => $iduser,
+						'$or' => [
+							['status' => 'R1'],
+							['status' => 'R0']
+						]
+					]
+				],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
 					'from' => 'user',
@@ -857,18 +923,6 @@ class M_admin extends CI_Model
 		)->toArray();
 		return $result;
 	}
-	function addAdmin($data_add)
-	{
-		$add = $this->table('admin')->insertOne([
-			'id_admin' => $this->mongodb->id(),
-			'nama_Admin' => $data_add['nama_Admin'],
-			'username' => $data_add['username'],
-			'katasandi' => md5($data_add['password']),
-			'level' => $data_add['level']
-		]);
-		return $add;
-	}
-
 	function admin($where)
 	{
 		$result = $this->table('user')->findOne(['username' => $where]);
@@ -911,11 +965,8 @@ class M_admin extends CI_Model
 
 	public function deleteCat()
 	{
-		$datanya = [
-			'id_kategori' => $this->input->post('id_kategori')
-		];
 		$updateResult = $this->table('category')->deleteOne(
-			['id_kategori' => $datanya['id_kategori']]
+			['id_kategori' => $this->input->post('id_kategori')]
 		);
 		return $updateResult;
 	}

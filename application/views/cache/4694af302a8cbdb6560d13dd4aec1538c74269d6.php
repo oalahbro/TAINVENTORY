@@ -255,16 +255,6 @@
 								<p>Masukkan Inventory</p>								
 							</a>
 						</li>
-						<?php if($planet['title'] !== "Kategori"): ?> 
-							<li class="nav-item">
-						<?php else: ?> 
-							<li class="nav-item active">
-						<?php endif; ?>
-							<a href="<?php echo e(base_url()); ?>admin/Admin/kategori">
-								<i class="fas fa-cube"></i>
-								<p>Kategori</p>								
-							</a>
-						</li>
 						<?php if(strpos($planet['title'], "Inventory") === FALSE): ?>
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#inventory">
@@ -312,6 +302,26 @@
 									</li>
 								</ul>
 							</div>
+						</li>
+						<?php if($planet['title'] !== "User"): ?> 
+							<li class="nav-item">
+						<?php else: ?> 
+							<li class="nav-item active">
+						<?php endif; ?>
+							<a href="<?php echo e(base_url()); ?>admin/Admin/user">
+								<i class="fas fa-user-friends"></i>
+								<p>User</p>								
+							</a>
+						</li>
+						<?php if($planet['title'] !== "Kategori"): ?> 
+							<li class="nav-item">
+						<?php else: ?> 
+							<li class="nav-item active">
+						<?php endif; ?>
+							<a href="<?php echo e(base_url()); ?>admin/Admin/kategori">
+								<i class="fas fa-cube"></i>
+								<p>Kategori</p>								
+							</a>
 						</li>
 						<?php if($planet['title'] !== "Input Inventory"): ?> 
 							<li class="nav-item">

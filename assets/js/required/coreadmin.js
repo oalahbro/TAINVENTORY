@@ -4,6 +4,7 @@
     if(document.title.includes("Unconfirmed")){ unTable(); }
     if(document.title.includes("Semua")){ inventory() }
     if(document.title.includes("Kategori")){ kategori() }
+    if(document.title.includes("User")){ user() }
   });
   
 $(".logout").click(function() {
@@ -125,6 +126,186 @@ $(".logout").click(function() {
       document.getElementById('putbas').value = dataURL;
     };
   };
+  // SECTION USER
+  function user() {
+    const api_url = link
+    async function getapi(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          merg(dat)
+      }
+    getapi(api_url);
+    function merg(dat){
+      ok = []
+      let no = 0
+      for(let i of dat) {
+        no += 1
+        if(i.level == 1){
+          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Superadmin&nbsp;</p></td>`
+        }else if(i.level == 2){
+          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-primary btn-round'>Guru</p></td>`
+        }else{
+          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-warning btn-round'>Buyer</p></td>`
+        }
+        if(i.status == 1){
+          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Aktif&nbsp;</p></td>`
+        }else{
+          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-danger btn-round'>Non Aktif</p></td>`
+        }
+          let obj = [no, i.nama_Admin,i.username,i.level , i.status , `<div class="form-button-action">
+          <button type="button" data-toggle="tooltip" onclick="upUsr('${i.id_admin}')" title="" class="btn btn-link btn-primary btn-lg">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button type="button" data-toggle="tooltip" onclick="delUsr('${i.id_admin}','${i.nama_Admin}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
+            <i class="fa fa-times""></i>
+          </button>
+        </div>`];
+          ok.push(obj);
+      }
+      $('#user').DataTable({
+              "pageLength": 5,
+              "bDestroy": true,
+              data: ok
+            });
+    }
+  };
+  function addUser(){
+    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    let uname = /^[a-zA-Z0-9_.-]{5,20}$/;
+    if(!$('#usernameadd').val().match(uname)){$('#errorusr').text('*Username min 5 karakter harus berupa huruf atau angka'); unm = "NO"}else{unm = "YES"}
+    if(!$('#passwordadd').val().match(passw)){$('#errorpwd').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
+    if(unm == "YES" && pwd == "YES"){
+      const api_url = "cekusername?username=" + $('#usernameadd').val()
+      async function cekusername(url) {
+            const response = await fetch(url);
+            var dat = await response.json();
+            if (!dat){
+              noUser()
+            }else{
+              $('#errorusr').text('*Username sudah ada silahkan gunakan username lain')
+            }
+        }
+      cekusername(api_url);
+      function noUser(){
+          const url = "addUser"
+          const data = {
+          nama_Admin : $('#addName').val(),
+          username : $('#usernameadd').val(),
+          password : $('#passwordadd').val(),
+          level : $('#leveladd').val(),
+        }
+        console.log(data);
+        $.post(url,data, function(data, status){
+          if(status == 'success'){
+            $.notify({
+              message: 'Sukses Menambah User'
+          }, {
+              type: 'info',
+              delay: 1500
+          });
+            user()
+            $('#adduser').modal('hide');
+          }
+        })
+          $('#errorusr').text('')
+          $('#errorpwd').text('')
+          $('#addName').val(''),
+          $('#usernameadd').val('')
+          $('#passwordadd').val('')
+          $('#leveladd').val('1')
+      }
+    }
+    return false
+  }
+  function delUsr(id_user, nama_Admin){
+    var url = "delUser"
+    const data = {
+        id_admin : id_user
+    }
+    swal({
+      title: `Anda yakin menghapus ${nama_Admin}`,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $.post(url,data, function(data, status){
+          if(status == 'success'){
+            user()
+            $.notify({
+                message: 'User telah dihapuss'
+            }, {
+                type: 'info',
+                delay: 1100
+            });
+          }
+        })
+      } else {
+      }
+    });
+  }
+  function upUsr(id_user){
+    $('#modaledit').modal('show');
+      const id_admin = id_user
+      $('#id_user').val(id_user);
+      var api_url = "detailUsr?id=" + id_admin;
+      
+      async function getapi(url) {
+          const response = await fetch(url);
+          var data = await response.json();
+          if (response) {
+              hideloader();
+          }
+          show(data);
+      }
+      getapi(api_url);
+      function hideloader() {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('fupdate').style.display = 'block';
+      }
+      function show(data) {
+        $('#name').val(data['nama_Admin']);
+        $('#status').val(data['status']);
+        $('#level').val(data['level']);
+        $('#username').val(data['username']);
+      }
+      if (!$('.modal').hasClass("show")){
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('fupdate').style.display = 'none';
+      }
+  }
+  function userUp(){
+    const url = "updateUser"
+    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    let uname = /^[a-zA-Z0-9_.-]{5,20}$/;
+    if(!$('#username').val().match(uname)){$('#errorusrup').text('*Username min 5 karakter harus berupa huruf atau angka'); unm = "NO"}else{unm = "YES"}
+    if(!$('#password').val().match(passw)){$('#errorpwdup').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
+    if(!$('#password').val()){$('#errorpwdup').text(''); pwd = "YES"}
+    if(unm == "YES" && pwd == "YES"){
+      const data = {
+        id_user : $('#id_user').val(),
+        nama_Admin : $('#name').val(),
+        username : $('#username').val(),
+        password : $('#password').val(),
+        level : $('#level').val(),
+        status : $('#status').val()
+      }
+      $.post(url,data, function(data, status){
+        if(status == 'success'){
+          swal('Berhasil update data', {
+            icon : "info",
+            timer: 800,
+            buttons: false
+          });
+          user()
+          $('#modaledit').modal('hide');
+        }
+      })
+    }
+    return false
+}
+  // END USER
   // SECTION CATEGORIES
   function kategori() {
     const api_url = link
@@ -148,7 +329,7 @@ $(".logout").click(function() {
           <button type="button" data-toggle="tooltip" onclick="upCat('${i.id_kategori}')" title="" class="btn btn-link btn-primary btn-lg">
             <i class="fa fa-edit"></i>
           </button>
-          <button type="button" data-toggle="tooltip" onclick="delCat('${i.id_kategori}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
+          <button type="button" data-toggle="tooltip" onclick="delCat('${i.id_kategori}','${i.nama_kategori}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
             <i class="fa fa-times""></i>
           </button>
         </div>`];
@@ -211,22 +392,34 @@ $(".logout").click(function() {
     })
     return false
 }
-function delCat(id_kategori){
+function delCat(id_kategori,nama_kategori){
   var url = "delKategori"
   const data = {
       id_kategori : id_kategori
   }
-  $.post(url,data, function(data, status){
-      if(status == 'success'){
-        kategori()
-        $.notify({
-            message: 'Kategori telah dihapuss'
-        }, {
-            type: 'info',
-            delay: 1100
-        });
-      }
-    })
+  swal({
+    title: `Anda yakin menghapus ${nama_kategori}`,
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      $.post(url,data, function(data, status){
+        if(status == 'success'){
+          kategori()
+          $.notify({
+              message: 'Kategori telah dihapuss'
+          }, {
+              type: 'info',
+              delay: 1100
+          });
+        }
+      })
+    } else {
+    }
+  });
+  
 }
 
 function kategoriAdd(){
@@ -240,10 +433,11 @@ function kategoriAdd(){
   $.post(url,data, function(data, status){
     
     if(status == 'success'){
-      swal('Berhasil tambah kategori', {
-        icon : "info",
-        timer: 800,
-        buttons: false
+      $.notify({
+        message: 'Sukses Menambah Kategori'
+      }, {
+          type: 'info',
+          delay: 1500
       });
       kategori()
       $('#addRowModal').modal('hide');
@@ -461,7 +655,6 @@ function kategoriAdd(){
 // SECTION REQ
   $('.modal').on('hidden.bs.modal', function (e) {
     console.log('reset');
-    $('#kat').val("");
     $('#tuj').val("");
     $('#nam').val("");
     $('#cod').val("");

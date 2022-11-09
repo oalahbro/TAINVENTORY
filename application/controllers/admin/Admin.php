@@ -85,25 +85,45 @@ class Admin extends CI_Controller
 	{
 		$data['planet'] = [
 			'title' => "User",
-			'admin' => $this->M_admin->getAdmin(),
-			'user' => $this->dataAdmin()
+			'user' => $this->dataAdmin(),
+			'link' => 'userGet'
 		];
 
-		$this->load->view('template/headerAdmin', $data);
-		$this->load->view('admin/user', $data);
-		$this->load->view('template/footer');
+		return view('admin/user', $data);
 	}
-
-	public function inventory()
+	public function userGet()
 	{
-		$data['planet'] = [
-			'title' => "Inventory Unconfirmed",
-			'inventory' => $this->M_admin->getInventory(),
-			'user' => $this->dataAdmin()
-		];
-		var_dump($data['planet']['inventory']);
+		$data =  $this->M_admin->getUser();
+		echo json_encode($data);
 	}
-
+	public function addUser()
+	{
+		$data =  $this->M_admin->addUser();
+		echo json_encode($data);
+	}
+	public function cekusername()
+	{
+		$data =  $this->M_admin->cekusername();
+		echo json_encode($data);
+	}
+	public function delUser()
+	{
+		$data = $this->M_admin->deleteUser();
+		echo json_encode($data);
+	}
+	public function detailUsr()
+	{
+		$data = $this->M_admin->detailUsr();
+		if (!$data) {
+			$data = ['respon' => 'kosong'];
+		}
+		echo json_encode($data);
+	}
+	public function updateUser()
+	{
+		$data = $this->M_admin->updatUsr();
+		echo json_encode($data);
+	}
 	public function request()
 	{
 		$data['planet'] = [

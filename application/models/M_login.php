@@ -12,7 +12,7 @@ class M_login extends CI_Model
         $table = $this->mongodb->table('user');
         $result = $table->findOne([
             'username' => $where['username'],
-            'katasandi' => $where['password']
+            'password' => $where['password']
         ]);
         return $result;
     }
@@ -23,7 +23,7 @@ class M_login extends CI_Model
             'id_admin' => $this->mongodb->id(),
             'nama_Admin' => $data_add['nama_Admin'],
             'username' => $data_add['username'],
-            'katasandi' => md5($data_add['password']),
+            'password' => md5($data_add['password']),
             'level' => $data_add['level'],
             'status' => 0
         ]);

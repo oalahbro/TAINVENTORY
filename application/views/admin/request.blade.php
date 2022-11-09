@@ -76,8 +76,10 @@
 															@foreach($planet['tuser'] as $tus)
 															@if ($tus['level'] == 2)
 																@php $tus['level'] = '( Guru )' @endphp
+															@elseif($tus['level'] == 1)
+																@php $tus['level'] = '( Superadmin )' @endphp
 															@else
-																@php $tus['level'] = '( Buyer )' @endphp
+															@php $tus['level'] = '( Buyer )' @endphp
 															@endif
 															<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
 															@endforeach
@@ -152,7 +154,7 @@
 									<div class="card-body pt-0">
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
-												<select name="kategori" class="form-control"  id="kat">
+												<select name="kategori" class="form-control"  id="kat" required>
 													@foreach($planet['kategori'] as $kat)
 													<option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
 													@endforeach
@@ -160,7 +162,7 @@
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
-												<select name="tujuan" class="form-control" id="tuj">
+												<select name="tujuan" class="form-control" id="tuj" required>
 													@foreach($planet['tuser'] as $tus)
 													<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
 													@endforeach
@@ -168,11 +170,11 @@
 											</div>
 											<div class="form-group">
 												<label for="email2">Nama Inventory</label>
-												<input  name="nama" type="text" class="form-control" id="nam" placeholder="Masukkan nama inventory">                                
+												<input  name="nama" type="text" class="form-control" id="nam" placeholder="Masukkan nama inventory" required>                                
 											</div>
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
-												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory">                                
+												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory" required>                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar Inventory</label>

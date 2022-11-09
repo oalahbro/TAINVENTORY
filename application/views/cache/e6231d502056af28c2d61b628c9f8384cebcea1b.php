@@ -76,8 +76,10 @@
 															<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 															<?php if($tus['level'] == 2): ?>
 																<?php $tus['level'] = '( Guru )' ?>
+															<?php elseif($tus['level'] == 1): ?>
+																<?php $tus['level'] = '( Superadmin )' ?>
 															<?php else: ?>
-																<?php $tus['level'] = '( Buyer )' ?>
+															<?php $tus['level'] = '( Buyer )' ?>
 															<?php endif; ?>
 															<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
 															<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -152,7 +154,7 @@
 									<div class="card-body pt-0">
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Kategori</label>
-												<select name="kategori" class="form-control"  id="kat">
+												<select name="kategori" class="form-control"  id="kat" required>
 													<?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 													<option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
 													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -160,7 +162,7 @@
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">Pilih Tujuan</label>
-												<select name="tujuan" class="form-control" id="tuj">
+												<select name="tujuan" class="form-control" id="tuj" required>
 													<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 													<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
 													<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -168,11 +170,11 @@
 											</div>
 											<div class="form-group">
 												<label for="email2">Nama Inventory</label>
-												<input  name="nama" type="text" class="form-control" id="nam" placeholder="Masukkan nama inventory">                                
+												<input  name="nama" type="text" class="form-control" id="nam" placeholder="Masukkan nama inventory" required>                                
 											</div>
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
-												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory">                                
+												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory" required>                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar Inventory</label>

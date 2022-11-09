@@ -254,16 +254,6 @@
 								<p>Masukkan Inventory</p>								
 							</a>
 						</li>
-						@if ($planet['title'] !== "Kategori") 
-							<li class="nav-item">
-						@else 
-							<li class="nav-item active">
-						@endif
-							<a href="{{ base_url() }}admin/Admin/kategori">
-								<i class="fas fa-cube"></i>
-								<p>Kategori</p>								
-							</a>
-						</li>
 						@if (strpos($planet['title'], "Inventory") === FALSE)
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#inventory">
@@ -311,6 +301,26 @@
 									</li>
 								</ul>
 							</div>
+						</li>
+						@if ($planet['title'] !== "User") 
+							<li class="nav-item">
+						@else 
+							<li class="nav-item active">
+						@endif
+							<a href="{{ base_url() }}admin/Admin/user">
+								<i class="fas fa-user-friends"></i>
+								<p>User</p>								
+							</a>
+						</li>
+						@if ($planet['title'] !== "Kategori") 
+							<li class="nav-item">
+						@else 
+							<li class="nav-item active">
+						@endif
+							<a href="{{ base_url() }}admin/Admin/kategori">
+								<i class="fas fa-cube"></i>
+								<p>Kategori</p>								
+							</a>
 						</li>
 						@if ($planet['title'] !== "Input Inventory") 
 							<li class="nav-item">
