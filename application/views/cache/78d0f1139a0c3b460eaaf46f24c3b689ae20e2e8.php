@@ -54,7 +54,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="small">Masukkan detail user untuk mandambah user</p>
+                                            <p class="small">Masukkan detail user untuk menambah user</p>
                                             <form onsubmit="return addUser();" method="POST" action="">
                                                 <div class="row">
                                                     <div class="col-sm-12">
@@ -145,7 +145,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="small">Masukkan detail user untuk mandambah user</p>
+                            <p class="small">Masukkan detail user untuk mengedit user</p>
                             <div class="d-flex justify-content-center">
                                 <div class="loader loader-lg" id="loading"></div>
                             </div>
@@ -193,7 +193,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer no-bd">
-                                    <button class="btn btn-primary">Add</button>
+                                    <button class="btn btn-primary">Submit</button>
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
                             </form>

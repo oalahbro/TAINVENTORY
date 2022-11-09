@@ -269,14 +269,23 @@ class Admin extends CI_Controller
 		$data = $this->M_admin->deleteCat();
 		echo json_encode($data);
 	}
-	public function tabel($title)
+	public function profile()
 	{
-		$table = $this->mongodb->table($title);
-		return $table;
+		$data['planet'] = [
+			'user' => $this->dataAdmin(),
+			'title' => "Profile",
+			'profile' => $this->M_admin->profile()
+		];
+		return view('admin/profile', $data);
 	}
-	public function opo()
+	public function cekpwd()
 	{
-		$result =  $this->M_admin->getCategory();
-		var_dump($result);
+		$data =  $this->M_admin->profile();
+		echo json_encode($data);
+	}
+	public function resetpwd()
+	{
+		$data =  $this->M_admin->resetpwd();
+		echo json_encode($data);
 	}
 }

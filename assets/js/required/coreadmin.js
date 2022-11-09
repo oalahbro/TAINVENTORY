@@ -126,6 +126,51 @@ $(".logout").click(function() {
       document.getElementById('putbas').value = dataURL;
     };
   };
+  // SECTION PROFILE
+  function resetPwd(){
+    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    if(!$('#pwdnew').val().match(passw)){$('#errpwdnew').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
+    if($('#pwdnew').val() == $('#pwdnew1').val()){pwd1 = "YES"}else{$('#errpwdnew1').text('*Password tidak sama dengan password baru'); pwd1 = "NO"}
+    if(pwd == "YES" && pwd1 == "YES"){
+      const api_url = "cekpwd" 
+      async function cekusername(url) {
+            const response = await fetch(url);
+            var dat = await response.json();
+            if (dat.password == CryptoJS.MD5($('#pwdold').val())){
+              valid()
+            }else{
+              $('#errpwdold').text('*Password lama anda salah')
+            }
+        }
+      cekusername(api_url);
+      function valid(){
+        $('#errpwdold').val('')
+        $('#errpwdnew').val('')
+        $('#errpwdnew1').val('')
+        const url = "resetpwd"
+        const data = {
+        password : $('#pwdnew').val(),
+      }
+      console.log(data);
+      $.post(url,data, function(data, status){
+        if(status == 'success'){
+          $.notify({
+            message: 'Sukses Reset Password'
+        }, {
+            type: 'info',
+            delay: 1500
+        });
+          $('#resetpwd').modal('hide');
+        }
+      })
+      $('#pwdold').val('')
+      $('#pwdnew').val('')
+      $('#pwdnew1').val('')
+      }
+    }
+    return false
+  }
+  // END PROFILE
   // SECTION USER
   function user() {
     const api_url = link

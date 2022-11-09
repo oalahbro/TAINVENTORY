@@ -970,4 +970,23 @@ class M_admin extends CI_Model
 		);
 		return $updateResult;
 	}
+	public function profile()
+	{
+		$updateResult = $this->table('user')->findOne(
+			['id_admin' => $this->session->userdata('id')]
+		);
+		return $updateResult;
+	}
+	public function resetpwd()
+	{
+		$updateResult = $this->table('user')->updateOne(
+			['id_admin' => $this->session->userdata('id')],
+			[
+				'$set' => [
+					'password' => md5($this->input->post('password'))
+				]
+			]
+		);
+		return $updateResult;
+	}
 }
