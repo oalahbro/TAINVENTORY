@@ -274,18 +274,44 @@ class Admin extends CI_Controller
 		$data['planet'] = [
 			'user' => $this->dataAdmin(),
 			'title' => "Profile",
-			'profile' => $this->M_admin->profile()
+			'link' =>  "apiProfile"
 		];
 		return view('admin/profile', $data);
 	}
-	public function cekpwd()
+	public function apiProfile()
 	{
 		$data =  $this->M_admin->profile();
 		echo json_encode($data);
 	}
+	public function cekpwd()
+	{
+		$data =  $this->M_admin->profile();
+		if ($data['password'] == md5($_GET['pwd'])) {
+			$respon = "ok";
+		} else {
+			$respon = "not ok";
+		}
+		echo json_encode($respon);
+	}
+
 	public function resetpwd()
 	{
 		$data =  $this->M_admin->resetpwd();
+		echo json_encode($data);
+	}
+	public function getimgprofile()
+	{
+		$data =  $this->M_admin->profile();
+		echo json_encode($data['img']);
+	}
+	public function updateImg()
+	{
+		$data =  $this->M_admin->updateImg();
+		echo json_encode($data);
+	}
+	public function updateProfile()
+	{
+		$data =  $this->M_admin->updateProfile();
 		echo json_encode($data);
 	}
 }

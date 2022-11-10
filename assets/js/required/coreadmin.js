@@ -5,6 +5,7 @@
     if(document.title.includes("Semua")){ inventory() }
     if(document.title.includes("Kategori")){ kategori() }
     if(document.title.includes("User")){ user() }
+    if(document.title.includes("Profile")){ profile() }
   });
   
 $(".logout").click(function() {
@@ -127,16 +128,39 @@ $(".logout").click(function() {
     };
   };
   // SECTION PROFILE
+  function profile() {
+    const api_url = link
+    async function getapi(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          merg(dat)
+      }
+    getapi(api_url);
+    function merg(dat){
+      if(dat.level == "1"){ dat.level = "Superadmin"}
+      if(dat.level == "2"){ dat.level = "Guru"}
+      if(dat.level == "3"){ dat.level = "Buyer"}
+      $('#name').val(dat.nama_Admin)
+      $('#email').val(dat.email)
+      $('#username').val(dat.username)
+      $('#phone').val(dat.telp)
+      $('#nameprfl').text(dat.nama_Admin)
+      $('#foto').attr("href", dat.img);
+      $('#foto1').attr('src', dat.img)
+      $('#level').text(dat.level)
+    }
+  };
+
   function resetPwd(){
     let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     if(!$('#pwdnew').val().match(passw)){$('#errpwdnew').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
     if($('#pwdnew').val() == $('#pwdnew1').val()){pwd1 = "YES"}else{$('#errpwdnew1').text('*Password tidak sama dengan password baru'); pwd1 = "NO"}
     if(pwd == "YES" && pwd1 == "YES"){
-      const api_url = "cekpwd" 
+      const api_url = "cekpwd?pwd=" + $('#pwdold').val()
       async function cekusername(url) {
             const response = await fetch(url);
             var dat = await response.json();
-            if (dat.password == CryptoJS.MD5($('#pwdold').val())){
+            if (dat=="ok"){
               valid()
             }else{
               $('#errpwdold').text('*Password lama anda salah')
@@ -151,7 +175,6 @@ $(".logout").click(function() {
         const data = {
         password : $('#pwdnew').val(),
       }
-      console.log(data);
       $.post(url,data, function(data, status){
         if(status == 'success'){
           $.notify({
@@ -167,6 +190,72 @@ $(".logout").click(function() {
       $('#pwdnew').val('')
       $('#pwdnew1').val('')
       }
+    }
+    return false
+  }
+  function getimg(){
+    $('#change-img').modal('show');
+      const api_url = "getimgprofile"
+      async function cekusername(url) {
+            const response = await fetch(url);
+            var dat = await response.json();
+              valid(dat)
+        }
+      cekusername(api_url);
+      function valid(dat){
+        $('#blah').attr('src',dat);
+      }
+  }
+  function imgUpdate(){
+    const url = "updateImg"
+    const data = {
+      img : document.getElementById('putbas').value,
+    }
+    $.post(url,data, function(data, status){
+      if(status == 'success'){
+        swal('Berhasil update data', {
+          icon : "info",
+          timer: 800,
+          buttons: false
+        });
+      }
+      profile()
+    })
+    return false
+  }
+  function updateProfile(){
+    const api_url = "cekpwd?pwd=" + $('#pwdedit').val()
+      async function cekusername(url) {
+            const response = await fetch(url);
+            var dat = await response.json();
+            if (dat=="ok"){
+              valid()
+            }else{
+              $('#errpwdedit').text('*Password anda salah')
+            }
+        }
+    cekusername(api_url);
+    function valid(){
+      const url = "updateProfile"
+      const data = {
+        nama_Admin : $('#name').val(),
+        email : $('#email').val(),
+        username : $('#username').val(),
+        telp : $('#phone').val()
+      }
+      $.post(url,data, function(data, status){
+        let k = JSON.parse(data)
+        if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
+        else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
+        else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
+        else { pesan = 'sukses edit profile'; stts = "info"; profile()}
+        swal(`${pesan}`, {
+          icon : `${stts}`,
+          timer: 1800,
+          buttons: false
+        });
+        
+      })
     }
     return false
   }
@@ -239,7 +328,6 @@ $(".logout").click(function() {
           password : $('#passwordadd').val(),
           level : $('#leveladd').val(),
         }
-        console.log(data);
         $.post(url,data, function(data, status){
           if(status == 'success'){
             $.notify({
@@ -474,7 +562,6 @@ function kategoriAdd(){
     status : $('#statusadd').val()
 
   }
-  console.log(data);
   $.post(url,data, function(data, status){
     
     if(status == 'success'){
@@ -699,7 +786,6 @@ function kategoriAdd(){
 // END INS
 // SECTION REQ
   $('.modal').on('hidden.bs.modal', function (e) {
-    console.log('reset');
     $('#tuj').val("");
     $('#nam').val("");
     $('#cod').val("");

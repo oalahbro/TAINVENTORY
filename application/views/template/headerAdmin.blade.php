@@ -22,6 +22,7 @@
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.min.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap-select.css">
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/photoviewer.css">
 
 	<!-- CSS Just for demo purpose, don't include it in your project -->
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/demo.css">

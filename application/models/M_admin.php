@@ -989,4 +989,62 @@ class M_admin extends CI_Model
 		);
 		return $updateResult;
 	}
+	public function updateImg()
+	{
+		$updateResult = $this->table('user')->updateOne(
+			['id_admin' => $this->session->userdata('id')],
+			[
+				'$set' => [
+					'img' => $this->input->post('img')
+				]
+			]
+		);
+		return $updateResult;
+	}
+	public function updateProfile()
+	{
+		$validate = $this->session->userdata('id');
+		$cekusername = $this->table('user')->findOne(
+			['username' => $this->input->post('username')]
+		);
+		$cektelp = $this->table('user')->findOne(
+			['telp' => $this->input->post('telp')]
+		);
+		$cekemail = $this->table('user')->findOne(
+			['email' => $this->input->post('email')]
+		);
+		if (!$cekemail or $cekemail['id_admin'] == $validate) {
+			$cekemail = 1;
+		} else {
+			$cekemail = 0;
+		}
+		if (!$cektelp or $cektelp['id_admin'] == $validate) {
+			$cektelp = 1;
+		} else {
+			$cektelp = 0;
+		}
+		if (!$cekusername or $cekusername['id_admin'] == $validate) {
+			$cekusername = 1;
+		} else {
+			$cekusername = 0;
+		}
+		if ($cekemail == 1 && $cekusername == 1 && $cektelp == 1) {
+			$this->table('user')->updateOne(
+				['id_admin' => $this->session->userdata('id')],
+				[
+					'$set' => [
+						'username' => $this->input->post('username'),
+						'telp' => $this->input->post('telp'),
+						'email' => $this->input->post('email'),
+						'nama_Admin' => $this->input->post('nama_Admin')
+					]
+				]
+			);
+			$updateResult = 1;
+		} else {
+			$updateResult = ["username" => $cekusername, "email" => $cekemail, "telp" => $cektelp];
+		}
+
+		return $updateResult;
+	}
 }

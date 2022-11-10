@@ -41,17 +41,37 @@
 
 <!-- Sweet Alert -->
 <script src="<?php echo e(base_url()); ?>/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-
+<script src="<?php echo e(base_url()); ?>/assets/js/photoviewer.js"></script>
 <!-- Azzara JS -->
 <script src="<?php echo e(base_url()); ?>/assets/js/ready.min.js"></script>
-<script src="<?php echo e(base_url()); ?>/assets/js/plugin/md5.js"></script>
 <script src="https://www.jquery-az.com/boots/js/bootstrap-imageupload/bootstrap-imageupload.js"></script>
 <script>
   var link = "<?= base_url('admin/Admin/'.$planet['link'])?>";
 </script>
 <script src="<?php echo e(base_url()); ?>/assets/js/required/coreadmin.js"></script>
 <script src="<?php echo e(base_url()); ?>/assets/js/bootstrap-select.js"></script>
+<script>
+  // initialize manually with a list of links
+  $('[data-gallery=photoviewer]').click(function (e) {
 
+    e.preventDefault();
+
+    var items = [],
+      options = {
+        index: $(this).index(),
+      };
+
+    $('[data-gallery=photoviewer]').each(function () {
+      items.push({
+        src: $(this).attr('href'),
+        title: $(this).attr('data-title')
+      });
+    });
+
+    new PhotoViewer(items, options);
+
+  });
+</script>
 
 <?php
 error_reporting(0);

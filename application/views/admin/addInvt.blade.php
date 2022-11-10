@@ -144,14 +144,13 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="email2">Code Inventory</label>
-                                            <input id="code" name="code" type="text" class="form-control" placeholder="Masukkan code invemtory">                                
+                                            <input id="code" name="code" type="text" class="form-control" placeholder="Masukkan code inventory">                                
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlFile1">Masukkan Gambar</label>
                                             <input type="text" id="putbas" hidden>
                                             <input id="imgInp" name="img" type="file" class="form-control-file resize" ><br/>
                                             <img id="blah" src="#" alt="your image" style="max-width: 20rem;" />
-                                            
                                         </div>
                                         <div class="form-group">
                                             <label for="comment">Spesifikasi</label>

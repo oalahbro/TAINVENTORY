@@ -18,13 +18,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label>Nama</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{ $planet['profile']['nama_Admin'] }}">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label>Email</label>
-                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ $planet['profile']['email'] }}">
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="">
                                     </div>
                                 </div>
                             </div>
@@ -32,19 +32,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label>username</label>
-                                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{ $planet['profile']['username'] }}">
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label>Phone</label>
-                                        <input type="text" class="form-control" name="phone" placeholder="Phone" value="{{ $planet['profile']['telp'] }}">
+                                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="">
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 mb-3">
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#resetpwd">Reset Password</button>
-                                <button class="float-right btn btn-success">Save</button>
+                                <button class="float-right btn btn-success" data-toggle="modal" data-target="#changeprofile">Edit Profile</button>
                             </div>
                         </div>
                     </div>
@@ -53,23 +53,25 @@
                     <div class="card card-profile card-secondary">
                         <div class="card-header" style="background-image: url('{{ base_url() }}assets/img/blogpost.jpg')">
                             <div class="profile-picture">
-                                <div class="avatar avatar-xl">
-                                    <img src="{{ base_url() }}/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                                <div class="avatar avatar-xl image-set">
+                                    <a data-gallery="photoviewer" data-group="a"
+                                        href="" id="foto">
+                                        <img src="" alt="..." class="avatar-img rounded-circle" id="foto1">
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body pt-xl-5">
                             <div class="user-profile text-center">
-                                <div class="name">{{ $planet['profile']['nama_Admin'] }}</div>
-                                <div class="job">Frontend Developer</div>
-                                <div class="view-profile">
-                                    <a href="#" class="btn btn-secondary btn-block">View Full Profile</a>
-                                </div>
+                                <div class="change-img mb-2 text-primary" onclick="getimg()" ><a style="cursor: pointer;">Ganti Foto</a></div>
+                                <div class="name" id="nameprfl"></div>
+                                <div class="job" id="level"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {{-- modal reset password --}}
             <div class="modal fade" id="resetpwd" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -92,23 +94,99 @@
                                     <div class="col-sm-12">
                                         <div class="form-group form-group-default">
                                             <label>Password lama</label>
-                                            <input id="pwdold" type="text" class="form-control" required>
+                                            <input id="pwdold" type="password" class="form-control" required><div class="show-password">
+                                                <i class="flaticon-interface"></i>
+                                            </div>
                                         </div>
                                         <p class="text-danger ml-2" id="errpwdold"></p>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group form-group-default">
                                             <label>Password baru</label>
-                                            <input id="pwdnew" type="text" class="form-control" required>
+                                            <input id="pwdnew" type="password" class="form-control" required>
                                         </div>
                                         <p class="text-danger ml-2" id="errpwdnew"></p>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group form-group-default">
                                             <label>Masukkan kembali password baru</label>
-                                            <input id="pwdnew1" type="text" class="form-control" required>
+                                            <input id="pwdnew1" type="password" class="form-control" required>
+                                            <input id="img1" hidden >
                                         </div>
                                         <p class="text-danger ml-2" id="errpwdnew1"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer no-bd">
+                                    <button class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- modal change picture --}}
+            <div class="modal fade" id="change-img" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header no-bd">
+                            <h5 class="modal-title">
+                                <span class="fw-mediumbold">
+                                    Ganti</span>
+                                <span class="fw-light">
+                                    Foto
+                                </span>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p class="small">Masukkan Foto baru</p>
+                            <form onsubmit="return imgUpdate();" method="POST" action="">
+                                <div class="d-flex justify-content-center">
+                                    <div class="form-group">
+                                        <img id="blah" src="#" alt="your image" style="max-width: 20rem;" /><br>
+                                        <label for="exampleFormControlFile1">Masukkan Gambar</label>
+                                        <input type="text" id="putbas" hidden>
+                                        <input id="imgInp" name="img" type="file" class="form-control-file resize" >
+                                    </div>
+                                </div>
+                                <div class="modal-footer no-bd">
+                                    <button class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- modal change profil --}}
+            <div class="modal fade" id="changeprofile" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header no-bd">
+                            <h5 class="modal-title">
+                                <span class="fw-mediumbold">
+                                    Edit</span>
+                                <span class="fw-light">
+                                    Profile
+                                </span>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="small">Masukkan Password untuk konfirmasi</p>
+                            <form onsubmit="return updateProfile();" method="POST" action="">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-default">
+                                            <label>Password</label>
+                                            <input id="pwdedit" type="password" class="form-control" required>
+                                        </div>
+                                        <p class="text-danger ml-2" id="errpwdedit"></p>
                                     </div>
                                 </div>
                                 <div class="modal-footer no-bd">
