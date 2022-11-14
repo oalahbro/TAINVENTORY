@@ -34,8 +34,10 @@
 							</div>
 						</div>
 						<div class="card-body">
+							<div id="img1"></div>
+							<div id="imgInp"></div>
 							<div class="table-responsive">
-								<table id="untables" class="display table table-striped table-hover">
+								<table id="untables" class="display table table-striped table-hover responsive nowrap" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th style="width: 5%">No</th>

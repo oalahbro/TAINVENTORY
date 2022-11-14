@@ -6,14 +6,15 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="card card-with-nav">
-                        <div class="card-header">
+                        <div class="card-header ">
                             <div class="row row-nav-line">
-                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                <ul class="nav nav-tabs nav-line nav-color-success" role="tablist">
                                     <li class="nav-item"> <a class="nav-link active show" data-toggle="tab" href="#profile" role="tab" aria-selected="false">Profile</a> </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="card-body">
+                            <form id="myform">
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
@@ -22,41 +23,45 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default">
+                                    <div class="form-group form-group-default mb-2">
                                         <label>Email</label>
-                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="">
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="" required>
                                     </div>
+                                    <label id="email-error" class="error mt-0 ml-2" for="email"></label>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default">
+                                    <div class="form-group form-group-default mb-2">
                                         <label>username</label>
                                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
                                     </div>
+                                    <label id="username-error" class="error mt-0 ml-2" for="username"></label>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default">
+                                    <div class="form-group form-group-default mb-2">
                                         <label>Phone</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="">
+                                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="" required>
                                     </div>
+                                    <label id="phone-error" class="error mt-0 ml-2" for="phone"></label>
                                 </div>
                             </div>
+                            </form>
                             <div class="mt-3 mb-3">
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#resetpwd">Reset Password</button>
-                                <button class="float-right btn btn-success" data-toggle="modal" data-target="#changeprofile">Edit Profile</button>
+                                <button class="float-right btn btn-success" id="edit-profile" data-toggle="modal" data-target="#changeprofile">Edit Profile</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card card-profile card-secondary">
-                        <div class="card-header" style="background-image: url('{{ base_url() }}assets/img/blogpost.jpg')">
+                <div class="col-md-4 rounded">
+                    <div class="card card-profile card-success">
+                        <div class="card-header rounded-top" style="background-image: url('https://picsum.photos/900/400')">
                             <div class="profile-picture">
                                 <div class="avatar avatar-xl image-set">
                                     <a data-gallery="photoviewer" data-group="a"
                                         href="" id="foto">
-                                        <img src="" alt="..." class="avatar-img rounded-circle" id="foto1">
+                                        <img src="" alt="..." class="avatar-img rounded-circle border border-white border-3" id="foto1">
                                     </a>
                                 </div>
                             </div>
@@ -94,9 +99,10 @@
                                     <div class="col-sm-12">
                                         <div class="form-group form-group-default">
                                             <label>Password lama</label>
-                                            <input id="pwdold" type="password" class="form-control" required><div class="show-password">
+                                            <input id="pwdold" type="password" class="form-control" required>
+                                            {{-- <div class="show-password">
                                                 <i class="flaticon-interface"></i>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <p class="text-danger ml-2" id="errpwdold"></p>
                                     </div>

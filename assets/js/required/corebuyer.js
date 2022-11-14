@@ -1,13 +1,12 @@
+if(window.location.pathname.includes("buyer")){  
   $(document).ready(function(){
-    if(document.title.includes("Masukkan")){
-      showTmp();
-    }else if(document.title.includes("Request")){
-      dataTable();
-    }else if(document.title.includes("Unconfirmed")){
-      unTable();
-    }else{
-      inventory()
-    }
+    if(document.title.includes("Masukkan")){ showTmp(); }
+    if(document.title.includes("Request")){ dataTable(); }
+    if(document.title.includes("Unconfirmed")){ unTable(); }
+    if(document.title.includes("Semua")){ inventory() }
+    if(document.title.includes("Profile")){ profile() }
+    if(document.title.includes("Laporan")){ laporan(); }
+    if(document.title.includes("Search")){ search(); }
   });
   
 $(".logout").click(function() {
@@ -338,9 +337,6 @@ $(".logout").click(function() {
 // END INS
 // ON REQ
 $('.modal').on('hidden.bs.modal', function (e) {
-  console.log('reset');
-  $('#kat').val("");
-  $('#tuj').val("");
   $('#nam').val("");
   $('#cod').val("");
   $('#img1').val("");
@@ -599,7 +595,23 @@ function unTable() {
     for(let i of kp) {
       no += 1
       if(!i.asal_info[0] ){ i.asal_info[0]  = {nama_Admin : 'User dihapus'}}
-        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'] , `<div class="form-button-action">
+      if(i.status == 'R1'){
+        i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
+         <span class="btn-label">
+           <i class="fas fa-arrow-alt-circle-down"></i>
+         </span>
+         <b>Masuk</b>
+       </div>`
+       }
+       else{
+         i.status = `<div class="btn btn-warning btn-border btn-round btn-sm">
+         <span class="btn-label">
+           <i class="fas fa-arrow-alt-circle-up"></i>
+         </span>
+         <b>Keluar</b>
+       </div>`
+       }
+        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'],i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="unDetail('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
             <i class="fa fa-edit"></i>
           </button>
@@ -636,6 +648,8 @@ function unDetail(id_aset){
         document.getElementById('fupdate').style.display = 'block';
     }
     function show(data) {
+      if(!data[0].user_info[0] ){ data[0].user_info[0]  = {nama_Admin : 'User dihapus'}}
+      if(!data[0].kategori_info[0] ){ data[0].kategori_info[0]  = {nama_kategori : 'Kategori dihapus'}}
       $('#katup').html(data[0].kategori_info[0]['nama_kategori']);
       $('#tujup').html(data[0].user_info[0]['nama_Admin']);
       $('#nama_aset').html(data[0]['nama_aset']);
@@ -853,7 +867,6 @@ function inDetail(id_aset){
       }
         $.post(url,data, function(data, status){
           let k = JSON.parse(data)
-          console.log(k)
           if(k.respon == 'sukses'){
             swal('Berhasil update data', {
               icon : "info",
@@ -892,6 +905,311 @@ function inDetail(id_aset){
         })
     }
 // END Inventory
+// SECTION PROFILE
+function profile() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        merg(dat)
+    }
+  getapi(api_url);
+  function merg(dat){
+    if(dat.level == "1"){ dat.level = "Superadmin"}
+    if(dat.level == "2"){ dat.level = "Guru"}
+    if(dat.level == "3"){ dat.level = "Buyer"}
+    $('#name').val(dat.nama_Admin)
+    $('#side-name').text(dat.nama_Admin)
+    $('#email').val(dat.email)
+    $('#username').val(dat.username)
+    $('#phone').val(dat.telp)
+    $('#nameprfl').text(dat.nama_Admin)
+    $('#foto').attr("href", dat.img);
+    $('#foto1').attr('src', dat.img)
+    $('#header-img').attr('src', dat.img)
+    $('#header-img1').attr('src', dat.img)
+    $('#header-img2').attr('src', dat.img)
+    $('#level').text(dat.level)
+  }
+};
+function resetPwd(){
+  let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+  if(!$('#pwdnew').val().match(passw)){$('#errpwdnew').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
+  if($('#pwdnew').val() == $('#pwdnew1').val()){pwd1 = "YES"}else{$('#errpwdnew1').text('*Password tidak sama dengan password baru'); pwd1 = "NO"}
+  if(pwd == "YES" && pwd1 == "YES"){
+    const api_url = "cekpwd?pwd=" + $('#pwdold').val()
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          if (dat=="ok"){
+            valid()
+          }else{
+            $('#errpwdold').text('*Password lama anda salah')
+          }
+      }
+    cekusername(api_url);
+    function valid(){
+      $('#errpwdold').val('')
+      $('#errpwdnew').val('')
+      $('#errpwdnew1').val('')
+      const url = "resetpwd"
+      const data = {
+      password : $('#pwdnew').val(),
+    }
+    $.post(url,data, function(data, status){
+      if(status == 'success'){
+        $.notify({
+          message: 'Sukses Reset Password'
+      }, {
+          type: 'success',
+          delay: 1500
+      });
+        $('#resetpwd').modal('hide');
+      }
+    })
+    $('#pwdold').val('')
+    $('#pwdnew').val('')
+    $('#pwdnew1').val('')
+    }
+  }
+  return false
+}
+function getimg(){
+  $('#change-img').modal('show');
+    const api_url = "getimgprofile"
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+            valid(dat)
+      }
+    cekusername(api_url);
+    function valid(dat){
+      $('#blah').attr('src',dat);
+      $('#putbas').val(dat);
+    }
+}
+function imgUpdate(){
+  const url = "updateImg"
+  const data = {
+    img : document.getElementById('putbas').value,
+  }
+  $.post(url,data, function(data, status){
+    if(status == 'success'){
+      swal('Berhasil update data', {
+        icon : "info",
+        timer: 800,
+        buttons: false
+      });
+    }
+    profile()
+    $('#change-img').modal('hide');
+  })
+  return false
+}
+function updateProfile(){
+  const api_url = "cekpwd?pwd=" + $('#pwdedit').val()
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          if (dat=="ok"){
+            valid()
+          }else{
+            $('#errpwdedit').text('*Password anda salah')
+          }
+      }
+  cekusername(api_url);
+  function valid(){
+    const url = "updateProfile"
+    const data = {
+      nama_Admin : $('#name').val(),
+      email : $('#email').val(),
+      username : $('#username').val(),
+      telp : $('#phone').val()
+    }
+    $.post(url,data, function(data, status){
+      let k = JSON.parse(data)
+      if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
+      else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
+      else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
+      else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide');}
+      swal(`${pesan}`, {
+        icon : `${stts}`,
+        timer: 1400,
+        buttons: false
+      });
+      
+    })
+  }
+  return false
+}
+//END PROFILE
+// SECTION LAPORAN
+
+function laporan() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        let kp = dat
+        merg(kp,kp.pop())
+    }
+  getapi(api_url);
+  function merg(kp,sesid){
+    ok = []
+    let no = 0 
+    for(let i of kp) {
+      if(!i.tujuan_info[0]){i.tujuan_info[0]= {'nama_Admin':""}}
+      no += 1
+      const d = new Date(`${i.date}`)
+      i.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'short', timeStyle: 'short' }).format(d);
+      if(i.status == 'R0' ){
+          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar</b></div>`
+      }else if (i.status == 'R1' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk</b></div>`
+      }else if (i.status == 'R1Y' ){
+        i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diterima</b></div>`
+      }else if (i.status == 'R0Y' ){
+        i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar Diterima</b></div>`
+      }else if (i.status == 'R1N' ){
+        i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Ditolak</b></div>`
+      }else if (i.status == 'R0N' ){
+        i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Ditolak</b></div>`
+      }else if (i.status == 'R1F' ){
+        i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diteruskan</b></div>`
+      }
+       let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
+        ok.push(obj);
+    }
+    $('#basic-datatables').DataTable({
+            "pageLength": 5,
+            "bDestroy": true,
+            data: ok,
+            responsive: true
+          });
+  }
+};
+function filter(){
+  const url = "filter"
+  const data = {
+    date1 : $('#datepicker').val(),
+    date2 : $('#datepicker1').val(),
+    tujuan : $('#tujuan').val(),
+    status : $('#status').val()
+  }
+    $.post(url,data, function(data, status){
+      let k = JSON.parse(data)
+      merg(k)
+    })
+    function merg(kp){
+      ok = []
+      let no = 0 
+      for(let i of kp) {
+        if(!i.tujuan_info[0]){i.tujuan_info[0]= {'nama_Admin':""}}
+        no += 1
+        const d = new Date(`${i.date}`)
+        i.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'short', timeStyle: 'short' }).format(d);
+        if(i.status == 'R0' ){
+            i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar</b></div>`
+        }else if (i.status == 'R1' ){
+            i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk</b></div>`
+        }else if (i.status == 'R1Y' ){
+          i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diterima</b></div>`
+        }else if (i.status == 'R0Y' ){
+          i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar Diterima</b></div>`
+        }else if (i.status == 'R1N' ){
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Ditolak</b></div>`
+        }else if (i.status == 'R0N' ){
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Ditolak</b></div>`
+        }else if (i.status == 'R1F' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diteruskan</b></div>`
+        }
+         let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
+          ok.push(obj);
+      }
+      $('#basic-datatables').DataTable({
+              "pageLength": 5,
+              "bDestroy": true,
+              data: ok,
+              responsive: true
+            });
+      $('#modalfilter').modal('hide')
+    }
+    return false
+  }
+  function exportPdf() {
+    const url = "cetak_pdf"
+    const data = {
+    date1 : $('#datepicker').val(),
+    date2 : $('#datepicker1').val(),
+    tujuan : $('#tujuan').val(),
+    status : $('#status').val()
+  }
+    $.post(url,data, function(data, status){
+      download(data)
+    })
+    function download(data){
+      var link = document.createElement("a");
+      //edit this after deploy
+      let path = window.location.origin +'/demo/assets/'+ data;
+      link.download = data;
+      link.href =  path;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      delete link;
+
+      const del = "deletePdf?path=" + data
+      async function getapi(del) {
+        const response = await fetch(del);
+        var dat = await response.json();
+      }
+      getapi(del);
+    }
+    
+  }
+// END LAPORAN
+// SECTION SEARCH
+function search() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        let kp = dat
+        merg(kp,kp.pop())
+    }
+  getapi(api_url);
+  function merg(kp,sesid){
+    ok = []
+    let no = 0 
+    for(let i of kp) {
+      no += 1
+      if(i.id_user_asal == sesid['sesid']){
+        del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
+        edt = `<button type="button" data-toggle="tooltip" onclick="updtInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
+      }else{
+        del = ``
+        edt = `<button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg"><i class="fa fa-eye"></i></button>`
+      }
+      if(i.status == '1' || i.status == 'R0N' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Didalam</b></div>`
+        }else{
+          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Diluar</b></div>`
+        }
+       let obj = [no,i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">${edt}<button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+                <i class="fa fa-info-circle"></i>
+                </button>
+                ${del}`
+              ];
+        ok.push(obj);
+    }
+    $('#asetall').DataTable({
+            "pageLength": 5,
+            "bDestroy": true,
+            data: ok
+          });
+  }
+};
+// END SEARCH
   function calculateSize(img, maxWidth, maxHeight) {
     let width = img.width;
     let height = img.height;
@@ -916,3 +1234,4 @@ function inDetail(id_aset){
 
     return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
   }
+}

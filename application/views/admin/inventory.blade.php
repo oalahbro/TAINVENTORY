@@ -34,11 +34,11 @@
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table id="asetall" class="display table table-striped table-hover">
+								<table id="asetall" class="display table table-striped table-hover responsive nowrap" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>No</th>
-											<th style="width: 30%">Nama Inventory</th>
+											<th style="width: 25%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Penanggung Jawab</th>
 											<th>Status</th>

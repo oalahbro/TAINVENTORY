@@ -20,7 +20,8 @@
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.min.css">
+	{{-- <link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.min.css"> --}}
+	<link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap-select.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/photoviewer.css">
 
@@ -37,10 +38,10 @@
 		<!--
 				Tip 1: You can change the background color of the main header using: data-background-color="blue | purple | light-blue | green | orange | red"
 		-->
-		<div class="main-header" data-background-color="purple">
+		<div class="main-header" data-background-color="green">
 			<!-- Logo Header -->
 			<div class="logo-header">
-				<a href="index.html" class="logo">
+				<a href="{{ base_url() }}" class="logo">
 					<img src="{{ base_url() }}/assets/img/logo-kecil.png" alt="navbar brand" class="navbar-brand" height="70%">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +50,7 @@
 					</span>
 				</button>
 				<button class="topbar-toggler more"><i class="fa fa-ellipsis-v"></i></button>
-				<div class="navbar-minimize">
+				<div class="navbar-minimize" onclick="minimize()">
 					<button class="btn btn-minimize btn-rounded">
 						<i class="fa fa-bars"></i>
 					</button>
@@ -62,14 +63,14 @@
 
 				<div class="container-fluid">
 					<div class="collapse" id="search-nav">
-						<form class="navbar-left navbar-form nav-search mr-md-3">
+						<form class="navbar-left navbar-form nav-search mr-md-3" method="POST" action="{{ base_url() }}admin/admin/search">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<button type="submit" class="btn btn-search pr-1">
 										<i class="fa fa-search search-icon"></i>
 									</button>
 								</div>
-								<input type="text" placeholder="Search ..." class="form-control">
+									<input type="text" placeholder="Search ..." class="form-control" id="search" name="search">
 							</div>
 						</form>
 					</div>
@@ -82,16 +83,16 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="{{ base_url() }}/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+									<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<li>
 									<div class="user-box">
-										<div class="avatar-lg"><img src="{{ base_url() }}/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
+										<div class="avatar-lg"><img src="{{  $planet['user']['img'] }}" alt="image profile" class="avatar-img rounded" id="header-img2"></div>
 										<div class="u-text">
 											<h4>{{  $planet['user']['nama_Admin'] }}</h4>
-											<p class="text-muted">hello@example.com</p>
+											<p class="text-muted">{{  $planet['user']['email'] }}</p>
 										</div>
 									</div>
 								</li>
@@ -99,7 +100,7 @@
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="{{ base_url() }}admin/admin/profile">My Profile</a>
 									<div class="dropdown-divider"></div>
-									<button type="submit" class="dropdown-item logout" href="">Logout</button>
+									<button style="cursor: pointer;" type="submit" class="dropdown-item logout" href="">Logout</button>
 								</li>
 							</ul>
 						</li>
@@ -118,12 +119,12 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="{{ base_url() }}assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+							<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img1">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-                                {{  $planet['user']['nama_Admin'] }}
+                                <p id="side-name" class="mb-0">{{  $planet['user']['nama_Admin'] }}</p>
 									<span class="user-level">
                                         Superadmin
                                     </span>
@@ -239,12 +240,12 @@
 								<p>Kategori</p>								
 							</a>
 						</li>
-						@if ($planet['title'] !== "Input Inventory") 
+						@if ($planet['title'] !== "Laporan") 
 							<li class="nav-item">
 						@else 
 							<li class="nav-item active">
 						@endif
-							<a href="{{ base_url() }}inputInventory">
+							<a href="{{ base_url() }}admin/admin/report">
 								<i class="fas fa-pen-square"></i>
 								<p>Laporan</p>								
 							</a>

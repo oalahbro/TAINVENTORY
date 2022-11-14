@@ -1,4 +1,7 @@
 <?php
+
+use phpDocumentor\Reflection\Types\Null_;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_admin extends CI_Model
@@ -126,7 +129,9 @@ class M_admin extends CI_Model
 				'date' => date("Y-m-d H:i:s"),
 				'deskripsi' => join(", ", $kol)
 			];
-			$this->table('history')->insertOne($data);
+			if ($kol) {
+				$this->table('history')->insertOne($data);
+			}
 			$add = ['respon' => 'sukses'];
 		} else {
 			$add = ['respon' => 'gagal'];
@@ -214,7 +219,9 @@ class M_admin extends CI_Model
 			'date' => date("Y-m-d H:i:s"),
 			'deskripsi' => join(", ", $kol)
 		];
-		$this->table('history')->insertOne($data);
+		if ($kol) {
+			$this->table('history')->insertOne($data);
+		}
 		return $add;
 	}
 	public function delReq()
@@ -651,7 +658,7 @@ class M_admin extends CI_Model
 		if (!$resultast and !$resulttmp) {
 			$user = $this->table('user');
 			$result = $user->findOne(['id_admin' => $this->input->post('tujuan')]);
-			if ($result['level'] == 2) {
+			if ($result['level'] != 3) {
 				$data = [
 					'id_aset' => $this->mongodb->id(),
 					'id_user_asal' => $this->session->userdata('id'),
@@ -1003,12 +1010,15 @@ class M_admin extends CI_Model
 	}
 	public function updateProfile()
 	{
+		if (substr($this->input->post('telp'), 0, 1) == 0) {
+			$telpon = '62' . substr($this->input->post('telp'), 1);
+		}
 		$validate = $this->session->userdata('id');
 		$cekusername = $this->table('user')->findOne(
 			['username' => $this->input->post('username')]
 		);
 		$cektelp = $this->table('user')->findOne(
-			['telp' => $this->input->post('telp')]
+			['telp' => $telpon]
 		);
 		$cekemail = $this->table('user')->findOne(
 			['email' => $this->input->post('email')]
@@ -1034,9 +1044,9 @@ class M_admin extends CI_Model
 				[
 					'$set' => [
 						'username' => $this->input->post('username'),
-						'telp' => $this->input->post('telp'),
+						'telp' => $telpon,
 						'email' => $this->input->post('email'),
-						'nama_Admin' => $this->input->post('nama_Admin')
+						'nama_Admin' => ucwords($this->input->post('nama_Admin'))
 					]
 				]
 			);
@@ -1046,5 +1056,179 @@ class M_admin extends CI_Model
 		}
 
 		return $updateResult;
+	}
+	public function reportApi()
+	{
+		$result = $this->table('history')->aggregate(
+			[
+				[
+					'$match' => [
+						'id_user_asal' => $this->session->userdata('id'),
+						// '$or' => [
+						// 	[
+						'status' => ['$nin' => ['R1E', 'R0E', '1E', '0E']]
+						// ],
+						// 	['status' => 'R0']
+						// ]
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'date' => 1,
+					'user_info.nama_Admin' => 1,
+					'tujuan_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function filter()
+	{
+		if ($this->input->post('date1') && $this->input->post('date2')) {
+			$date = [
+				'$gte' => $this->input->post('date1'),
+				'$lte' => date('Y-m-d', strtotime($this->input->post('date2') . ' + 1 days'))
+			];
+		} elseif ($this->input->post('date1')) {
+			$date = [
+				'$gte' => $this->input->post('date1')
+			];
+		} elseif ($this->input->post('date2')) {
+			$date = [
+				'$lte' => date('Y-m-d', strtotime($this->input->post('date2') . ' + 1 days'))
+			];
+		} else {
+			$date = [
+				'$gte' => "0000-00-00"
+			];
+		}
+		if ($this->input->post('status')) {
+			if ($this->input->post('status') != "N" && $this->input->post('status') != "Y") {
+				$status = $this->input->post('status');
+			}
+			if ($this->input->post('status') == "Y") {
+				$status = ['$in' => ['R1Y', 'R0Y']];
+			}
+			if ($this->input->post('status') == "N") {
+				$status = ['$in' => ['R1N', 'R0N']];
+			}
+		} else {
+			$status = ['$nin' => ['R1E', 'R0E']];
+		}
+		if ($this->input->post('tujuan')) {
+			$tujuan = $this->input->post('tujuan');
+		} else {
+			$tujuan = ['$nin' => [null]];
+		}
+
+		$result = $this->table('history')->aggregate(
+			[
+				[
+					'$match' => [
+						'id_user_asal' => $this->session->userdata('id'),
+						'date' => $date,
+						'status' => $status,
+						'id_user_tujuan' => $tujuan
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'date' => 1,
+					'user_info.nama_Admin' => 1,
+					'tujuan_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function invtSearch($search)
+	{
+
+		$result = $this->table('aset')->aggregate(
+			[
+				[
+					'$match' => [
+						'$or' => [
+							['nama_aset' => ['$regex' => $search, '$options' => 'g']],
+							['code' => ['$regex' => $search, '$options' => 'g']]
+						]
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'user_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
 	}
 }

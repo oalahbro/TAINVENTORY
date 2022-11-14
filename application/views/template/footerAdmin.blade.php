@@ -31,7 +31,7 @@
 
 <!-- Bootstrap Toggle -->
 <script src="{{ base_url() }}/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
-
+<script src="{{ base_url() }}/assets/js/plugin/datetimepicker/datetimepicker.js"></script>
 <!-- jQuery Vector Maps -->
 <script src="{{ base_url() }}/assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
 <script src="{{ base_url() }}/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
@@ -44,7 +44,9 @@
 <script src="{{ base_url() }}/assets/js/photoviewer.js"></script>
 <!-- Azzara JS -->
 <script src="{{ base_url() }}/assets/js/ready.min.js"></script>
-<script src="https://www.jquery-az.com/boots/js/bootstrap-imageupload/bootstrap-imageupload.js"></script>
+<script src="{{ base_url() }}/assets/js/plugin/bootstrap-imageupload/bootstrap-imageupload.js"></script>
+<script src="{{ base_url() }}/assets/js/plugin/dataTables-responsive/dataTables.responsive.js"></script>
+<script src="{{ base_url() }}/assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
 <script>
   var link = "<?= base_url('admin/Admin/'.$planet['link'])?>";
 </script>
@@ -67,12 +69,43 @@
         title: $(this).attr('data-title')
       });
     });
-
     new PhotoViewer(items, options);
-
   });
-</script>
 
+  jQuery.validator.addMethod("phone", function(value, element) {
+  return this.optional( element ) || /^(\+62|62)?[\s-]?0?8[1-9]{1}\d{1}[\s-]?\d{4}[\s-]?\d{2,5}$/.test( value );
+  }, 'Please enter a valid Phone.');
+  $( "#myform" ).validate({
+    rules: {
+      email: {
+        required: true,
+        email: true
+      },
+      username: {
+      required: true,
+      minlength: 5
+				},
+      phone: {
+      required: true,
+      phone: true
+				},
+    },
+    highlight: function(element) {
+      $("#edit-profile").attr("disabled", true);
+			},
+    success: function(element) {
+    $("#edit-profile").attr("disabled", false);
+    $( ".error" ).text('');
+    },
+  });
+
+  $('#datepicker').datetimepicker({
+			format: 'YYYY-MM-DD',
+		});
+    $('#datepicker1').datetimepicker({
+			format: 'YYYY-MM-DD',
+		});
+</script>
 <?php
 error_reporting(0);
 ?>

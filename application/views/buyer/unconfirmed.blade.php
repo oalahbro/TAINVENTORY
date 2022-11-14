@@ -34,14 +34,17 @@
 							</div>
 						</div>
 						<div class="card-body">
+							<div id="img1" hidden></div>
+							<div id="imgInp" hidden></div>
 							<div class="table-responsive">
-								<table id="untables" class="display table table-striped table-hover">
+								<table id="untables" class="display table table-striped table-hover responsive nowrap" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th style="width: 5%">No</th>
 											<th style="width: 30%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Asal</th>
+											<th>Status</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>
@@ -51,6 +54,7 @@
 											<th>Nama Inventory</th>
 											<th>Code</th>
 											<th>Asal</th>
+											<th>Status</th>
 											<th>Action</th>
 										</tr>
 									</tfoot>

@@ -1,4 +1,5 @@
-  $(document).ready(function(){
+if(window.location.pathname.includes("admin")){
+  $(document).ready(function (){
     if(document.title.includes("Masukkan")){ showTmp(); }
     if(document.title.includes("Request")){ dataTable(); }
     if(document.title.includes("Unconfirmed")){ unTable(); }
@@ -6,31 +7,32 @@
     if(document.title.includes("Kategori")){ kategori() }
     if(document.title.includes("User")){ user() }
     if(document.title.includes("Profile")){ profile() }
+    if(document.title.includes("Laporan")){ laporan(); }
+    if(document.title.includes("Search")){ search(); }
   });
-  
-$(".logout").click(function() {
-    swal({
-        title: "Anda yakin keluar?",
-        text: "Setelah keluar anda akan diminta login untuk mengakses halaman ini",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          swal("Anda berhasil logout", {
-            icon: "success",
-            buttons: false,
-          });
-          setTimeout(function() {
-            let p = window.location.origin
-            //ganti url location kalo udah deploy
-            window.location = p +  '/demo/login/logout';
-          }, 1000);
-        } else {
+  $(".logout").click(function() {
+      swal({
+          title: "Anda yakin keluar?",
+          text: "Setelah keluar anda akan diminta login untuk mengakses halaman ini",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            swal("Anda berhasil logout", {
+              icon: "success",
+              buttons: false,
+            });
+            setTimeout(function() {
+              let p = window.location.origin
+              //ganti url location kalo udah deploy
+              window.location = p +  '/demo/login/logout';
+            }, 1000);
+          } else {
 
-        }
-      });
+          }
+        });
   });
 
   const MAX_WIDTH = 580;
@@ -141,12 +143,16 @@ $(".logout").click(function() {
       if(dat.level == "2"){ dat.level = "Guru"}
       if(dat.level == "3"){ dat.level = "Buyer"}
       $('#name').val(dat.nama_Admin)
+      $('#side-name').text(dat.nama_Admin)
       $('#email').val(dat.email)
       $('#username').val(dat.username)
       $('#phone').val(dat.telp)
       $('#nameprfl').text(dat.nama_Admin)
       $('#foto').attr("href", dat.img);
       $('#foto1').attr('src', dat.img)
+      $('#header-img').attr('src', dat.img)
+      $('#header-img1').attr('src', dat.img)
+      $('#header-img2').attr('src', dat.img)
       $('#level').text(dat.level)
     }
   };
@@ -180,7 +186,7 @@ $(".logout").click(function() {
           $.notify({
             message: 'Sukses Reset Password'
         }, {
-            type: 'info',
+            type: 'success',
             delay: 1500
         });
           $('#resetpwd').modal('hide');
@@ -204,6 +210,7 @@ $(".logout").click(function() {
       cekusername(api_url);
       function valid(dat){
         $('#blah').attr('src',dat);
+        $('#putbas').val(dat);
       }
   }
   function imgUpdate(){
@@ -220,6 +227,7 @@ $(".logout").click(function() {
         });
       }
       profile()
+      $('#change-img').modal('hide');
     })
     return false
   }
@@ -248,10 +256,10 @@ $(".logout").click(function() {
         if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
         else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
         else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
-        else { pesan = 'sukses edit profile'; stts = "info"; profile()}
+        else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide');}
         swal(`${pesan}`, {
           icon : `${stts}`,
-          timer: 1800,
+          timer: 1400,
           buttons: false
         });
         
@@ -333,7 +341,7 @@ $(".logout").click(function() {
             $.notify({
               message: 'Sukses Menambah User'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1500
           });
             user()
@@ -369,7 +377,7 @@ $(".logout").click(function() {
             $.notify({
                 message: 'User telah dihapuss'
             }, {
-                type: 'info',
+                type: 'success',
                 delay: 1100
             });
           }
@@ -544,7 +552,7 @@ function delCat(id_kategori,nama_kategori){
           $.notify({
               message: 'Kategori telah dihapuss'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
         }
@@ -568,7 +576,7 @@ function kategoriAdd(){
       $.notify({
         message: 'Sukses Menambah Kategori'
       }, {
-          type: 'info',
+          type: 'success',
           delay: 1500
       });
       kategori()
@@ -641,7 +649,7 @@ function kategoriAdd(){
             $.notify({
                 message: 'Sukses Menambah Inventory semenatara'
             }, {
-                type: 'info',
+                type: 'success',
                 delay: 1100
             });
             $('.subm').show()
@@ -746,7 +754,7 @@ function kategoriAdd(){
           $.notify({
               message: 'Inventory sementara telah dihapus'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
         }
@@ -768,7 +776,7 @@ function kategoriAdd(){
           $.notify({
               message: 'Inventory semenatara berhasil di request'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
           $('.allin').show()
@@ -786,7 +794,7 @@ function kategoriAdd(){
 // END INS
 // SECTION REQ
   $('.modal').on('hidden.bs.modal', function (e) {
-    $('#tuj').val("");
+   
     $('#nam').val("");
     $('#cod').val("");
     $('#bla').attr("hidden",true);
@@ -804,7 +812,7 @@ function kategoriAdd(){
           $.notify({
               message: 'Inventory request telah dihapus'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
           dataTable();
@@ -833,7 +841,7 @@ function kategoriAdd(){
           </span>
           <b>Masuk</b>
         </div>`
-        }else if(i.status == '1R1N'){
+        }else if(i.status == 'R1N'){
           i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
            <span class="btn-label">
              <i class="fas fa-arrow-alt-circle-down"></i>
@@ -906,7 +914,7 @@ function kategoriAdd(){
         $.notify({
             message: 'Sukses Menambah Inventory request'
         }, {
-            type: 'info',
+            type: 'success',
             delay: 1500
         });
 
@@ -1027,7 +1035,7 @@ function backReq(){
         $.notify({
             message: 'Sukses Menambah request aset kembali'
         }, {
-            type: 'info',
+            type: 'success',
             delay: 1100
         });
 
@@ -1158,7 +1166,7 @@ function unDetail(id_aset){
           $.notify({
               message: 'Sukses Menambah request aset kembali'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
 
@@ -1423,7 +1431,7 @@ function updateInv(){
           $.notify({
               message: 'Inventory request telah dihapus'
           }, {
-              type: 'info',
+              type: 'success',
               delay: 1100
           });
           inventory();
@@ -1431,6 +1439,177 @@ function updateInv(){
       })
   }
 // END Inventory
+// SECTION LAPORAN
+
+function laporan() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        let kp = dat
+        merg(kp,kp.pop())
+    }
+  getapi(api_url);
+  function merg(kp,sesid){
+    ok = []
+    let no = 0 
+    for(let i of kp) {
+      if(!i.tujuan_info[0]){i.tujuan_info[0]= {'nama_Admin':""}}
+      no += 1
+      const d = new Date(`${i.date}`)
+      i.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'short', timeStyle: 'short' }).format(d);
+      if(i.status == 'R0' ){
+          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar</b></div>`
+      }else if (i.status == 'R1' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk</b></div>`
+      }else if (i.status == 'R1Y' ){
+        i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diterima</b></div>`
+      }else if (i.status == 'R0Y' ){
+        i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar Diterima</b></div>`
+      }else if (i.status == 'R1N' ){
+        i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Ditolak</b></div>`
+      }else if (i.status == 'R0N' ){
+        i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Ditolak</b></div>`
+      }else if (i.status == 'R1F' ){
+        i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diteruskan</b></div>`
+      }else if (i.status == 'R0F' ){
+      i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Diteruskan</b></div>`
+      }
+       let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
+        ok.push(obj);
+    }
+    $('#basic-datatables').DataTable({
+            "pageLength": 5,
+            "bDestroy": true,
+            data: ok,
+            responsive: true
+          });
+  }
+};
+function filter(){
+  const url = "filter"
+  const data = {
+    date1 : $('#datepicker').val(),
+    date2 : $('#datepicker1').val(),
+    tujuan : $('#tujuan').val(),
+    status : $('#status').val()
+  }
+    $.post(url,data, function(data, status){
+      let k = JSON.parse(data)
+      merg(k)
+    })
+    function merg(kp){
+      ok = []
+      let no = 0 
+      for(let i of kp) {
+        if(!i.tujuan_info[0]){i.tujuan_info[0]= {'nama_Admin':""}}
+        no += 1
+        const d = new Date(`${i.date}`)
+        i.date = new Intl.DateTimeFormat('id-GB', { dateStyle: 'short', timeStyle: 'short' }).format(d);
+        if(i.status == 'R0' ){
+            i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar</b></div>`
+        }else if (i.status == 'R1' ){
+            i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk</b></div>`
+        }else if (i.status == 'R1Y' ){
+          i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diterima</b></div>`
+        }else if (i.status == 'R0Y' ){
+          i.status = `<div class="btn btn-success btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar Diterima</b></div>`
+        }else if (i.status == 'R1N' ){
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Ditolak</b></div>`
+        }else if (i.status == 'R0N' ){
+          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Ditolak</b></div>`
+        }else if (i.status == 'R1F' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Aset Masuk Diteruskan</b></div>`
+        }else if (i.status == 'R0F' ){
+        i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Aset Keluar Diteruskan</b></div>`
+        }
+         let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
+          ok.push(obj);
+      }
+      $('#basic-datatables').DataTable({
+              "pageLength": 5,
+              "bDestroy": true,
+              data: ok,
+              responsive: true
+            });
+      $('#modalfilter').modal('hide')
+    }
+    return false
+  }
+  function exportPdf() {
+    const url = "cetak_pdf"
+    const data = {
+    date1 : $('#datepicker').val(),
+    date2 : $('#datepicker1').val(),
+    tujuan : $('#tujuan').val(),
+    status : $('#status').val()
+  }
+    $.post(url,data, function(data, status){
+      download(data)
+    })
+    function download(data){
+      var link = document.createElement("a");
+      //edit this after deploy
+      let path = window.location.origin +'/demo/assets/'+ data;
+      link.download = data;
+      link.href =  path;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      delete link;
+
+      const del = "deletePdf?path=" + data
+      async function getapi(del) {
+        const response = await fetch(del);
+        var dat = await response.json();
+      }
+      getapi(del);
+    }
+    
+  }
+// END LAPORAN
+// SECTION SEARCH
+function search() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        let kp = dat
+        merg(kp,kp.pop())
+    }
+  getapi(api_url);
+  function merg(kp,sesid){
+    ok = []
+    let no = 0 
+    for(let i of kp) {
+      no += 1
+      if(i.id_user_asal == sesid['sesid']){
+        del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
+        edt = `<button type="button" data-toggle="tooltip" onclick="updtInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
+      }else{
+        del = ``
+        edt = `<button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg"><i class="fa fa-eye"></i></button>`
+      }
+      if(i.status == '1' || i.status == 'R0N' ){
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Didalam</b></div>`
+        }else{
+          i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Diluar</b></div>`
+        }
+       let obj = [no,i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">${edt}<button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+                <i class="fa fa-info-circle"></i>
+                </button>
+                ${del}`
+              ];
+        ok.push(obj);
+    }
+    $('#asetall').DataTable({
+            "pageLength": 5,
+            "bDestroy": true,
+            data: ok
+          });
+  }
+};
+// END SEARCH
   function calculateSize(img, maxWidth, maxHeight) {
     let width = img.width;
     let height = img.height;
@@ -1455,3 +1634,4 @@ function updateInv(){
 
     return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
   }
+}

@@ -41,6 +41,7 @@
 							</div>
 						</div>
 						<div class="card-body">
+							
 							<!-- Modal -->
 							<div class="modal fade" id="modalback" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
@@ -95,7 +96,7 @@
 								</div>
 							</div>
 							<div class="table-responsive">
-								<table id="basic-datatables" class="display table table-striped table-hover">
+								<table id="basic-datatables" class="display table table-striped table-hover responsive nowrap" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th style="width: 5%">No</th>

@@ -14,7 +14,8 @@
 		"php": ">=5.3.7",
 		"mongodb/mongodb": "^1.11",
 		"jenssegers/blade": "^1.4",
-		"snapappointments/bootstrap-select": "^1.13"
+		"snapappointments/bootstrap-select": "^1.13",
+		"dompdf/dompdf": "^2.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

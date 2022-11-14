@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+@include('template.headerBuyer');
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -8,7 +8,7 @@
                     <div class="card card-with-nav">
                         <div class="card-header ">
                             <div class="row row-nav-line">
-                                <ul class="nav nav-tabs nav-line nav-color-success" role="tablist">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
                                     <li class="nav-item"> <a class="nav-link active show" data-toggle="tab" href="#profile" role="tab" aria-selected="false">Profile</a> </li>
                                 </ul>
                             </div>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            
+            {{-- modal reset password --}}
             <div class="modal fade" id="resetpwd" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -100,7 +100,9 @@
                                         <div class="form-group form-group-default">
                                             <label>Password lama</label>
                                             <input id="pwdold" type="password" class="form-control" required>
-                                            
+                                            {{-- <div class="show-password">
+                                                <i class="flaticon-interface"></i>
+                                            </div> --}}
                                         </div>
                                         <p class="text-danger ml-2" id="errpwdold"></p>
                                     </div>
@@ -129,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            
+            {{-- modal change picture --}}
             <div class="modal fade" id="change-img" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -165,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            
+            {{-- modal change profil --}}
             <div class="modal fade" id="changeprofile" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -205,4 +207,4 @@
         </div>
     </div>
 </div>
-<?php echo $__env->make('template.footerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/admin/profile.blade.php ENDPATH**/ ?>
+@include('template.footerBuyer');

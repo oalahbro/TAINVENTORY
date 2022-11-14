@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -8,7 +8,7 @@
                     <div class="card card-with-nav">
                         <div class="card-header ">
                             <div class="row row-nav-line">
-                                <ul class="nav nav-tabs nav-line nav-color-success" role="tablist">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
                                     <li class="nav-item"> <a class="nav-link active show" data-toggle="tab" href="#profile" role="tab" aria-selected="false">Profile</a> </li>
                                 </ul>
                             </div>
@@ -205,4 +205,4 @@
         </div>
     </div>
 </div>
-<?php echo $__env->make('template.footerAdmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/admin/profile.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/profile.blade.php ENDPATH**/ ?>

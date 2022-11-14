@@ -28,6 +28,8 @@
 				<div class="col-sm-6 col-md-3">
 					<div class="card card-stats card-info card-round">
 						<div class="card-body">
+							<div id="img1"></div>
+							<div id="imgInp"></div>
 							<div class="row">
 								<div class="col-5">
 									<div class="icon-big text-center">

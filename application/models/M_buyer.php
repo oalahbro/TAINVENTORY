@@ -10,7 +10,7 @@ class M_buyer extends CI_Model
 	}
 	public function table($title)
 	{
-		$table = $this->table($title);
+		$table = $this->mongodb->table($title);
 		return $table;
 	}
 	public function getInventory()
@@ -578,11 +578,13 @@ class M_buyer extends CI_Model
 				'id_category' => $this->input->post('kategori'),
 				'nama_aset' => $this->input->post('nama'),
 				'code' => $result['code'],
-				'status' => $result['status'] . "E ",
+				'status' => $result['status'] . "E",
 				'date' => date("Y-m-d H:i:s"),
 				'deskripsi' => join(", ", $kol)
 			];
-			$this->table('history')->insertOne($data);
+			if ($kol) {
+				$this->table('history')->insertOne($data);
+			}
 			$add = ['respon' => 'sukses'];
 		} else {
 			$add = ['respon' => 'gagal'];
@@ -667,7 +669,9 @@ class M_buyer extends CI_Model
 			'date' => date("Y-m-d H:i:s"),
 			'deskripsi' => join(", ", $kol)
 		];
-		$this->table('history')->insertOne($data);
+		if ($kol) {
+			$this->table('history')->insertOne($data);
+		}
 		return $add;
 	}
 	public function invtUnc()
@@ -785,8 +789,8 @@ class M_buyer extends CI_Model
 		$data = [
 			'id_history' =>  $this->mongodb->id(),
 			'id_aset' => $result['id_aset'],
-			'id_user_asal' => $this->session->userdata('id'),
-			'id_user_tujuan' =>  "",
+			'id_user_asal' => $result['id_user_asal'],
+			'id_user_tujuan' =>  $result['id_user_tujuan'],
 			'id_category' =>  $result['id_category'],
 			'nama_aset' =>  $result['nama_aset'],
 			'code' => $result['code'],
@@ -889,6 +893,260 @@ class M_buyer extends CI_Model
 	function admin($where)
 	{
 		$result = $this->table('user')->findOne(['username' => $where]);
+		return $result;
+	}
+	public function profile()
+	{
+		$updateResult = $this->table('user')->findOne(
+			['id_admin' => $this->session->userdata('id')]
+		);
+		return $updateResult;
+	}
+	public function resetpwd()
+	{
+		$updateResult = $this->table('user')->updateOne(
+			['id_admin' => $this->session->userdata('id')],
+			[
+				'$set' => [
+					'password' => md5($this->input->post('password'))
+				]
+			]
+		);
+		return $updateResult;
+	}
+	public function updateImg()
+	{
+		$updateResult = $this->table('user')->updateOne(
+			['id_admin' => $this->session->userdata('id')],
+			[
+				'$set' => [
+					'img' => $this->input->post('img')
+				]
+			]
+		);
+		return $updateResult;
+	}
+	public function updateProfile()
+	{
+		if (substr($this->input->post('telp'), 0, 1) == 0) {
+			$telpon = '62' . substr($this->input->post('telp'), 1);
+		}
+		$validate = $this->session->userdata('id');
+		$cekusername = $this->table('user')->findOne(
+			['username' => $this->input->post('username')]
+		);
+		$cektelp = $this->table('user')->findOne(
+			['telp' => $telpon]
+		);
+		$cekemail = $this->table('user')->findOne(
+			['email' => $this->input->post('email')]
+		);
+		if (!$cekemail or $cekemail['id_admin'] == $validate) {
+			$cekemail = 1;
+		} else {
+			$cekemail = 0;
+		}
+		if (!$cektelp or $cektelp['id_admin'] == $validate) {
+			$cektelp = 1;
+		} else {
+			$cektelp = 0;
+		}
+		if (!$cekusername or $cekusername['id_admin'] == $validate) {
+			$cekusername = 1;
+		} else {
+			$cekusername = 0;
+		}
+		if ($cekemail == 1 && $cekusername == 1 && $cektelp == 1) {
+			$this->table('user')->updateOne(
+				['id_admin' => $this->session->userdata('id')],
+				[
+					'$set' => [
+						'username' => $this->input->post('username'),
+						'telp' => $telpon,
+						'email' => $this->input->post('email'),
+						'nama_Admin' => ucwords($this->input->post('nama_Admin'))
+					]
+				]
+			);
+			$updateResult = 1;
+		} else {
+			$updateResult = ["username" => $cekusername, "email" => $cekemail, "telp" => $cektelp];
+		}
+
+		return $updateResult;
+	}
+	public function reportApi()
+	{
+		$result = $this->table('history')->aggregate(
+			[
+				[
+					'$match' => [
+						'id_user_asal' => $this->session->userdata('id'),
+						// '$or' => [
+						// 	[
+						'status' => ['$nin' => ['R1E', 'R0E', '0E']]
+						// ],
+						// 	['status' => 'R0']
+						// ]
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'date' => 1,
+					'user_info.nama_Admin' => 1,
+					'tujuan_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function filter()
+	{
+		if ($this->input->post('date1') && $this->input->post('date2')) {
+			$date = [
+				'$gte' => $this->input->post('date1'),
+				'$lte' => date('Y-m-d', strtotime($this->input->post('date2') . ' + 1 days'))
+			];
+		} elseif ($this->input->post('date1')) {
+			$date = [
+				'$gte' => $this->input->post('date1')
+			];
+		} elseif ($this->input->post('date2')) {
+			$date = [
+				'$lte' => date('Y-m-d', strtotime($this->input->post('date2') . ' + 1 days'))
+			];
+		} else {
+			$date = [
+				'$gte' => "0000-00-00"
+			];
+		}
+		if ($this->input->post('status')) {
+			if ($this->input->post('status') != "N" && $this->input->post('status') != "Y") {
+				$status = $this->input->post('status');
+			}
+			if ($this->input->post('status') == "Y") {
+				$status = ['$in' => ['R1Y', 'R0Y']];
+			}
+			if ($this->input->post('status') == "N") {
+				$status = ['$in' => ['R1N', 'R0N']];
+			}
+		} else {
+			$status = ['$nin' => ['R1E', 'R0E']];
+		}
+		if ($this->input->post('tujuan')) {
+			$tujuan = $this->input->post('tujuan');
+		} else {
+			$tujuan = ['$nin' => [null]];
+		}
+
+		$result = $this->table('history')->aggregate(
+			[
+				[
+					'$match' => [
+						'id_user_asal' => $this->session->userdata('id'),
+						'date' => $date,
+						'status' => $status,
+						'id_user_tujuan' => $tujuan
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'date' => 1,
+					'user_info.nama_Admin' => 1,
+					'tujuan_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function invtSearch($search)
+	{
+
+		$result = $this->table('aset')->aggregate(
+			[
+				[
+					'$match' => [
+						'$or' => [
+							['nama_aset' => ['$regex' => $search, '$options' => 'g']],
+							['code' => ['$regex' => $search, '$options' => 'g']]
+						]
+					]
+				],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_asal',
+					'foreignField' => 'id_admin',
+					'as' => 'user_info'
+				]],
+				['$lookup' => [
+					'from' => 'category',
+					'localField' => 'id_category',
+					'foreignField' => 'id_kategori',
+					'as' => 'kategori_info'
+				]],
+				['$project' => [
+					'id_aset' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'user_info.nama_Admin' => 1
+				]]
+			]
+		)->toArray();
 		return $result;
 	}
 }

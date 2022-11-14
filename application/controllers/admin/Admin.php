@@ -1,4 +1,8 @@
 <?php
+
+use phpDocumentor\Reflection\Types\This;
+use PhpParser\Node\Stmt\Echo_;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
@@ -17,6 +21,11 @@ class Admin extends CI_Controller
 		$data = $this->M_admin->admin($this->session->userdata('username'));
 		return $data;
 	}
+	public function nama_file()
+	{
+		$filename = "laporan" . date("Y-m-d|h:i:s") . ".pdf";
+		return $filename;
+	}
 
 	public function index()
 	{
@@ -25,7 +34,8 @@ class Admin extends CI_Controller
 			'jumlah' => count($this->M_admin->getAdmin()),
 			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'jumlah_unconfirmed' => count($this->M_admin->getUnconfirmed()),
-			'user' => $this->dataAdmin()
+			'user' => $this->dataAdmin(),
+			'link' => ''
 		];
 		return view('admin/dashboard', $data);
 	}
@@ -36,7 +46,8 @@ class Admin extends CI_Controller
 			'kategori' => $this->M_admin->getCategory(),
 			'tuser' => $this->M_admin->getTuser(),
 			'user' => $this->dataAdmin(),
-			'title' => 'Masukkan'
+			'title' => 'Masukkan',
+			'link' => ''
 		];
 		// print_r($data['planet']['tuser']);
 		return view('admin/addInvt', $data);
@@ -50,7 +61,6 @@ class Admin extends CI_Controller
 	{
 		$data = $this->M_admin->insInvt();
 		echo json_encode($data);
-		// var_dump($data);
 	}
 	public function api()
 	{
@@ -312,6 +322,73 @@ class Admin extends CI_Controller
 	public function updateProfile()
 	{
 		$data =  $this->M_admin->updateProfile();
+		echo json_encode($data);
+	}
+	public function report()
+	{
+		$data['planet'] = [
+			'user' => $this->dataAdmin(),
+			'tuser' => $this->M_admin->getTuser(),
+			'title' => "Laporan",
+			'link' =>  "apiReport"
+		];
+		return view('admin/report', $data);
+	}
+	public function apiReport()
+	{
+		$data =  $this->M_admin->reportApi();
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
+		echo json_encode($data);
+	}
+	public function filter()
+	{
+		$data =  $this->M_admin->filter();
+		echo json_encode($data);
+	}
+	public function cetak_pdf()
+	{
+		$this->load->library('pdf');
+		$option = $this->pdf->getOptions();
+		$option->set(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true]);
+		$data['laporan'] = $this->M_admin->filter();
+		$view = $this->load->view('template/laporan', $data);
+		$html = $this->output->get_output($view);
+		$this->pdf->setPaper('A4', 'landscape');
+		$this->pdf->load_html($html);
+		$this->pdf->render();
+		$this->pdf->filename = "laporan.pdf";
+		$output = $this->pdf->output();
+		file_put_contents('assets/' . $this->nama_file(), $output);
+		header('location: ' . base_url('admin/admin/filename'));
+	}
+	public function filename()
+	{
+		echo $this->nama_file();
+	}
+	public function deletePdf()
+	{
+		$filename = $_GET['path'];
+		unlink('assets' . DIRECTORY_SEPARATOR . $filename);
+		echo json_encode("success");
+	}
+	public function search()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_admin->getAdmin()),
+			'jumlah_aset' => count($this->M_admin->getInventory()),
+			'kategori' => $this->M_admin->getCategory(),
+			'tuser' => $this->M_admin->getTuser(),
+			'user' => $this->dataAdmin(),
+			'link' => 'invtSearch?query=' . $this->input->post('search'),
+			'title' => 'Search Inventory'
+		];
+		return view('admin/inventory', $data);
+	}
+	public function invtSearch()
+	{
+		$search  = $_GET['query'];
+		$data =  $this->M_admin->invtSearch($search);
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
 		echo json_encode($data);
 	}
 }

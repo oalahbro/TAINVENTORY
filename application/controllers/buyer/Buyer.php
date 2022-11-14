@@ -30,7 +30,16 @@ class Buyer extends CI_Controller
 			redirect(base_url("login"));
 		}
 	}
-
+	public function dataAdmin()
+	{
+		$data = $this->M_buyer->admin($this->session->userdata('username'));
+		return $data;
+	}
+	public function nama_file()
+	{
+		$filename = "laporan" . date("Y-m-d|h:i:s") . ".pdf";
+		return $filename;
+	}
 	public function index()
 	{
 
@@ -215,7 +224,7 @@ class Buyer extends CI_Controller
 			'kategori' => $this->M_buyer->getCategory(),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
 			'link' => 'invtAll',
-			'title' => 'Inventory'
+			'title' => 'Semua Inventory'
 		];
 		return view('buyer/inventory', $data);
 	}
@@ -227,5 +236,117 @@ class Buyer extends CI_Controller
 	public function cek()
 	{
 		var_dump($this->M_buyer->getBack());
+	}
+	public function profile()
+	{
+		$data['planet'] = [
+			'user' => $this->dataAdmin(),
+			'title' => "Profile",
+			'link' =>  "apiProfile"
+		];
+		return view('buyer/profile', $data);
+	}
+	public function apiProfile()
+	{
+		$data =  $this->M_buyer->profile();
+		echo json_encode($data);
+	}
+	public function cekpwd()
+	{
+		$data =  $this->M_buyer->profile();
+		if ($data['password'] == md5($_GET['pwd'])) {
+			$respon = "ok";
+		} else {
+			$respon = "not ok";
+		}
+		echo json_encode($respon);
+	}
+
+	public function resetpwd()
+	{
+		$data =  $this->M_buyer->resetpwd();
+		echo json_encode($data);
+	}
+	public function getimgprofile()
+	{
+		$data =  $this->M_buyer->profile();
+		echo json_encode($data['img']);
+	}
+	public function updateImg()
+	{
+		$data =  $this->M_buyer->updateImg();
+		echo json_encode($data);
+	}
+	public function updateProfile()
+	{
+		$data =  $this->M_buyer->updateProfile();
+		echo json_encode($data);
+	}
+	public function report()
+	{
+		$data['planet'] = [
+			'user' => $this->dataAdmin(),
+			'tuser' => $this->M_buyer->getTuser(),
+			'title' => "Laporan",
+			'link' =>  "apiReport"
+		];
+		return view('buyer/report', $data);
+	}
+	public function apiReport()
+	{
+		$data =  $this->M_buyer->reportApi();
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
+		echo json_encode($data);
+	}
+	public function filter()
+	{
+		$data =  $this->M_buyer->filter();
+		echo json_encode($data);
+	}
+	public function cetak_pdf()
+	{
+		$this->load->library('pdf');
+		$option = $this->pdf->getOptions();
+		$option->set(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true]);
+		$data['laporan'] = $this->M_buyer->filter();
+		$view = $this->load->view('template/laporan', $data);
+		$html = $this->output->get_output($view);
+		$this->pdf->setPaper('A4', 'landscape');
+		$this->pdf->load_html($html);
+		$this->pdf->render();
+		$this->pdf->filename = "laporan.pdf";
+		$output = $this->pdf->output();
+		file_put_contents('assets/' . $this->nama_file(), $output);
+		header('location: ' . base_url('buyer/buyer/filename'));
+	}
+	public function filename()
+	{
+		echo $this->nama_file();
+	}
+	public function deletePdf()
+	{
+		$filename = $_GET['path'];
+		unlink('assets' . DIRECTORY_SEPARATOR . $filename);
+		echo json_encode("success");
+	}
+	public function search()
+	{
+		$data['planet'] = [
+			'jumlah' => count($this->M_buyer->getAdmin()),
+			'jumlah_aset' => count($this->M_buyer->getInventory()),
+			'kategori' => $this->M_buyer->getCategory(),
+			'tuser' => $this->M_buyer->getTuser(),
+			'user' => $this->dataAdmin(),
+			'link' => 'invtSearch?query=' . $this->input->post('search'),
+			'title' => 'Search Inventory'
+		];
+		return view('buyer/inventory', $data);
+	}
+	public function invtSearch()
+	{
+		$search  = $_GET['query'];
+		$data =  $this->M_buyer->invtSearch($search);
+		array_push($data, ["sesid" => $this->session->userdata('id')]);
+		echo json_encode($data);
 	}
 }

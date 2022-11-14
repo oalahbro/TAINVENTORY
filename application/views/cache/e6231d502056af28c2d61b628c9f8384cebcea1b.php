@@ -102,7 +102,7 @@
 								</div>
 							</div>
 							<div class="table-responsive">
-								<table id="basic-datatables" class="display table table-striped table-hover">
+								<table id="basic-datatables" class="display table table-striped table-hover responsive nowrap" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th style="width: 5%">No</th>
