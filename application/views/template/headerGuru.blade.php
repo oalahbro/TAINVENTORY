@@ -20,7 +20,6 @@
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap.min.css">
-	{{-- <link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.min.css"> --}}
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/azzara.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/bootstrap-select.css">
 	<link rel="stylesheet" href="{{ base_url() }}/assets/css/photoviewer.css">
@@ -38,10 +37,10 @@
 		<!--
 				Tip 1: You can change the background color of the main header using: data-background-color="blue | purple | light-blue | green | orange | red"
 		-->
-		<div class="main-header" data-background-color="green">
+		<div class="main-header" data-background-color="orange">
 			<!-- Logo Header -->
 			<div class="logo-header">
-				<a href="{{ base_url() }}" class="logo">
+				<a href="index.html" class="logo">
 					<img src="{{ base_url() }}/assets/img/logo-kecil.png" alt="navbar brand" class="navbar-brand" height="70%">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +49,7 @@
 					</span>
 				</button>
 				<button class="topbar-toggler more"><i class="fa fa-ellipsis-v"></i></button>
-				<div class="navbar-minimize" onclick="minimize()">
+				<div class="navbar-minimize">
 					<button class="btn btn-minimize btn-rounded">
 						<i class="fa fa-bars"></i>
 					</button>
@@ -63,14 +62,14 @@
 
 				<div class="container-fluid">
 					<div class="collapse" id="search-nav">
-						<form class="navbar-left navbar-form nav-search mr-md-3" method="POST" action="{{ base_url() }}admin/admin/search">
+						<form class="navbar-left navbar-form nav-search mr-md-3" action="{{ base_url() }}guru/guru/search" method="POST">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<button type="submit" class="btn btn-search pr-1">
 										<i class="fa fa-search search-icon"></i>
 									</button>
 								</div>
-									<input type="text" placeholder="Search ..." class="form-control" id="search" name="search">
+								<input type="text" placeholder="Search ..." class="form-control" id="search" name="search">
 							</div>
 						</form>
 					</div>
@@ -83,7 +82,7 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img">
+									<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img1">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -98,9 +97,9 @@
 								</li>
 								<li>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="{{ base_url() }}admin/admin/profile">My Profile</a>
+									<a class="dropdown-item" href="{{ base_url() }}guru/guru/profile">My Profile</a>
 									<div class="dropdown-divider"></div>
-									<button style="cursor: pointer;" type="submit" class="dropdown-item logout" href="">Logout</button>
+									<button  style="cursor: pointer;" type="submit" class="dropdown-item logout" href="">Logout</button>
 								</li>
 							</ul>
 						</li>
@@ -119,14 +118,14 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img1">
+							<img src="{{  $planet['user']['img'] }}" alt="..." class="avatar-img rounded-circle" id="header-img">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-                                <p id="side-name" class="mb-0">{{  $planet['user']['nama_Admin'] }}</p>
+									<p id="side-name" class="mb-0">{{  $planet['user']['nama_Admin'] }}</p>
 									<span class="user-level">
-                                        Superadmin
+                                        Guru
                                     </span>
 									<span class="caret"></span>
 								</span>
@@ -136,7 +135,7 @@
 							<div class="collapse in" id="collapseExample">
 								<ul class="nav">
 									<li>
-										<a href="{{ base_url() }}admin/admin/profile">
+										<a href="{{ base_url() }}guru/guru/profile">
 											<span class="link-collapse">My Profile</span>
 										</a>
 									</li>
@@ -150,7 +149,7 @@
 						@else 
 							<li class="nav-item active">
 						@endif
-							<a href="{{ base_url() }}admin/admin">
+							<a href="{{ base_url() }}guru/guru">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
 								<span class="badge badge-count">5</span>
@@ -160,18 +159,9 @@
 							<span class="sidebar-mini-icon">
 								<i class="fa fa-ellipsis-h"></i>
 							</span>
-							<h4 class="text-section">Menu Dashboard</h4>
+							<h4 class="text-section">Menu Inventory</h4>
 						</li>
-						@if ($planet['title'] !== "Masukkan") 
-							<li class="nav-item">
-						@else 
-							<li class="nav-item active">
-						@endif
-							<a href="{{ base_url() }}admin/Admin/addInvt">
-								<i class="fas fa-plus-circle"></i>
-								<p>Masukkan Inventory</p>								
-							</a>
-						</li>
+						
 						@if (strpos($planet['title'], "Inventory") === FALSE)
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#inventory">
@@ -195,7 +185,7 @@
 								@else
 									<li class="active">
 								@endif
-										<a href="<?= base_url()?>admin/admin/unconfirmed">
+										<a href="<?= base_url()?>guru/guru/unconfirmed">
 											<span class="sub-item">Perlu Konfirmasi</span>
 										</a>
 									</li>
@@ -204,52 +194,32 @@
 								@else
 									<li class="active">
 								@endif
-								<a href="<?= base_url()?>admin/admin/aset">
-									<span class="sub-item">Inventory</span>
-								</a>
+										<a href="<?= base_url()?>guru/guru/aset">
+											<span class="sub-item">Inventory</span>
+										</a>
 									</li>
 								@if ($planet['title'] !== "Inventory Request")
 									<li>
 								@else
 									<li class="active">
 								@endif
-										<a href="<?= base_url()?>admin/admin/request">
+										<a href="<?= base_url()?>guru/guru/request">
 											<span class="sub-item">Request</span>
 										</a>
 									</li>
 								</ul>
 							</div>
 						</li>
-						@if ($planet['title'] !== "User") 
-							<li class="nav-item">
-						@else 
-							<li class="nav-item active">
-						@endif
-							<a href="{{ base_url() }}admin/Admin/user">
-								<i class="fas fa-user-friends"></i>
-								<p>User</p>								
-							</a>
-						</li>
-						@if ($planet['title'] !== "Kategori") 
-							<li class="nav-item">
-						@else 
-							<li class="nav-item active">
-						@endif
-							<a href="{{ base_url() }}admin/Admin/kategori">
-								<i class="fas fa-cube"></i>
-								<p>Kategori</p>								
-							</a>
-						</li>
 						@if ($planet['title'] !== "Laporan") 
 							<li class="nav-item">
 						@else 
 							<li class="nav-item active">
 						@endif
-							<a href="{{ base_url() }}admin/admin/report">
+							<a href="{{ base_url() }}guru/guru/report">
 								<i class="fas fa-pen-square"></i>
 								<p>Laporan</p>								
 							</a>
-						</li>								
+						</li>									
 					</ul>
 				</div>
 			</div>

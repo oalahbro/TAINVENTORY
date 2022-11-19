@@ -59,6 +59,11 @@ class M_admin extends CI_Model
 		]])->toArray();
 		return $result;
 	}
+	public function getSementara()
+	{
+		$result = $this->table('aset_tmp')->find(['id_user_asal' => $this->session->userdata('id')])->toArray();
+		return $result;
+	}
 	public function updateInv()
 	{
 		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
@@ -227,6 +232,28 @@ class M_admin extends CI_Model
 	public function delReq()
 	{
 		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
+		if ($result['id_user_tujuan']) {
+			if ($result['status'] == 'R1' or $result['status'] == 'R1F' or $result['status'] == 'R1N') {
+				$set = [
+					'id_user_tujuan' => '',
+					'status' => "0"
+				];
+			} else {
+				$set = [
+					'id_user_tujuan' => '',
+					'status' => "1"
+				];
+			}
+
+			$updateResult = $this->table('aset')->updateOne(
+				['id_aset' => $this->input->post('id_aset')],
+				['$set' => $set]
+			);
+		} else {
+			$updateResult = $this->table('aset')->deleteOne(
+				['id_aset' => $this->input->post('id_aset')]
+			);
+		}
 		$data = [
 			'id_history' =>  $this->mongodb->id(),
 			'id_aset' => $result['id_aset'],
@@ -240,9 +267,6 @@ class M_admin extends CI_Model
 		];
 		$this->table('history')->insertOne($data);
 
-		$updateResult = $this->table('aset')->deleteOne(
-			['id_aset' => $this->input->post('id_aset')]
-		);
 		return $updateResult;
 	}
 	public function invtTmp()
@@ -256,7 +280,32 @@ class M_admin extends CI_Model
 				['$project' => [
 					'id_aset_tmp' => 1,
 					'nama_aset' => 1,
-					'code' => 1
+					'code' => 1,
+					'id_user_tujuan' => 1
+				]]
+			]
+		)->toArray();
+		return $result;
+	}
+	public function getno()
+	{
+		$result = $this->table('aset_tmp')->aggregate(
+			[
+				['$match' => ['id_user_asal' => $this->session->userdata('id')]],
+				['$sort' => ['_id' => -1]],
+				['$lookup' => [
+					'from' => 'user',
+					'localField' => 'id_user_tujuan',
+					'foreignField' => 'id_admin',
+					'as' => 'tujuan_info'
+				]],
+				['$project' => [
+					'id_aset_tmp' => 1,
+					'id_user_asal' => 1,
+					'nama_aset' => 1,
+					'code' => 1,
+					'status' => 1,
+					'tujuan_info.telp' => 1,
 				]]
 			]
 		)->toArray();
@@ -540,6 +589,21 @@ class M_admin extends CI_Model
 				]]
 			]
 		)->toArray();
+		return $result;
+	}
+	public function getBacksend()
+	{
+		$result = $this->table('aset')->aggregate(
+			[
+				['$match' => ['id_aset' => $this->input->post('id_aset')]],
+				['$sort' => ['_id' => -1]],
+				['$project' => [
+					'id_aset' => 1,
+					'nama_aset' => 1,
+					'code' => 1
+				]]
+			]
+		)->toArray();;
 		return $result;
 	}
 	public function updateBack()
@@ -935,7 +999,17 @@ class M_admin extends CI_Model
 		$result = $this->table('user')->findOne(['username' => $where]);
 		return $result;
 	}
+	function adminno($where)
+	{
+		$result = $this->table('user')->aggregate(
+			[
+				['$match' => ['id_admin' => $where]],
+				['$project' => ['telp' => 1,]]
 
+			]
+		)->toArray();
+		return $result;
+	}
 	function addCategory()
 	{
 		$data_add = [
@@ -1012,6 +1086,8 @@ class M_admin extends CI_Model
 	{
 		if (substr($this->input->post('telp'), 0, 1) == 0) {
 			$telpon = '62' . substr($this->input->post('telp'), 1);
+		} else {
+			$telpon = $this->input->post('telp');
 		}
 		$validate = $this->session->userdata('id');
 		$cekusername = $this->table('user')->findOne(

@@ -34,6 +34,7 @@ class Admin extends CI_Controller
 			'jumlah' => count($this->M_admin->getAdmin()),
 			'jumlah_aset' => count($this->M_admin->getInventory()),
 			'jumlah_unconfirmed' => count($this->M_admin->getUnconfirmed()),
+			'jumlah_sementara' => count($this->M_admin->getSementara()),
 			'user' => $this->dataAdmin(),
 			'link' => ''
 		];
@@ -90,6 +91,35 @@ class Admin extends CI_Controller
 			];
 		}
 		echo json_encode($respon);
+	}
+	public function tmpsend()
+	{
+		$data = $this->M_admin->getno();
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		foreach ($data as $d) {
+			$merg[] = $d['tujuan_info'][0]['telp'];
+		}
+		$count = array_count_values($merg);
+		// print_r($count);
+		foreach ($count as $n => $val) {
+			$datawa = [
+				'pesan' => '*' . $asal['nama_Admin'] . '*' . ' Telah Melakukan Requset, dengan total : ' . $val . ' Aset',
+				'nomer' => $n,
+			];
+			$options = array(
+				'http' => array(
+					'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+					'method' => 'POST',
+					'content' => http_build_query($datawa)
+				)
+			);
+			$context = stream_context_create($options);
+			$result = file_get_contents($url, false, $context);
+			if ($result === FALSE) {
+				echo "gagal";
+			}
+		}
 	}
 	public function user()
 	{
@@ -155,6 +185,27 @@ class Admin extends CI_Controller
 	public function backReq()
 	{
 		$this->M_admin->updateBack();
+		$data = $this->M_admin->getBacksend();
+		$no = $this->M_admin->adminno($this->input->post('tujuan'));
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		print_r($no[0]['telp']);
+		$datawa = [
+			'pesan' => '*' . $asal['nama_Admin'] . '*' . " Telah Melakukan Requset\n" . 'Nama Aset : ' . $data[0]['nama_aset'] . "\n" . 'Code : ' . $data[0]['code'],
+			'nomer' => $no[0]['telp'],
+		];
+		$options = array(
+			'http' => array(
+				'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method' => 'POST',
+				'content' => http_build_query($datawa)
+			)
+		);
+		$context = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		if ($result === FALSE) {
+			echo "gagal";
+		}
 	}
 	public function getReq()
 	{
@@ -169,6 +220,29 @@ class Admin extends CI_Controller
 	{
 		$data = $this->M_admin->addReq();
 		echo json_encode($data);
+	}
+	public function addreqsend()
+	{
+		$no = $this->M_admin->adminno($_GET['id_user_tujuan']);
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		print_r($no[0]['telp']);
+		$datawa = [
+			'pesan' => '*' . $asal['nama_Admin'] . '*' . " Telah Melakukan Requset\n" . 'Nama Aset : ' . $_GET['nama_aset'] . "\n" . 'Code : ' . $_GET['code'],
+			'nomer' => $no[0]['telp'],
+		];
+		$options = array(
+			'http' => array(
+				'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method' => 'POST',
+				'content' => http_build_query($datawa)
+			)
+		);
+		$context = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		if ($result === FALSE) {
+			echo "gagal";
+		}
 	}
 	public function updateReq()
 	{

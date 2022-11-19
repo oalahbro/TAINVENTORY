@@ -134,156 +134,52 @@ class login extends CI_Controller
 			return false;
 		}
 	}
-	public function apinotif()
+
+	public function forgot()
 	{
-		$api = '[
-		{
-			"name": "Quyn Mays",
-			"email": "tempus@protonmail.ca",
-			"phone": "1-867-835-6080"
-		},
-		{
-			"name": "Wayne Buchanan",
-			"email": "ornare.placerat@icloud.couk",
-			"phone": "1-582-867-9444"
-		},
-		{
-			"name": "Juliet Burks",
-			"email": "dictum.placerat@outlook.couk",
-			"phone": "1-517-224-9648"
-		},
-		{
-			"name": "Juliet Burks",
-			"email": "dictum.placerat@outlook.couk",
-			"phone": "1-517-224-9648"
-		},
-		{
-			"name": "Wayne Buchanan",
-			"email": "ornare.placerat@icloud.couk",
-			"phone": "1-582-867-9444"
-		},
-		{
-			"name": "Juliet Burks",
-			"email": "dictum.placerat@outlook.couk",
-			"phone": "1-517-224-9648"
-		},
-		{
-			"name": "Juliet Burks",
-			"email": "dictum.placerat@outlook.couk",
-			"phone": "1-517-224-9648"
+		$cekuname = $this->M_admin->admin($this->input->post('username'));
+		if (!$cekuname) {
+			$data = null;
+			echo json_encode($data);
+		} else {
+			$data = $cekuname;
+			echo json_encode($data);
+			$otp = ['otp' => (rand(100, 999)) . (rand(100, 999))];
+			$this->session->set_userdata($otp);
+			$url = 'http://127.0.0.1:3000/otp';
+			$datawa = [
+				'pesan' => 'Kode Otp anda ' . $otp['otp'],
+				'nomer' => $cekuname['telp']
+			];
+			$options = array(
+				'http' => array(
+					'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+					'method' => 'POST',
+					'content' => http_build_query($datawa)
+				)
+			);
+			$context = stream_context_create($options);
+			$result = file_get_contents($url, false, $context);
+			if ($result === FALSE) {
+			}
 		}
-		
-	]';
-
-		$doom = json_decode($api, true);
-		$data = [
-			'jumlah' => count($doom),
-			'get' => $doom
-
-
-		];
+	}
+	public function otp()
+	{
+		if ($this->session->userdata('otp') == $this->input->post('otp')) {
+			$data = "success";
+			echo $data;
+		} else {
+			$data = "error";
+			echo $data;
+		}
+	}
+	public function resetpw()
+	{
+		$data =  $this->M_login->resetpwd();
+		$this->session->sess_destroy();
 		echo json_encode($data);
 	}
-
-	public function show()
-	{
-		$this->load->view('opo');
-	}
-
-	public function pse()
-	{
-		$get = $_GET['id'];
-		$ch = curl_init();
-
-		// set url 
-		curl_setopt($ch, CURLOPT_URL, "https://pse.kominfo.go.id/static/json-static/LOKAL_TERDAFTAR/" . $get . ".json");
-
-		// return the transfer as a string 
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-		// $output contains the output string 
-		$output = curl_exec($ch);
-
-		// tutup curl 
-		curl_close($ch);
-		$k =  $output;
-		$m = json_decode($k, true);
-		// print_r($m[0]['data']);
-
-		$lop = $m['data'];
-		// foreach ($lop as $p) {
-		// 	echo $p['id'] . '<br>';
-		// 	echo $p['attributes']['nama'] . '<br><br>';
-		// }
-		echo json_encode($lop);
-	}
-
-	public function arra()
-	{
-		$this->load->view('notif');
-
-		// $no = 1;
-		// foreach ($doom as $d) {
-		// 	echo '<form method="post" action="' . base_url() . 'login/arra">
-		// 	<div class="form-row mb-2">
-		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[nama]" value="' . $d['name'] . '"/></div>
-		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[email]" value="' . $d['email'] . '"/></div>
-		// 	<div class="col"><input type="text"  class="form-control" name="nama' . $no . '[phone]" value="' . $d['phone'] . '"/></div>
-		// 	</div>
-		// 	';
-		// 	$no++;
-		// }
-		// echo '<button type="submit" class="btn btn-primary mt-2 mx-auto custom d-block">Submit</button></form>';
-		// if ($this->input->post()) {
-		// 	echo '<table class="table">
-		// 		<thead>
-		// 			<tr>
-		// 			<th>Nama</th>
-		// 			<th>Email</th>
-		// 			<th>No Telp</th>
-		// 			</tr>
-		// 		</thead>';
-		// 	foreach ($this->input->post() as $d) {
-		// 		echo '
-		// 		<tr>
-		// 		  <td>' . $d['nama'] . '</td>
-		// 		  <td>' . $d['email'] . '</td>
-		// 		  <td>' . $d['phone'] . '</td>
-		// 		</tr>
-		// 		';
-		// 		// echo $d['nama'];
-		// 	}
-		// 	echo '</table>';
-		// 	// var_dump($this->input->post('nama1'));
-		// }
-		// echo '</div>';
-	}
-	public function api()
-	{
-		$url = 'http://127.0.0.1:3000/kirim';
-		$data = [
-			'pesan' => 'ahahahah',
-			'nomer' => '62895338221298',
-			// 'link' => base_url() . 'assets/ss.png'
-			'link' => 'https://picsum.photos/720/800'
-		];
-
-		// use key 'http' even if you send the request to https://...
-		$options = array(
-			'http' => array(
-				'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-				'method'  => 'POST',
-				'content' => http_build_query($data)
-			)
-		);
-		$context  = stream_context_create($options);
-		$result = file_get_contents($url, false, $context);
-		if ($result === FALSE) { /* Handle error */
-		}
-
-		var_dump($result);
-	}
-
 	function info()
 	{
 		phpinfo();

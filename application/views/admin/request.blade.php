@@ -4,25 +4,7 @@
 		<div class="page-inner">
 			<div class="page-header">
 				<h4 class="page-title">Data Inventaris</h4>
-				<ul class="breadcrumbs">
-					<li class="nav-home">
-						<a href="#">
-							<i class="flaticon-home"></i>
-						</a>
-					</li>
-					<li class="separator">
-						<i class="flaticon-right-arrow"></i>
-					</li>
-					<li class="nav-item">
-						<a href="#">Tables</a>
-					</li>
-					<li class="separator">
-						<i class="flaticon-right-arrow"></i>
-					</li>
-					<li class="nav-item">
-						<a href="#">Datatables</a>
-					</li>
-				</ul>
+				
 			</div>
 			<div class="row">
 				<div class="col-md-12">
@@ -106,10 +88,10 @@
 									<thead>
 										<tr>
 											<th style="width: 5%">No</th>
-											<th style="width: 25%">Nama Inventory</th>
+											<th style="width: 30%">Nama Inventory</th>
 											<th>Code</th>
 											<th>Tujuan</th>
-											<th style="width: 15%">Status Request</th>
+											<th>Status Request</th>
 											<th style="width: 10%">Action</th>
 										</tr>
 									</thead>

@@ -70,13 +70,13 @@
 									<div class="row">
 										<div class="col-5">
 											<div class="icon-big text-center">
-												<i class="flaticon-success"></i>
+												<i class="flaticon-interface-7"></i>
 											</div>
 										</div>
 										<div class="col col-stats">
 											<div class="numbers">
-												<p class="card-category">Order</p>
-												<h4 class="card-title">576</h4>
+												<p class="card-category">Aset Sementara</p>
+												<h4 class="card-title"><?php echo e($planet['jumlah_sementara']); ?></h4>
 											</div>
 										</div>
 									</div>

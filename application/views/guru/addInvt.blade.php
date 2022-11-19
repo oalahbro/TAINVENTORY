@@ -1,11 +1,29 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+@include('template.headerGuru');
 
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
             <div class="page-header">
                 <h4 class="page-title">Forms</h4>
-                
+                <ul class="breadcrumbs">
+                    <li class="nav-home">
+                        <a href="#">
+                            <i class="flaticon-home"></i>
+                        </a>
+                    </li>
+                    <li class="separator">
+                        <i class="flaticon-right-arrow"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Forms</a>
+                    </li>
+                    <li class="separator">
+                        <i class="flaticon-right-arrow"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Basic Form</a>
+                    </li>
+                </ul>
             </div>
             <div class="row">
                 <div class="col-md-8">
@@ -19,17 +37,17 @@
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Pilih Kategori</label>
                                 <select name="kategori" class="form-control" id="kat">
-                                    <?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    @foreach($planet['kategori'] as $kat)
+                                    <option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Pilih Tujuan</label>
                                 <select name="tujuan" class="form-control" id="tuj">
-                                    <?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    @foreach($planet['tuser'] as $tus)
+                                    <option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
@@ -80,7 +98,7 @@
             </div>
         </div>
     </div>
-    
+    {{-- MODAL --}}
     <div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -107,17 +125,17 @@
                                             <input type="text" id="id_aset_tmp" hidden/>
                                             <label for="exampleFormControlSelect1">Pilih Kategori</label>
                                             <select name="kategori" class="form-control" id="kategori">
-                                                <?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                @foreach($planet['kategori'] as $kat)
+                                                <option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Pilih Tujuan</label>
                                             <select name="tujuan" class="form-control" id="tujuan">
-                                                <?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?></option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                @foreach($planet['tuser'] as $tus)
+                                                <option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -158,4 +176,4 @@
     </div>
 </div>
 
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/addInvt.blade.php ENDPATH**/ ?>
+@include('template.footerGuru');

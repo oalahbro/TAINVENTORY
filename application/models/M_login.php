@@ -29,4 +29,17 @@ class M_login extends CI_Model
         ]);
         return $add;
     }
+    public function resetpwd()
+    {
+        $table = $this->mongodb->table('user');
+        $updateResult = $table->updateOne(
+            ['username' => $this->input->post('username')],
+            [
+                '$set' => [
+                    'password' => md5($this->input->post('password'))
+                ]
+            ]
+        );
+        return $updateResult;
+    }
 }

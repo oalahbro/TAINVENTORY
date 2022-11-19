@@ -31,7 +31,7 @@
 
 <body class="login">
     <div class="wrapper wrapper-login">
-        <div class="container container-login animated fadeIn">
+        <div class="container container-login animated fadeIn" id="login">
             <h3 class="text-center">Sign In To Admin</h3>
             <form onsubmit="return login()">
                 <div class="login-form">
@@ -51,7 +51,7 @@
                             <input type="checkbox" class="custom-control-input" id="rememberme">
                             <label class="custom-control-label" for="rememberme">Remember Me</label>
                         </div>
-                        <a href="#" class="link float-right">Forget Password ?</a>
+                        <a href="#" id="show-signup" class="link float-right">Forget Password ?</a>
                     </div>
                     <div class="form-action mb-3">
                         <button id="enter" type="submit" class="btn btn-primary btn-rounded btn-login subm">Log in</button>
@@ -59,68 +59,74 @@
                     </div>
                 </div>
             </form>
-                <div class="login-account">
-                    <span class="msg">Don't have an account yet ?</span>
-                    <a href="#" id="show-signup" class="link">Sign Up</a>
-                </div>
         </div>
-    </div>
     <div class="container container-signup animated fadeIn">
-        <h3 class="text-center">Sign Up</h3>
-        <form action="<?=base_url()?>/login/signup" method="post">
+        <h3 class="text-center">Forgot Password</h3>
+        <form onsubmit="return forgot();" action="">
             <div class="login-form">
                 <div class="form-group form-floating-label">
+                    <label>Masukkan Username</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">@</span>
                         </div>
-                        <input type="text" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" required>
-                    </div>
-                </div>
-                <div class="form-group form-floating-label">
-                    <input id="fullname" name="nama_Admin" type="text" class="form-control input-border-bottom" required>
-                    <label for="fullname" class="placeholder">Fullname</label>
-                </div>
-                <!-- <div class="form-group form-floating-label">
-                        <input  id="email" name="email" type="email" class="form-control input-border-bottom" required>
-                        <label for="email" class="placeholder">Email</label>
-                    </div> -->
-                <div class="form-group form-floating-label">
-                    <input id="passwordsignin" name="password" type="password" class="form-control input-border-bottom" required>
-                    <label for="passwordsignin" class="placeholder">Password</label>
-                    <div class="show-password">
-                        <i class="flaticon-interface"></i>
-                    </div>
-                </div>
-                <div class="form-group form-floating-label">
-                    <input id="confirmpassword" name="cpassword" type="password" class="form-control input-border-bottom" required>
-                    <label for="confirmpassword" class="placeholder">Confirm Password</label>
-                    <div class="show-password">
-                        <i class="flaticon-interface"></i>
-                    </div>
-                </div>
-                <div class="form-group form-floating-label">
-                    <label for="pillSelect">Pilih role</label>
-                    <select class="form-control input-pill" name="level" id="pillSelect">
-                        <option></option>
-                        <option value="1">Admin</option>
-                        <option value="2">Guru</option>
-                        <option value="3">Buyer</option>
-                    </select>
-                </div>
-                <div class="row form-sub m-0">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" name="agree" id="agree">
-                        <label class="custom-control-label" for="agree">I Agree the terms and conditions</label>
+                        <input id="usrforgot" type="text" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" required>
                     </div>
                 </div>
                 <div class="form-action">
                     <a href="#" id="show-signin" class="btn btn-danger btn-rounded btn-login mr-3">Cancel</a>
                     <!-- <a href="#" class="btn btn-primary btn-rounded btn-login">Sign Up</a> -->
-                    <button type="submit" class="btn btn-primary btn-rounded btn-login">Sign Up</button>
+                    <button type="submit" class="btn btn-primary btn-rounded btn-login">submit</button>
                 </div>
             </div>
         </form>
+    </div>
+    <div class="card animated fadeIn text-center" id="otp-container" style="display: none; width: 25rem;" >
+        <div class="card-body">
+            <h3 class="text-center"><b>Forgot Password</b></h3>
+            <form onsubmit="return otpe();" action="">
+                <div class="login-form">
+                    <div class="form-group form-floating-label">
+                        <label>Masukkan OTP</label>
+                        <div class="form-group">
+                            <input type="number" id="otp" class="form-control"  aria-describedby="emailHelp" placeholder="Masukkan 6 digit otp">
+                            
+                        </div>
+                    </div>
+                    <div class="form-action mt-2">
+                        <a href="#"  class="btn btn-danger btn-rounded btn-login mr-3" onclick="hideall()">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-rounded btn-login">submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card animated fadeIn text-center" id="reset-pw" style="display: none; width: 25rem;" >
+        <div class="card-body">
+            <h3 class="text-center"><b>Reset Password</b></h3>
+            <form id="myform" onsubmit="return resetpw()" action="">
+                <div class="login-form">
+                        <div class="form-group form-group-default mb-2">
+                            <label>Masukkan password baru</label>
+                            <input type="password" class="form-control" id="pwd" name="pwd" placeholder="password baru" value="">
+                        </div>
+                        <label id="pwd-error" class="error mt-0 ml-2" for="pwd"></label>
+                    
+                    
+                        <div class="form-group form-group-default mb-2">
+                            <label>Masukkan kembali password baru</label>
+                            <input type="password" class="form-control" id="pwd2" name="pwd2" placeholder="masukkan kembali password baru" value="" required>
+                        </div>
+                        <label id="pwd2-error" class="error mt-0 ml-2" for="pwd2"></label>
+                    
+                </div>
+                <div class="form-action mt-2">
+                    <a href="#" class="btn btn-danger btn-rounded btn-login mr-3" onclick="hideall()">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-rounded btn-login">submit</button>
+                </div>
+            </form>
+            
+        </div>
     </div>
     </div>
 
@@ -130,8 +136,34 @@
     <script src="{{ base_url() }}assets/js/core/popper.min.js"></script>
     <script src="{{ base_url() }}assets/js/core/bootstrap.min.js"></script>
     <script src="{{ base_url() }}assets/js/ready.js"></script>
+    <script src="{{ base_url() }}/assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
 
     <script>
+    $.validator.addMethod("pwcheck", function(value) {
+   return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+       && /[a-z]/.test(value) // has a lowercase letter
+       && /\d/.test(value)  // has a digit
+}, 'Password harus berupa angke, huruf besar dan kecil.');
+  $( "#myform" ).validate({
+    rules: {
+      pwd: {
+      required: true,
+      minlength: 6,
+      pwcheck: true
+				},
+      pwd2: {
+      required: true,
+      equalTo: '#pwd'
+				},
+    },
+    highlight: function(element) {
+      
+			},
+    success: function(element) {
+    
+    $( ".error" ).text('');
+    },
+  });
         function login(){
       const api_url = "<?= base_url() ?>login/apiAuth"
       const data = {
@@ -169,6 +201,85 @@
         $('.load').hide()
       }
       return false
+    }
+    function forgot(){
+        const api_url = "<?= base_url() ?>login/forgot"
+      const data = {
+        username : document.getElementById('usrforgot').value,
+      }
+      
+      $.post(api_url,data, function(data, status){
+        k = JSON.parse(data)
+        if(k == null){
+            swal({
+			title: "User Tidak terdafter",
+			icon: "warning",
+			buttons: "OK",
+			dangerMode: true,
+			})
+        }else{
+            $('.container-signup').css("display", "none");
+            $('#otp-container').css("display", "block");
+        }
+        
+      })
+        return false
+    }
+    function otpe(){
+        const api_url = "<?= base_url() ?>login/otp"
+      const data = {
+        otp : document.getElementById('otp').value,
+      }
+      
+      $.post(api_url,data, function(data, status){
+        if(data == "error"){
+            swal({
+			title: "OTP salah silahkan cek kembali",
+			icon: "warning",
+			buttons: "OK",
+			dangerMode: true,
+			})
+        }else{
+            $('#otp-container').css("display", "none");
+            $('#reset-pw').css("display", "block");
+            console.log("benar");
+        }
+        
+      })
+        return false
+    }
+    function resetpw(){
+        const api_url = "<?= base_url() ?>login/resetpw"
+      const data = {
+        password : document.getElementById('pwd').value,
+        username : document.getElementById('usrforgot').value,
+      }
+      
+      $.post(api_url,data, function(data, status){
+        
+            swal({
+			title: "Reset password berhasil",
+            text: "silahkan login dengan password baru anda",
+			icon: "success",
+			buttons: "OK",
+			})
+            .then((willDelete) => {
+          if (willDelete) {
+            $('#reset-pw').css("display", "none");
+            $('#login').css("display", "block");
+            console.log("benar");
+          } else {
+
+          }
+        });
+      })
+        
+        return false
+    }
+    function hideall(){
+        $('#otp-container').css("display", "none");
+        $('#reset-pw').css("display", "none");
+        $('#login').css("display", "block");
     }
     </script>
     

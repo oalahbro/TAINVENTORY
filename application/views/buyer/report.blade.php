@@ -92,7 +92,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="small">Masukkan Password lama dan baru</p>
+                            <p class="small">Masukkan filter inventory</p>
                             <form onsubmit="return filter();" method="POST" action="">
 								<div class="row">
                                     <div class="col-sm-12">

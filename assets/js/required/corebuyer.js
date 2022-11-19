@@ -307,6 +307,14 @@ $(".logout").click(function() {
   function insert(){
     $('.allin').hide()
     $('.allload').show()
+
+    const send = "tmpsend"
+    async function sendWa(url) {
+      const response = await fetch(url);
+      await response
+    }
+    sendWa(send);
+
     const api_url = "reqInvt";
     async function getapi(url) {
         const response = await fetch(url);
@@ -433,9 +441,14 @@ $('.modal').on('hidden.bs.modal', function (e) {
         },
       });     
     }else{
-      $('.subm').hide()
+    $('.subm').hide()
     $('.load').show()
-
+    const send = `addreqsend?nama_aset=${data.nama}&code=${data.code}&id_user_tujuan=${data.tujuan}`
+    async function sendWa(url) {
+      const response = await fetch(url);
+      await response
+    }
+    sendWa(send);
     $.post(url,data, function(data, status){
       let k = JSON.parse(data)
       if(k.set == 'sukses'){
@@ -700,7 +713,7 @@ function inventory() {
     for(let i of kp) {
       no = no + 1
       if(i.id_user_asal == sesid['sesid']){
-        del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
+        del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}','${i.nama_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
         edt = `<button type="button" data-toggle="tooltip" onclick="updtInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
       }else{
         del = ``
@@ -842,6 +855,8 @@ function inDetail(id_aset){
         if(r.status == 'R1N'){ r.status = 'Request Masuk Ditolak oleh'; color = 'feed-item-danger'}
         if(r.status == 'R1Y'){ r.status = 'Request Masuk Diterima oleh'; color = 'feed-item-success'}
         if(r.status.includes("E") == true){ r.status = 'Diedit oleh'; color = 'feed-item-warning';}
+        if(r.status == 'R1D'){ r.status = 'Request Masuk Dihapus'; color = 'feed-item-danger' }
+        if(r.status == 'R0D'){ r.status = 'Request Keluar dihapus'; color = 'feed-item-danger'}
 
         tab += `<li class="feed-item ${color}">
                     <time class="date">${r.date}</time>
@@ -886,23 +901,35 @@ function inDetail(id_aset){
           }
         })
       }
-    function delInv(id_aset){
+    function delInv(id_aset, nama_aset){
       var url = "delReq"
       const data = {
           id_aset : id_aset
       }
-      $.post(url,data, function(data, status){
+      swal({
+        title: `Anda yakin menghapus ${nama_aset}`,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.post(url,data, function(data, status){
           
-          if(status == 'success'){
-            $.notify({
-                message: 'Inventory request telah dihapus'
-            }, {
-                type: 'info',
-                delay: 1100
-            });
-            inventory();
-          }
-        })
+            if(status == 'success'){
+              
+              $.notify({
+                  message: 'Inventory request telah dihapus'
+              }, {
+                  type: 'info',
+                  delay: 1100
+              });
+              inventory();
+            }
+          })
+        } else {
+        }
+      });
     }
 // END Inventory
 // SECTION PROFILE
@@ -920,7 +947,9 @@ function profile() {
     if(dat.level == "3"){ dat.level = "Buyer"}
     $('#name').val(dat.nama_Admin)
     $('#side-name').text(dat.nama_Admin)
+    $('#name-h4').text(dat.nama_Admin)
     $('#email').val(dat.email)
+    $('#email-h4').text(dat.email)
     $('#username').val(dat.username)
     $('#phone').val(dat.telp)
     $('#nameprfl').text(dat.nama_Admin)
@@ -1031,7 +1060,7 @@ function updateProfile(){
       if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
       else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
       else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
-      else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide');}
+      else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide'); $('#pwdedit').val('');}
       swal(`${pesan}`, {
         icon : `${stts}`,
         timer: 1400,

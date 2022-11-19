@@ -91,8 +91,8 @@
 									<div class="user-box">
 										<div class="avatar-lg"><img src="<?php echo e($planet['user']['img']); ?>" alt="image profile" class="avatar-img rounded" id="header-img2"></div>
 										<div class="u-text">
-											<h4><?php echo e($planet['user']['nama_Admin']); ?></h4>
-											<p class="text-muted"><?php echo e($planet['user']['email']); ?></p>
+											<h4 id="name-h4"><?php echo e($planet['user']['nama_Admin']); ?></h4>
+											<p class="text-muted" id="email-h4"><?php echo e($planet['user']['email']); ?></p>
 										</div>
 									</div>
 								</li>

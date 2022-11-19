@@ -109,13 +109,13 @@
     <table width="100%">
         <thead style="background-color: lightgray;">
             <tr class="teer">
-                <th>No</th>
-                <th>Nama Inventory</th>
-                <th>Code</th>
-                <th>Tanggal Waktu</th>
-                <th>Penanggung Jawab</th>
-                <th>Tujuan</th>
-                <th>Status</th>
+                <th class="text-center">No</th>
+                <th class="text-center">Nama Inventory</th>
+                <th class="text-center">Code</th>
+                <th class="text-center">Tanggal Waktu</th>
+                <th class="text-center">Penanggung Jawab</th>
+                <th class="text-center">Tujuan</th>
+                <th class="text-center">Status</th>
             </tr>
         </thead>
         <tbody>

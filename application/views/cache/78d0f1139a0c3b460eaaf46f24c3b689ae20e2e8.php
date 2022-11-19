@@ -4,25 +4,6 @@
         <div class="page-inner">
             <div class="page-header">
                 <h4 class="page-title">Data User</h4>
-                <ul class="breadcrumbs">
-                    <li class="nav-home">
-                        <a href="#">
-                            <i class="flaticon-home"></i>
-                        </a>
-                    </li>
-                    <li class="separator">
-                        <i class="flaticon-right-arrow"></i>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">Tables</a>
-                    </li>
-                    <li class="separator">
-                        <i class="flaticon-right-arrow"></i>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">Datatables</a>
-                    </li>
-                </ul>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -137,7 +118,7 @@
                         <div class="modal-header no-bd">
                             <h5 class="modal-title">
                                 <span class="fw-mediumbold">
-                                    Tambah</span>
+                                    Edit</span>
                                 <span class="fw-light">
                                     User
                                 </span>

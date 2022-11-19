@@ -1,4 +1,4 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+@include('template.headerGuru');
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
@@ -112,16 +112,16 @@
 											<label for="exampleFormControlSelect1">Tujuan</label>
 											<select name="tujuan" class="form-control" id="tujuan">
 												<option value=""></option>
-												<?php $__currentLoopData = $planet['tuser']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-												<?php if($tus['level'] == 2): ?>
-													<?php $tus['level'] = '( Guru )' ?>
-												<?php elseif($tus['level'] == 1): ?>
-													<?php $tus['level'] = '( Superadmin )' ?>
-												<?php else: ?>
-												<?php $tus['level'] = '( Buyer )' ?>
-												<?php endif; ?>
-												<option value="<?php echo e($tus['id_admin']); ?>"><?php echo e($tus['nama_Admin']); ?> <?php echo e($tus['level']); ?></option>
-												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+												@foreach($planet['tuser'] as $tus)
+												@if ($tus['level'] == 2)
+													@php $tus['level'] = '( Guru )' @endphp
+												@elseif($tus['level'] == 1)
+													@php $tus['level'] = '( Superadmin )' @endphp
+												@else
+												@php $tus['level'] = '( Buyer )' @endphp
+												@endif
+												<option value="{{ $tus['id_admin'] }}">{{ $tus['nama_Admin'] }} {{ $tus['level'] }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -150,4 +150,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/report.blade.php ENDPATH**/ ?>
+@include('template.footerGuru');

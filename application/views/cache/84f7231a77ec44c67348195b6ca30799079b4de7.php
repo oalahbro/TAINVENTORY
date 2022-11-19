@@ -82,16 +82,16 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="<?php echo e($planet['user']['img']); ?>" alt="..." class="avatar-img rounded-circle">
+									<img src="<?php echo e($planet['user']['img']); ?>" alt="..." class="avatar-img rounded-circle" id="header-img">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<li>
 									<div class="user-box">
-										<div class="avatar-lg"><img src="<?php echo e($planet['user']['img']); ?>" alt="image profile" class="avatar-img rounded"></div>
+										<div class="avatar-lg"><img src="<?php echo e($planet['user']['img']); ?>" alt="image profile" class="avatar-img rounded" id="header-img1"></div>
 										<div class="u-text">
-											<h4><?php echo e($planet['user']['nama_Admin']); ?></h4>
-											<p class="text-muted"><?php echo e($planet['user']['email']); ?></p>
+											<h4 id="name-h4"><?php echo e($planet['user']['nama_Admin']); ?></h4>
+											<p class="text-muted" id="email-h4"><?php echo e($planet['user']['email']); ?></p>
 										</div>
 									</div>
 								</li>
@@ -118,13 +118,12 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="<?php echo e($planet['user']['img']); ?>" alt="..." class="avatar-img rounded-circle">
+							<img src="<?php echo e($planet['user']['img']); ?>" alt="..." class="avatar-img rounded-circle" id="header-img2">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-                                <?php echo e($planet['user']['nama_Admin']); ?>
-
+									<p id="side-name" class="mb-0"><?php echo e($planet['user']['nama_Admin']); ?></p>
 									<span class="user-level">
                                         Buyer
                                     </span>
@@ -153,7 +152,6 @@
 							<a href="<?php echo e(base_url()); ?>buyer/buyer">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
-								<span class="badge badge-count">5</span>
 							</a>
 						</li>
 						<li class="nav-section">

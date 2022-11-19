@@ -1,38 +1,37 @@
-if(window.location.pathname.includes("admin")){
-  $(document).ready(function (){
+if(window.location.pathname.includes("guru")){  
+  $(document).ready(function(){
     if(document.title.includes("Masukkan")){ showTmp(); }
     if(document.title.includes("Request")){ dataTable(); }
     if(document.title.includes("Unconfirmed")){ unTable(); }
     if(document.title.includes("Semua")){ inventory() }
-    if(document.title.includes("Kategori")){ kategori() }
-    if(document.title.includes("User")){ user() }
     if(document.title.includes("Profile")){ profile() }
     if(document.title.includes("Laporan")){ laporan(); }
     if(document.title.includes("Search")){ search(); }
   });
-  $(".logout").click(function() {
-      swal({
-          title: "Anda yakin keluar?",
-          text: "Setelah keluar anda akan diminta login untuk mengakses halaman ini",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((willDelete) => {
-          if (willDelete) {
-            swal("Anda berhasil logout", {
-              icon: "success",
-              buttons: false,
-            });
-            setTimeout(function() {
-              let p = window.location.origin
-              //ganti url location kalo udah deploy
-              window.location = p +  '/demo/login/logout';
-            }, 1000);
-          } else {
+  
+$(".logout").click(function() {
+    swal({
+        title: "Anda yakin keluar?",
+        text: "Setelah keluar anda akan diminta login untuk mengakses halaman ini",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Anda berhasil logout", {
+            icon: "success",
+            buttons: false,
+          });
+          setTimeout(function() {
+            let p = window.location.origin
+            //ganti url location kalo udah deploy
+            window.location = p +  '/demo/login/logout';
+          }, 1000);
+        } else {
 
-          }
-        });
+        }
+      });
   });
 
   const MAX_WIDTH = 580;
@@ -41,7 +40,6 @@ if(window.location.pathname.includes("admin")){
   const QUALITY = 0.4;
   const input = document.getElementById("img1");
   const inputMod = document.getElementById("imgInp");
-
   input.onchange = function(ev) {
     const file = ev.target.files[0]; // get the file
     const blobURL = URL.createObjectURL(file);
@@ -109,6 +107,7 @@ if(window.location.pathname.includes("admin")){
         buttons: false
       });
       console.log("Cannot load image");
+      $('#blah').attr('src',"https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png");
     };
     img.onload = function() {
       URL.revokeObjectURL(this.src);
@@ -127,469 +126,11 @@ if(window.location.pathname.includes("admin")){
       // document.getElementById("root").append(canvas);
       var dataURL = canvas.toDataURL();
       document.getElementById('putbas').value = dataURL;
+
     };
   };
-  // SECTION PROFILE
-  function profile() {
-    const api_url = link
-    async function getapi(url) {
-          const response = await fetch(url);
-          var dat = await response.json();
-          merg(dat)
-      }
-    getapi(api_url);
-    function merg(dat){
-      if(dat.level == "1"){ dat.level = "Superadmin"}
-      if(dat.level == "2"){ dat.level = "Guru"}
-      if(dat.level == "3"){ dat.level = "Buyer"}
-      $('#name').val(dat.nama_Admin)
-      $('#side-name').text(dat.nama_Admin)
-      $('#name-h4').text(dat.nama_Admin)
-      $('#email').val(dat.email)
-      $('#email-h4').text(dat.email)
-      $('#username').val(dat.username)
-      $('#phone').val(dat.telp)
-      $('#nameprfl').text(dat.nama_Admin)
-      $('#foto').attr("href", dat.img);
-      $('#foto1').attr('src', dat.img)
-      $('#header-img').attr('src', dat.img)
-      $('#header-img1').attr('src', dat.img)
-      $('#header-img2').attr('src', dat.img)
-      $('#level').text(dat.level)
-    }
-  };
-
-  function resetPwd(){
-    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    if(!$('#pwdnew').val().match(passw)){$('#errpwdnew').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
-    if($('#pwdnew').val() == $('#pwdnew1').val()){pwd1 = "YES"}else{$('#errpwdnew1').text('*Password tidak sama dengan password baru'); pwd1 = "NO"}
-    if(pwd == "YES" && pwd1 == "YES"){
-      const api_url = "cekpwd?pwd=" + $('#pwdold').val()
-      async function cekusername(url) {
-            const response = await fetch(url);
-            var dat = await response.json();
-            if (dat=="ok"){
-              valid()
-            }else{
-              $('#errpwdold').text('*Password lama anda salah')
-            }
-        }
-      cekusername(api_url);
-      function valid(){
-        $('#errpwdold').val('')
-        $('#errpwdnew').val('')
-        $('#errpwdnew1').val('')
-        const url = "resetpwd"
-        const data = {
-        password : $('#pwdnew').val(),
-      }
-      $.post(url,data, function(data, status){
-        if(status == 'success'){
-          $.notify({
-            message: 'Sukses Reset Password'
-        }, {
-            type: 'success',
-            delay: 1500
-        });
-          $('#resetpwd').modal('hide');
-        }
-      })
-      $('#pwdold').val('')
-      $('#pwdnew').val('')
-      $('#pwdnew1').val('')
-      }
-    }
-    return false
-  }
-  function getimg(){
-    $('#change-img').modal('show');
-      const api_url = "getimgprofile"
-      async function cekusername(url) {
-            const response = await fetch(url);
-            var dat = await response.json();
-              valid(dat)
-        }
-      cekusername(api_url);
-      function valid(dat){
-        $('#blah').attr('src',dat);
-        $('#putbas').val(dat);
-      }
-  }
-  function imgUpdate(){
-    const url = "updateImg"
-    const data = {
-      img : document.getElementById('putbas').value,
-    }
-    $.post(url,data, function(data, status){
-      if(status == 'success'){
-        swal('Berhasil update data', {
-          icon : "info",
-          timer: 800,
-          buttons: false
-        });
-      }
-      profile()
-      $('#change-img').modal('hide');
-    })
-    return false
-  }
-  function updateProfile(){
-    const api_url = "cekpwd?pwd=" + $('#pwdedit').val()
-      async function cekusername(url) {
-            const response = await fetch(url);
-            var dat = await response.json();
-            if (dat=="ok"){
-              valid()
-            }else{
-              $('#errpwdedit').text('*Password anda salah')
-            }
-        }
-    cekusername(api_url);
-    function valid(){
-      const url = "updateProfile"
-      const data = {
-        nama_Admin : $('#name').val(),
-        email : $('#email').val(),
-        username : $('#username').val(),
-        telp : $('#phone').val()
-      }
-      $.post(url,data, function(data, status){
-        let k = JSON.parse(data)
-        if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
-        else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
-        else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
-        else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide'); $('#pwdedit').val('');}
-        swal(`${pesan}`, {
-          icon : `${stts}`,
-          timer: 1400,
-          buttons: false
-        });
-        
-      })
-    }
-    return false
-  }
-  // END PROFILE
-  // SECTION USER
-  function user() {
-    const api_url = link
-    async function getapi(url) {
-          const response = await fetch(url);
-          var dat = await response.json();
-          merg(dat)
-      }
-    getapi(api_url);
-    function merg(dat){
-      ok = []
-      let no = 0
-      for(let i of dat) {
-        no += 1
-        if(i.level == 1){
-          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Superadmin&nbsp;</p></td>`
-        }else if(i.level == 2){
-          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-primary btn-round'>Guru</p></td>`
-        }else{
-          i.level = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-warning btn-round'>Buyer</p></td>`
-        }
-        if(i.status == 1){
-          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Aktif&nbsp;</p></td>`
-        }else{
-          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-danger btn-round'>Non Aktif</p></td>`
-        }
-          let obj = [no, i.nama_Admin,i.username,i.level , i.status , `<div class="form-button-action">
-          <button type="button" data-toggle="tooltip" onclick="upUsr('${i.id_admin}')" title="" class="btn btn-link btn-primary btn-lg">
-            <i class="fa fa-edit"></i>
-          </button>
-          <button type="button" data-toggle="tooltip" onclick="delUsr('${i.id_admin}','${i.nama_Admin}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
-            <i class="fa fa-times""></i>
-          </button>
-        </div>`];
-          ok.push(obj);
-      }
-      $('#user').DataTable({
-              "pageLength": 5,
-              "bDestroy": true,
-              data: ok
-            });
-    }
-  };
-  function addUser(){
-    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    let uname = /^[a-zA-Z0-9_.-]{5,20}$/;
-    if(!$('#usernameadd').val().match(uname)){$('#errorusr').text('*Username min 5 karakter harus berupa huruf atau angka'); unm = "NO"}else{unm = "YES"}
-    if(!$('#passwordadd').val().match(passw)){$('#errorpwd').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
-    if(unm == "YES" && pwd == "YES"){
-      const api_url = "cekusername?username=" + $('#usernameadd').val()
-      async function cekusername(url) {
-            const response = await fetch(url);
-            var dat = await response.json();
-            if (!dat){
-              noUser()
-            }else{
-              $('#errorusr').text('*Username sudah ada silahkan gunakan username lain')
-            }
-        }
-      cekusername(api_url);
-      function noUser(){
-          const url = "addUser"
-          const data = {
-          nama_Admin : $('#addName').val(),
-          username : $('#usernameadd').val(),
-          password : $('#passwordadd').val(),
-          level : $('#leveladd').val(),
-        }
-        $.post(url,data, function(data, status){
-          if(status == 'success'){
-            $.notify({
-              message: 'Sukses Menambah User'
-          }, {
-              type: 'success',
-              delay: 1500
-          });
-            user()
-            $('#adduser').modal('hide');
-          }
-        })
-          $('#errorusr').text('')
-          $('#errorpwd').text('')
-          $('#addName').val(''),
-          $('#usernameadd').val('')
-          $('#passwordadd').val('')
-          $('#leveladd').val('1')
-      }
-    }
-    return false
-  }
-  function delUsr(id_user, nama_Admin){
-    var url = "delUser"
-    const data = {
-        id_admin : id_user
-    }
-    swal({
-      title: `Anda yakin menghapus ${nama_Admin}`,
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willDelete) => {
-      if (willDelete) {
-        $.post(url,data, function(data, status){
-          if(status == 'success'){
-            user()
-            $.notify({
-                message: 'User telah dihapuss'
-            }, {
-                type: 'success',
-                delay: 1100
-            });
-          }
-        })
-      } else {
-      }
-    });
-  }
-  function upUsr(id_user){
-    $('#modaledit').modal('show');
-      const id_admin = id_user
-      $('#id_user').val(id_user);
-      var api_url = "detailUsr?id=" + id_admin;
-      
-      async function getapi(url) {
-          const response = await fetch(url);
-          var data = await response.json();
-          if (response) {
-              hideloader();
-          }
-          show(data);
-      }
-      getapi(api_url);
-      function hideloader() {
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('fupdate').style.display = 'block';
-      }
-      function show(data) {
-        $('#name').val(data['nama_Admin']);
-        $('#status').val(data['status']);
-        $('#level').val(data['level']);
-        $('#username').val(data['username']);
-      }
-      if (!$('.modal').hasClass("show")){
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('fupdate').style.display = 'none';
-      }
-  }
-  function userUp(){
-    const url = "updateUser"
-    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    let uname = /^[a-zA-Z0-9_.-]{5,20}$/;
-    if(!$('#username').val().match(uname)){$('#errorusrup').text('*Username min 5 karakter harus berupa huruf atau angka'); unm = "NO"}else{unm = "YES"}
-    if(!$('#password').val().match(passw)){$('#errorpwdup').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
-    if(!$('#password').val()){$('#errorpwdup').text(''); pwd = "YES"}
-    if(unm == "YES" && pwd == "YES"){
-      const data = {
-        id_user : $('#id_user').val(),
-        nama_Admin : $('#name').val(),
-        username : $('#username').val(),
-        password : $('#password').val(),
-        level : $('#level').val(),
-        status : $('#status').val()
-      }
-      $.post(url,data, function(data, status){
-        if(status == 'success'){
-          swal('Berhasil update data', {
-            icon : "info",
-            timer: 800,
-            buttons: false
-          });
-          user()
-          $('#modaledit').modal('hide');
-        }
-      })
-    }
-    return false
-}
-  // END USER
-  // SECTION CATEGORIES
-  function kategori() {
-    const api_url = link
-    async function getapi(url) {
-          const response = await fetch(url);
-          var dat = await response.json();
-          merg(dat)
-      }
-    getapi(api_url);
-    function merg(dat){
-      ok = []
-      let no = 0
-      for(let i of dat) {
-        if(i.status == 1){
-          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-success btn-round'>&nbsp;Aktif&nbsp;</p></td>`
-        }else{
-          i.status = `<td><p style='margin-bottom: 0;' class='btn btn-sm btn-danger btn-round'>Non Aktif</p></td>`
-        }
-        no += 1
-          let obj = [no, i.nama_kategori , i.status , `<div class="form-button-action">
-          <button type="button" data-toggle="tooltip" onclick="upCat('${i.id_kategori}')" title="" class="btn btn-link btn-primary btn-lg">
-            <i class="fa fa-edit"></i>
-          </button>
-          <button type="button" data-toggle="tooltip" onclick="delCat('${i.id_kategori}','${i.nama_kategori}')" title="" class="btn btn-link btn-icon btn-danger btn-lg">
-            <i class="fa fa-times""></i>
-          </button>
-        </div>`];
-          ok.push(obj);
-      }
-      $('#tabelkat').DataTable({
-              "pageLength": 5,
-              "bDestroy": true,
-              data: ok
-            });
-    }
-  };
-  function upCat(id_kategori){
-    $('#modaledit').modal('show');
-      const id_category = id_kategori
-      $('#id_kategori').val(id_category);
-      var api_url = "detailkat?id=" + id_category;
-      
-      async function getapi(url) {
-          const response = await fetch(url);
-          var data = await response.json();
-          if (response) {
-              hideloader();
-          }
-          show(data);
-      }
-      getapi(api_url);
-      function hideloader() {
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('fupdate').style.display = 'block';
-      }
-      function show(data) {
-        $('#nama_kat').val(data['nama_kategori']);
-        $('#status').val(data['status']);
-      }
-      if (!$('.modal').hasClass("show")){
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('fupdate').style.display = 'none';
-      }
-  }
-  function kategoriUp(){
-    const url = "updateCategory"
-    const data = {
-      id_kategori : $('#id_kategori').val(),
-      nama_kategori : $('#nama_kat').val(),
-      status : $('#status').val()
-
-    }
-    $.post(url,data, function(data, status){
-      
-      if(status == 'success'){
-        swal('Berhasil update data', {
-          icon : "info",
-          timer: 800,
-          buttons: false
-        });
-        kategori()
-        $('#modaledit').modal('hide');
-      }
-    })
-    return false
-}
-function delCat(id_kategori,nama_kategori){
-  var url = "delKategori"
-  const data = {
-      id_kategori : id_kategori
-  }
-  swal({
-    title: `Anda yakin menghapus ${nama_kategori}`,
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-  })
-  .then((willDelete) => {
-    if (willDelete) {
-      $.post(url,data, function(data, status){
-        if(status == 'success'){
-          kategori()
-          $.notify({
-              message: 'Kategori telah dihapuss'
-          }, {
-              type: 'success',
-              delay: 1100
-          });
-        }
-      })
-    } else {
-    }
-  });
   
-}
-
-function kategoriAdd(){
-  const url = "addCategory"
-  const data = {
-    nama_kategori : $('#addName').val(),
-    status : $('#statusadd').val()
-
-  }
-  $.post(url,data, function(data, status){
-    
-    if(status == 'success'){
-      $.notify({
-        message: 'Sukses Menambah Kategori'
-      }, {
-          type: 'success',
-          delay: 1500
-      });
-      kategori()
-      $('#addRowModal').modal('hide');
-    }
-  })
-  return false
-}
-  // END CATEGORIES
-
-  // SECTION INS
+  // ON INS
   function showTmp(){
     const api_url = "getTmp";
     async function getapi(url) {
@@ -651,7 +192,7 @@ function kategoriAdd(){
             $.notify({
                 message: 'Sukses Menambah Inventory semenatara'
             }, {
-                type: 'success',
+                type: 'info',
                 delay: 1100
             });
             $('.subm').show()
@@ -756,7 +297,7 @@ function kategoriAdd(){
           $.notify({
               message: 'Inventory sementara telah dihapus'
           }, {
-              type: 'success',
+              type: 'info',
               delay: 1100
           });
         }
@@ -772,7 +313,6 @@ function kategoriAdd(){
       await response;
     }
     sendWa(send);
-
     const api_url = "reqInvt";
     async function getapi(url) {
         const response = await fetch(url);
@@ -780,18 +320,16 @@ function kategoriAdd(){
         masuk(dat)
     }
     getapi(api_url);
-    
     function masuk(dat){
       if(dat.respon == 'habis'){
           $.notify({
               message: 'Inventory semenatara berhasil di request'
           }, {
-              type: 'success',
+              type: 'info',
               delay: 1100
           });
           $('.allin').show()
           $('.allload').hide()
-
         }
         else{
           $('.allin').hide()
@@ -803,15 +341,15 @@ function kategoriAdd(){
     }
   }
 // END INS
-// SECTION REQ
-  $('.modal').on('hidden.bs.modal', function (e) {
-   
-    $('#nam').val("");
-    $('#cod').val("");
-    $('#bla').attr("hidden",true);
-    $('#spek').val("");
-    $('#des').val("");
-  })
+// ON REQ
+$('.modal').on('hidden.bs.modal', function (e) {
+  $('#nam').val("");
+  $('#cod').val("");
+  $('#img1').val("");
+  $('#bla').attr("hidden",true);
+  $('#spek').val("");
+  $('#des').val("");
+})
   function delReq(id_aset){
     var url = "delReq"
     const data = {
@@ -823,7 +361,7 @@ function kategoriAdd(){
           $.notify({
               message: 'Inventory request telah dihapus'
           }, {
-              type: 'success',
+              type: 'info',
               delay: 1100
           });
           dataTable();
@@ -845,46 +383,31 @@ function kategoriAdd(){
       let no = 0
       for(let i of kp) {
         no += 1
-        if(i.status == 'R1'){
-         i.status = `<div class="btn btn-info btn-border btn-round btn-sm">
-          <span class="btn-label">
-            <i class="fas fa-arrow-alt-circle-down"></i>
-          </span>
-          <b>Masuk</b>
-        </div>`
-        }else if(i.status == 'R1N'){
-          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
-           <span class="btn-label">
-             <i class="fas fa-arrow-alt-circle-down"></i>
-           </span>
-           <b>Masuk Ditolak</b>
-         </div>`
-         }
-        else if(i.status == 'R0'){
+        if(i.status == 'R0'){
           i.status = `<div class="btn btn-warning btn-border btn-round btn-sm">
-          <span class="btn-label">
-            <i class="fas fa-arrow-alt-circle-up"></i>
-          </span>
-          <b>Keluar</b>
-        </div>`
-        }else{
-          i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
-          <span class="btn-label">
-            <i class="fas fa-arrow-alt-circle-up"></i>
-          </span>
-          <b>Keluar Ditolak</b>
-        </div>`
-        }
-          let obj = [no, i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status, `<div class="form-button-action">
-            <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-              <i class="fa fa-edit"></i>
-            </button>
-            <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+           <span class="btn-label">
+             <i class="fas fa-arrow-alt-circle-up"></i>
+           </span>
+           <b>Keluar</b>
+         </div>`
+         }else{
+           i.status = `<div class="btn btn-danger btn-border btn-round btn-sm">
+            <span class="btn-label">
+              <i class="fas fa-arrow-alt-circle-up"></i>
+            </span>
+            <b>Keluar Ditolak</b>
+          </div>`
+          }
+          let obj = [no, i.nama_aset , i.code , i.tujuan_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
+          <button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
             <i class="fa fa-info-circle"></i>
-            </button>
-            <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-              <i class="fa fa-times"></i>
-            </button>
+          </button>  
+          <button type="button" data-toggle="tooltip" onclick="updtReq('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+              <i class="fa fa-edit"></i>
+          </button>
+          <button type="button" data-toggle="tooltip" onclick="delReq('${i.id_aset}')" title="" class="btn btn-link btn-danger" data-original-title="Remove">
+            <i class="fa fa-times"></i>
+          </button>
           </div>`];
           ok.push(obj);
       }
@@ -930,7 +453,7 @@ function kategoriAdd(){
         $.notify({
             message: 'Sukses Menambah Inventory request'
         }, {
-            type: 'success',
+            type: 'info',
             delay: 1500
         });
 
@@ -1010,7 +533,6 @@ function updtReq(id_aset){
       deskripsi : document.getElementById('deskripsi').value,
 }
     $.post(url,data, function(data, status){
-      let k = JSON.parse(data)
       if(status == 'success'){
         swal('Berhasil update data', {
           icon : "info",
@@ -1051,7 +573,7 @@ function backReq(){
         $.notify({
             message: 'Sukses Menambah request aset kembali'
         }, {
-            type: 'success',
+            type: 'info',
             delay: 1100
         });
 
@@ -1100,7 +622,7 @@ function unTable() {
          <b>Keluar</b>
        </div>`
        }
-        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'], i.status , `<div class="form-button-action">
+        let obj = [no, i.nama_aset , i.code , i.asal_info[0]['nama_Admin'],i.status , `<div class="form-button-action">
           <button type="button" data-toggle="tooltip" onclick="unDetail('${i.id_aset}')" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
             <i class="fa fa-edit"></i>
           </button>
@@ -1133,22 +655,12 @@ function unDetail(id_aset){
     }
     getapi(api_url);
     function hideloader() {
-        $('#fupdate').show()
-        $('#loading').hide()
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('fupdate').style.display = 'block';
     }
     function show(data) {
-      if(data[0]['status'] == 'R0'){
-        $('#terima').hide()
-        $("#tujuan1").hide()
-        $("#tujuan0").show()
-      }else{
-        $('#terima').show()
-        $("#tujuan0").hide()
-        $("#tujuan1").show()
-      }
       if(!data[0].user_info[0] ){ data[0].user_info[0]  = {nama_Admin : 'User dihapus'}}
       if(!data[0].kategori_info[0] ){ data[0].kategori_info[0]  = {nama_kategori : 'Kategori dihapus'}}
-      
       $('#katup').html(data[0].kategori_info[0]['nama_kategori']);
       $('#tujup').html(data[0].user_info[0]['nama_Admin']);
       $('#nama_aset').html(data[0]['nama_aset']);
@@ -1156,66 +668,15 @@ function unDetail(id_aset){
       $('#blah').attr('src',data[0]['img']);
       $('#id_asal').val(data[0]['id_user_asal']);
       $('#spesifikasi').val(data[0]['spesifikasi']);
-      $('.deskripsi').val(data[0]['deskripsi']);
-      $('#stts').val(data[0]['status']);
+      $('#deskripsi').val(data[0]['deskripsi']);
     }
-
     if (!$('.modal').hasClass("show")){
-      $('#loading').show()
-      $('#fupdate').hide()
-      $('.container-login').show()
-      $('.container-signup').hide()
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('fupdate').style.display = 'none';
     }
   }
-  function forward(){
-    const url = "backReq"
-    if($('#stts').val() == 'R0'){ tujuan = $('#tujuan0').val() }else { tujuan = $('#tujuan1').val() }
-    const dat = {
-    id_aset : $('#id_aset').val(),
-    tujuan : tujuan,
-    deskripsi : $('#deskripsi').val(),
-    }
-    $('.subm').hide()
-    $('.load').show()
-    $.post(url,dat, function(data, status){
-        if(status == 'success'){
-          $.notify({
-              message: 'Sukses Menambah request aset kembali'
-          }, {
-              type: 'success',
-              delay: 1100
-          });
-
-          $('.subm').show()
-          $('.load').hide()
-        
-          unTable()
-          $('#modaledit').modal('hide');
-        }
-      })
-  }
-
   function unAction(action){
     let url = "actionUnc"
-    let dat = {
-      button : action,
-      id_aset : document.getElementById('id_aset').value,
-      id_asal : document.getElementById('id_asal').value
-    }
-    $.post(url,dat, function(data, status){
-      if(data == 1){
-        swal('Berhasil konfirmasi', {
-          icon : "info",
-          timer: 800,
-          buttons: false
-        });
-        unTable()
-        $('#modaledit').modal('hide')
-      }
-      })
-  }
-  function unForward(){
-    let url = "forwardUn"
     let dat = {
       button : action,
       id_aset : document.getElementById('id_aset').value,
@@ -1246,9 +707,9 @@ function inventory() {
   getapi(api_url);
   function merg(kp,sesid){
     ok = []
-    let no = 0 
+    no = 0
     for(let i of kp) {
-      no += 1
+      no = no + 1
       if(i.id_user_asal == sesid['sesid']){
         del = `<button type="button" data-toggle="tooltip" onclick="delInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-danger btn-lg"><i class="fa fa-times"></i></button></div>` 
         edt = `<button type="button" data-toggle="tooltip" onclick="updtInv('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg" ><i class="fa fa-edit"></i></button>`
@@ -1256,12 +717,12 @@ function inventory() {
         del = ``
         edt = `<button type="button" data-toggle="tooltip" onclick="inDetail('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-primary btn-lg"><i class="fa fa-eye"></i></button>`
       }
-      if(i.status == '1' || i.status == 'R0N' ){
+      if(i.status == '1'){
           i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Didalam</b></div>`
         }else{
           i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Diluar</b></div>`
         }
-       let obj = [no,i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">${edt}<button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
+       let obj = [no, i.nama_aset , i.code , i.user_info[0]['nama_Admin'], i.status , `<div class="form-button-action">${edt}<button type="button" data-toggle="tooltip" onclick="inHistory('${i.id_aset}')" title="" class="btn btn-link btn-icon btn-secondary btn-lg">
                 <i class="fa fa-info-circle"></i>
                 </button>
                 ${del}`
@@ -1275,6 +736,7 @@ function inventory() {
           });
   }
 };
+
 function updtInv(id_aset){
   const id_aset_tmp = id_aset
   $('#id_aset_u').val(id_aset_tmp);
@@ -1295,25 +757,25 @@ function updtInv(id_aset){
         $('#modalupdate').modal('show');
         show(data);
       }
-    }
-    getapi(api_url);
-    function hideloader() {
-        document.getElementById('loading_u').style.display = 'none';
-        document.getElementById('fupdate_u').style.display = 'block';
-    }
-    function show(data) {
-      $('#katup_u').val(data[0]['id_category']);
-      $('#nama_aset_u').val(data[0]['nama_aset']);
-      $('#code_u').val(data[0]['code']);
-      $('#blah').attr('src',data[0]['img']);
-      $('#spesifikasi_u').val(data[0]['spesifikasi']);
-      $('#deskripsi_u').val(data[0]['deskripsi']);
-    }
-    if (!$('.modal').hasClass("show")){
-      document.getElementById('loading_u').style.display = 'block';
-      document.getElementById('fupdate_u').style.display = 'none';
-    }
   }
+  getapi(api_url);
+  function hideloader() {
+      document.getElementById('loading_u').style.display = 'none';
+      document.getElementById('fupdate_u').style.display = 'block';
+  }
+  function show(data) {
+    $('#katup_u').val(data[0]['id_category']);
+    $('#nama_aset_u').val(data[0]['nama_aset']);
+    $('#code_u').val(data[0]['code']);
+    $('#blah').attr('src',data[0]['img']);
+    $('#spesifikasi_u').val(data[0]['spesifikasi']);
+    $('#deskripsi_u').val(data[0]['deskripsi']);
+  }
+  if (!$('.modal').hasClass("show")){
+    document.getElementById('loading_u').style.display = 'block';
+    document.getElementById('fupdate_u').style.display = 'none';
+  }
+}
 function inDetail(id_aset){
     const id_aset_tmp = id_aset
     $('#id_aset').val(id_aset_tmp);
@@ -1396,7 +858,7 @@ function inDetail(id_aset){
         if(r.status == 'R1FD'){ r.status = 'Request Diteruskan masuk dihapus'; color = 'feed-item-danger'}
         if(r.status == 'R0FD'){ r.status = 'Request Diteruskan keluar dihapus'; color = 'feed-item-primary'}
 
-       tab += `<li class="feed-item ${color}">
+        tab += `<li class="feed-item ${color}">
                     <time class="date">${r.date}</time>
                     <span class="text">${r.status} <b>${r.user_info[0].nama_Admin}</b> - <b>${r.tujuan_info[0].nama_Admin} </b><i>${r.deskripsi}</i></span>
                     </li>`;
@@ -1408,56 +870,196 @@ function inDetail(id_aset){
         document.getElementById('stephis').style.display = 'none';
       }
     }
-function updateInv(){
-  const url = "updateInv"
-  const data = {
-    id_aset : document.getElementById('id_aset_u').value,
-    kategori : document.getElementById('katup_u').value,
-    nama : document.getElementById('nama_aset_u').value,
-    img : document.getElementById('putbas').value,
-    spesifikasi : document.getElementById('spesifikasi_u').value,
-    deskripsi : document.getElementById('deskripsi_u').value,
-  }
-    $.post(url,data, function(data, status){
-      let k = JSON.parse(data)
-      if(k.respon == 'sukses'){
-        swal('Berhasil update data', {
-          icon : "info",
-          timer: 800,
-          buttons: false
-        });
-        inventory();
-        $('#modalupdate').modal('hide')
-      }else{
-        swal('Gagal update data', {
-          icon : "error",
-          text: "Anda hanya bisa mengedit aset dengan penanggung jawab anda sendiri!",
-          timer: 1800,
-          buttons: false
-        });
-        $('#modalupdate').modal('hide')
+    function updateInv(){
+      const url = "updateInv"
+      const data = {
+        id_aset : document.getElementById('id_aset_u').value,
+        kategori : document.getElementById('katup_u').value,
+        nama : document.getElementById('nama_aset_u').value,
+        img : document.getElementById('putbas').value,
+        spesifikasi : document.getElementById('spesifikasi_u').value,
+        deskripsi : document.getElementById('deskripsi_u').value,
       }
-    })
+        $.post(url,data, function(data, status){
+          let k = JSON.parse(data)
+          if(k.respon == 'sukses'){
+            swal('Berhasil update data', {
+              icon : "info",
+              timer: 800,
+              buttons: false
+            });
+            inventory();
+            $('#modalupdate').modal('hide')
+          }else{
+            swal('Gagal update data', {
+              icon : "error",
+              text: "Anda hanya bisa mengedit aset dengan penanggung jawab anda sendiri!",
+              timer: 1800,
+              buttons: false
+            });
+            $('#modalupdate').modal('hide')
+          }
+        })
+      }
+    function delInv(id_aset){
+      var url = "delReq"
+      const data = {
+          id_aset : id_aset
+      }
+      $.post(url,data, function(data, status){
+          
+          if(status == 'success'){
+            $.notify({
+                message: 'Inventory request telah dihapus'
+            }, {
+                type: 'info',
+                delay: 1100
+            });
+            inventory();
+          }
+        })
+    }
+// END Inventory
+// SECTION PROFILE
+function profile() {
+  const api_url = link
+  async function getapi(url) {
+        const response = await fetch(url);
+        var dat = await response.json();
+        merg(dat)
+    }
+  getapi(api_url);
+  function merg(dat){
+    if(dat.level == "1"){ dat.level = "Superadmin"}
+    if(dat.level == "2"){ dat.level = "Guru"}
+    if(dat.level == "3"){ dat.level = "Buyer"}
+    $('#name').val(dat.nama_Admin)
+    $('#side-name').text(dat.nama_Admin)
+    $('#name-h4').text(dat.nama_Admin)
+    $('#email').val(dat.email)
+    $('#email-h4').text(dat.email)
+    $('#username').val(dat.username)
+    $('#phone').val(dat.telp)
+    $('#nameprfl').text(dat.nama_Admin)
+    $('#foto').attr("href", dat.img);
+    $('#foto1').attr('src', dat.img)
+    $('#header-img').attr('src', dat.img)
+    $('#header-img1').attr('src', dat.img)
+    $('#header-img2').attr('src', dat.img)
+    $('#level').text(dat.level)
   }
-  function delInv(id_aset){
-    var url = "delReq"
-    const data = {
-        id_aset : id_aset
+};
+function resetPwd(){
+  let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+  if(!$('#pwdnew').val().match(passw)){$('#errpwdnew').text('*Password min 6 karakter berupa huruf besar & kecil, & angka'); pwd = "NO"}else{pwd = "YES"}
+  if($('#pwdnew').val() == $('#pwdnew1').val()){pwd1 = "YES"}else{$('#errpwdnew1').text('*Password tidak sama dengan password baru'); pwd1 = "NO"}
+  if(pwd == "YES" && pwd1 == "YES"){
+    const api_url = "cekpwd?pwd=" + $('#pwdold').val()
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          if (dat=="ok"){
+            valid()
+          }else{
+            $('#errpwdold').text('*Password lama anda salah')
+          }
+      }
+    cekusername(api_url);
+    function valid(){
+      $('#errpwdold').val('')
+      $('#errpwdnew').val('')
+      $('#errpwdnew1').val('')
+      const url = "resetpwd"
+      const data = {
+      password : $('#pwdnew').val(),
     }
     $.post(url,data, function(data, status){
-        
-        if(status == 'success'){
-          $.notify({
-              message: 'Inventory request telah dihapus'
-          }, {
-              type: 'success',
-              delay: 1100
-          });
-          inventory();
-        }
-      })
+      if(status == 'success'){
+        $.notify({
+          message: 'Sukses Reset Password'
+      }, {
+          type: 'success',
+          delay: 1500
+      });
+        $('#resetpwd').modal('hide');
+      }
+    })
+    $('#pwdold').val('')
+    $('#pwdnew').val('')
+    $('#pwdnew1').val('')
+    }
   }
-// END Inventory
+  return false
+}
+function getimg(){
+  $('#change-img').modal('show');
+    const api_url = "getimgprofile"
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+            valid(dat)
+      }
+    cekusername(api_url);
+    function valid(dat){
+      $('#blah').attr('src',dat);
+      $('#putbas').val(dat);
+    }
+}
+function imgUpdate(){
+  const url = "updateImg"
+  const data = {
+    img : document.getElementById('putbas').value,
+  }
+  $.post(url,data, function(data, status){
+    if(status == 'success'){
+      swal('Berhasil update data', {
+        icon : "info",
+        timer: 800,
+        buttons: false
+      });
+    }
+    profile()
+    $('#change-img').modal('hide');
+  })
+  return false
+}
+function updateProfile(){
+  const api_url = "cekpwd?pwd=" + $('#pwdedit').val()
+    async function cekusername(url) {
+          const response = await fetch(url);
+          var dat = await response.json();
+          if (dat=="ok"){
+            valid()
+          }else{
+            $('#errpwdedit').text('*Password anda salah')
+          }
+      }
+  cekusername(api_url);
+  function valid(){
+    const url = "updateProfile"
+    const data = {
+      nama_Admin : $('#name').val(),
+      email : $('#email').val(),
+      username : $('#username').val(),
+      telp : $('#phone').val()
+    }
+    $.post(url,data, function(data, status){
+      let k = JSON.parse(data)
+      if(k.username == 0){ pesan = 'Username sudah dipakai silahkan gunakan username lain'; stts = "error"}
+      else if(k.email == 0){ pesan = 'Email sudah dipakai silahkan gunakan email lain'; stts = "error"}
+      else if(k.telp == 0){ pesan = 'No telp sudah dipakai silahkan gunakan no telp lain'; stts = "error"}
+      else { pesan = 'sukses edit profile'; stts = "info"; profile(); $('#changeprofile').modal('hide');  $('#pwdedit').val('');}
+      swal(`${pesan}`, {
+        icon : `${stts}`,
+        timer: 1400,
+        buttons: false
+      });
+      
+    })
+  }
+  return false
+}
+//END PROFILE
 // SECTION LAPORAN
 
 function laporan() {
@@ -1492,7 +1094,7 @@ function laporan() {
       }else if (i.status == 'R1F' ){
         i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diteruskan</b></div>`
       }else if (i.status == 'R0F' ){
-      i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Diteruskan</b></div>`
+        i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-up"></i></span><b>Req Keluar Diteruskan</b></div>`
       }
        let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
         ok.push(obj);
@@ -1538,9 +1140,7 @@ function filter(){
         }else if (i.status == 'R0N' ){
           i.status = `<div class="btn btn-danger btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Keluar Ditolak</b></div>`
         }else if (i.status == 'R1F' ){
-          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Aset Masuk Diteruskan</b></div>`
-        }else if (i.status == 'R0F' ){
-        i.status = `<div class="btn btn-warning btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Aset Keluar Diteruskan</b></div>`
+          i.status = `<div class="btn btn-info btn-border btn-round btn-sm"><span class="btn-label"><i class="fas fa-arrow-alt-circle-down"></i></span><b>Req Masuk Diteruskan</b></div>`
         }
          let obj = [no,i.nama_aset , i.code,  i.date , i.user_info[0]['nama_Admin'], i.tujuan_info[0]['nama_Admin'], i.status ];
           ok.push(obj);

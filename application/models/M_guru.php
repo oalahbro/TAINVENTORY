@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class M_buyer extends CI_Model
+class M_guru extends CI_Model
 {
 
 	public function __construct()
@@ -23,14 +23,14 @@ class M_buyer extends CI_Model
 		]])->toArray();
 		return $result;
 	}
-	public function getSementara()
-	{
-		$result = $this->table('aset_tmp')->find(['id_user_asal' => $this->session->userdata('id')])->toArray();
-		return $result;
-	}
 	public function getUnconfirmed()
 	{
-		$result = $this->table('aset')->find(['id_user_tujuan' => $this->session->userdata('id'), 'status' => 'R0'])->toArray();
+		$result = $this->table('aset')->find(['id_user_tujuan' => $this->session->userdata('id'), 'status' => 'R1'])->toArray();
+		return $result;
+	}
+	public function getRequest()
+	{
+		$result = $this->table('aset')->find(['id_user_asal' => $this->session->userdata('id'), 'status' => 'R0'])->toArray();
 		return $result;
 	}
 
@@ -316,7 +316,7 @@ class M_buyer extends CI_Model
 		$iduser = $this->session->userdata('id');
 		$result = $this->table('aset')->aggregate(
 			[
-				['$match' => ['id_user_asal' => $iduser, '$or' => [['status' => 'R1'],  ['status' => 'R1N']]]],
+				['$match' => ['id_user_asal' => $iduser, '$or' => [['status' => 'R0'],  ['status' => 'R0N']]]],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
 					'from' => 'user',
@@ -352,7 +352,7 @@ class M_buyer extends CI_Model
 		$iduser = $this->session->userdata('id');
 		$result = $this->table('aset')->aggregate(
 			[
-				['$match' => ['id_user_asal' => $iduser, 'status' => '0']],
+				['$match' => ['id_user_asal' => $iduser, 'status' => '1']],
 				['$sort' => ['_id' => -1]],
 				['$project' => [
 					'id_aset' => 1,
@@ -380,33 +380,19 @@ class M_buyer extends CI_Model
 	}
 	public function updateBack()
 	{
-		$resultusr = $this->table('user')->findOne(['id_admin' => $this->input->post('tujuan')]);
 		$result = $this->table('aset')->findOne(['id_aset' => $this->input->post('id_aset')]);
 		$iduser = $this->session->userdata('id');
+		$set = [
+			'id_user_tujuan' => $this->input->post('tujuan'),
+			'id_user_asal' => $iduser,
+			'deskripsi' => $this->input->post('deskripsi'),
+			'status' => "R0"
+		];
+		$add = $this->table('aset')->updateOne(
+			['id_aset' => $this->input->post('id_aset')],
+			['$set' => $set]
+		);
 
-		if ($resultusr['level'] == 1) {
-			$set = [
-				'id_user_tujuan' => $this->input->post('tujuan'),
-				'id_user_asal' => $iduser,
-				'deskripsi' => $this->input->post('deskripsi'),
-				'status' => "R1"
-			];
-			$add = $this->table('aset')->updateOne(
-				['id_aset' => $this->input->post('id_aset')],
-				['$set' => $set]
-			);
-		} else {
-			$set = [
-				'id_user_tujuan' => $this->input->post('tujuan'),
-				'id_user_asal' => $iduser,
-				'deskripsi' => $this->input->post('deskripsi'),
-				'status' => "R0"
-			];
-			$add = $this->table('aset')->updateOne(
-				['id_aset' => $this->input->post('id_aset')],
-				['$set' => $set]
-			);
-		}
 
 		$data = [
 			'id_history' =>  $this->mongodb->id(),
@@ -428,7 +414,7 @@ class M_buyer extends CI_Model
 		if ($result['id_user_tujuan']) {
 			$set = [
 				'id_user_tujuan' => '',
-				'status' => "0"
+				'status' => "1"
 			];
 			$updateResult = $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
@@ -489,7 +475,7 @@ class M_buyer extends CI_Model
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
-				'status' => 'R1',
+				'status' => 'R0',
 				'date' => date("Y-m-d H:i:s")
 			];
 			$this->table('aset')->insertOne($data);
@@ -501,7 +487,7 @@ class M_buyer extends CI_Model
 				'id_category' => $this->input->post('kategori'),
 				'nama_aset' => $this->input->post('nama'),
 				'code' => $this->input->post('code'),
-				'status' => 'R1',
+				'status' => 'R0',
 				'date' => date("Y-m-d H:i:s")
 			]);
 			$add = [
@@ -733,7 +719,7 @@ class M_buyer extends CI_Model
 		$iduser = $this->session->userdata('id');
 		$result = $this->table('aset')->aggregate(
 			[
-				['$match' => ['id_user_tujuan' => $iduser, 'status' => 'R0']],
+				['$match' => ['id_user_tujuan' => $iduser, 'status' => 'R1']],
 				['$sort' => ['_id' => -1]],
 				['$lookup' => [
 					'from' => 'user',
@@ -758,6 +744,7 @@ class M_buyer extends CI_Model
 					'nama_aset' => 1,
 					'code' => 1,
 					'asal_info.nama_Admin' => 1,
+					'status' => 1,
 				]]
 			]
 		)->toArray();
@@ -808,7 +795,7 @@ class M_buyer extends CI_Model
 				'$set' => [
 					'id_user_tujuan' => '',
 					'id_user_asal' => $this->session->userdata('id'),
-					'status' => "0",
+					'status' => "1",
 					'date' => date("Y-m-d H:i:s")
 				]
 			]
@@ -1051,7 +1038,7 @@ class M_buyer extends CI_Model
 						'id_user_asal' => $this->session->userdata('id'),
 						// '$or' => [
 						// 	[
-						'status' => ['$nin' => ['R1E', 'R0E', '0E', 'R1D', 'R0D', '1D', '0D']]
+						'status' => ['$nin' => ['R1E', 'R0E', '0E']]
 						// ],
 						// 	['status' => 'R0']
 						// ]

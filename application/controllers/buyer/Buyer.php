@@ -47,6 +47,7 @@ class Buyer extends CI_Controller
 			'jumlah' => count($this->M_buyer->getAdmin()),
 			'jumlah_aset' => count($this->M_buyer->getInventory()),
 			'jumlah_unconfirmed' => count($this->M_buyer->getUnconfirmed()),
+			'jumlah_sementara' => count($this->M_buyer->getSementara()),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
 			'title' => 'Dashboard'
 		];
@@ -61,7 +62,8 @@ class Buyer extends CI_Controller
 			'kategori' => $this->M_buyer->getCategory(),
 			'tuser' => $this->M_buyer->getTuser(),
 			'user' => $this->M_buyer->admin($this->session->userdata('username')),
-			'title' => 'Masukkan'
+			'title' => 'Masukkan',
+			'link' => ""
 		];
 		return view('buyer/addInvt', $data);
 	}
@@ -113,7 +115,34 @@ class Buyer extends CI_Controller
 		}
 		echo json_encode($respon);
 	}
-
+	public function tmpsend()
+	{
+		$data = $this->M_buyer->getno();
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		foreach ($data as $d) {
+			$merg[] = $d['tujuan_info'][0]['telp'];
+		}
+		$count = array_count_values($merg);
+		foreach ($count as $n => $val) {
+			$datawa = [
+				'pesan' => '*' . $asal['nama_Admin'] . '*' . ' Telah Melakukan Requset, dengan total : ' . $val . ' Aset',
+				'nomer' => $n,
+			];
+			$options = array(
+				'http' => array(
+					'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+					'method' => 'POST',
+					'content' => http_build_query($datawa)
+				)
+			);
+			$context = stream_context_create($options);
+			$result = file_get_contents($url, false, $context);
+			if ($result === FALSE) {
+				echo "gagal";
+			}
+		}
+	}
 	public function aggregate()
 	{
 		$resultt = $this->M_buyer->invtTmp();
@@ -190,7 +219,29 @@ class Buyer extends CI_Controller
 		$data = $this->M_buyer->addReq();
 		echo json_encode($data);
 	}
-
+	public function addreqsend()
+	{
+		$no = $this->M_buyer->adminno($_GET['id_user_tujuan']);
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		print_r($no[0]['telp']);
+		$datawa = [
+			'pesan' => '*' . $asal['nama_Admin'] . '*' . " Telah Melakukan Requset\n" . 'Nama Aset : ' . $_GET['nama_aset'] . "\n" . 'Code : ' . $_GET['code'],
+			'nomer' => $no[0]['telp'],
+		];
+		$options = array(
+			'http' => array(
+				'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method' => 'POST',
+				'content' => http_build_query($datawa)
+			)
+		);
+		$context = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		if ($result === FALSE) {
+			echo "gagal";
+		}
+	}
 	public function getReq()
 	{
 		$asetid = $_GET['asetid'];
@@ -207,6 +258,27 @@ class Buyer extends CI_Controller
 	public function backReq()
 	{
 		$this->M_buyer->updateBack();
+		$data = $this->M_buyer->getBacksend();
+		$no = $this->M_buyer->adminno($this->input->post('tujuan'));
+		$asal = $this->dataAdmin();
+		$url = 'http://127.0.0.1:3000/submittmp';
+		print_r($no[0]['telp']);
+		$datawa = [
+			'pesan' => '*' . $asal['nama_Admin'] . '*' . " Telah Melakukan Requset\n" . 'Nama Aset : ' . $data[0]['nama_aset'] . "\n" . 'Code : ' . $data[0]['code'],
+			'nomer' => $no[0]['telp'],
+		];
+		$options = array(
+			'http' => array(
+				'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method' => 'POST',
+				'content' => http_build_query($datawa)
+			)
+		);
+		$context = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		if ($result === FALSE) {
+			echo "gagal";
+		}
 	}
 
 	public function gethis()

@@ -1,9 +1,28 @@
-<?php echo $__env->make('template.headerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+<?php echo $__env->make('template.headerGuru', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
 			<div class="page-header">
 				<h4 class="page-title">Data Inventaris</h4>
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Tables</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Datatables</a>
+					</li>
+				</ul>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
@@ -17,7 +36,7 @@
 								</button>
 								<button class="btn btn-primary btn-round ml-2" data-toggle="modal" data-target="#modalback">
 									<i class="fa fa-plus"></i>
-									Aset Teruskan
+									Aset Keluar
 								</button>
 							</div>
 						</div>
@@ -32,7 +51,7 @@
 												<span class="fw-mediumbold">
 													Pilih</span>
 												<span class="fw-light">
-													Aset Untuk Diteruskan
+													Aset Keluar
 												</span>
 											</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -44,8 +63,8 @@
 												<div class="row">
 													<div class="col-sm-12">
 														<div class="form-group" id="list">
-															<label for="exampleFormControlSelect1">Pilih Aset Kembali</label><br>
-															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset kembali...">
+															<label for="exampleFormControlSelect1">Pilih Aset Keluar</label><br>
+															<select class="selectpicker form-control" onchange="getBack()" id="asetback" data-live-search="true" data-width="auto" title="Pilih aset Keluar...">
 																<?php $__currentLoopData = $planet['back']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $back): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 																<option value="<?php echo e($back['id_aset']); ?>" data-tokens="<?php echo e($back['id_aset']); ?>" data-subtext="<?php echo e($back['code']); ?>"><?php echo e($back['nama_aset']); ?></option>
 																<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -296,4 +315,4 @@
 	</div>
 </div>
 
-<?php echo $__env->make('template.footerBuyer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/buyer/request.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('template.footerGuru', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/guru/request.blade.php ENDPATH**/ ?>

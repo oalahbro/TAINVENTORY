@@ -1,10 +1,28 @@
-@include('template.headerBuyer');
+<?php echo $__env->make('template.headerGuru', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
 <div class="main-panel">
 	<div class="content">
 		<div class="page-inner">
 			<div class="page-header">
 				<h4 class="page-title">Data Inventaris</h4>
-				
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Tables</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Datatables</a>
+					</li>
+				</ul>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
@@ -45,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-{{-- modal detail --}}
+
 			<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -121,7 +139,7 @@
 					</div>
 				</div>
 			</div>
-{{-- modal history --}}
+
 			<div class="modal fade bd-example-modal-lg" id="modalhistory" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -159,7 +177,7 @@
 					</div>
 				</div>
 			</div>
-{{-- modal edit --}}
+
 			<div class="modal fade bd-example-modal-lg" id="modalupdate" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -186,9 +204,9 @@
 													<input type="text" id="id_aset_u" hidden/>
 													<label for="exampleFormControlSelect1">Pilih Kategori</label>
 													<select name="kategori" class="form-control" id="katup_u">
-														@foreach($planet['kategori'] as $kat)
-														<option value="{{ $kat['id_kategori'] }}">{{ $kat['nama_kategori'] }}</option>
-														@endforeach
+														<?php $__currentLoopData = $planet['kategori']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+														<option value="<?php echo e($kat['id_kategori']); ?>"><?php echo e($kat['nama_kategori']); ?></option>
+														<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 													</select>
 												</div>
 												<div class="form-group">
@@ -232,4 +250,4 @@
 		</div>
 	</div>
 </div>
-@include('template.footerBuyer');
+<?php echo $__env->make('template.footerGuru', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;<?php /**PATH /home/eclipse/Documents/PROJ/demo/application/views/guru/inventory.blade.php ENDPATH**/ ?>

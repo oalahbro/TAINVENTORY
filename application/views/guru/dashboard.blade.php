@@ -1,4 +1,4 @@
-
+@include('template.headerGuru');
 
 		<div class="main-panel">
 			<div class="content">
@@ -19,7 +19,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">User</p>
-												<h4 class="card-title"><?= $planet['jumlah'];?></h4>
+												<h4 class="card-title">{{ $planet['jumlah'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -38,7 +38,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">Inventory</p>
-												<h4 class="card-title"><?= $planet['jumlah_aset'];?></h4>
+												<h4 class="card-title">{{ $planet['jumlah_aset'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -57,7 +57,7 @@
 										<div class="col col-stats">
 											<div class="numbers">
 												<p class="card-category">Unconfirmed</p>
-												<h4 class="card-title">$ 1,345</h4>
+												<h4 class="card-title">{{ $planet['jumlah_unconfirmed'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -70,13 +70,13 @@
 									<div class="row">
 										<div class="col-5">
 											<div class="icon-big text-center">
-												<i class="flaticon-success"></i>
+												<i class="flaticon-arrows-2"></i>
 											</div>
 										</div>
 										<div class="col col-stats">
 											<div class="numbers">
-												<p class="card-category">Order</p>
-												<h4 class="card-title">576</h4>
+												<p class="card-category">Request</p>
+												<h4 class="card-title">{{ $planet['jumlah_request'] }}</h4>
 											</div>
 										</div>
 									</div>
@@ -90,3 +90,4 @@
 		</div>
 
 	</div>
+@include('template.footerGuru');
