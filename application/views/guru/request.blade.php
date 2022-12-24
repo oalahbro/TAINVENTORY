@@ -171,6 +171,10 @@
 												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory">                                
 											</div>
 											<div class="form-group">
+												<label for="email2">Lokasi Inventory</label>
+												<input name="lokasi" type="text" class="form-control" id="loc" placeholder="Masukkan code invemtory">                                
+											</div>
+											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar Inventory</label>
 												<input name="img" type="text" id="putbase" hidden>
 												<input  type="file" class="form-control-file resize" id="img1">
@@ -197,7 +201,7 @@
 				</div>
 			</div>
 		</div>
-		{{-- modal add --}}
+		{{-- modal update --}}
 		<div class="modal fade bd-example-modal-lg" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -244,6 +248,10 @@
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
 												<input id="code" name="code" type="text" class="form-control" disabled placeholder="Masukkan code inventory">                                
+											</div>
+											<div class="form-group">
+												<label for="email2">Lokasi Inventory</label>
+												<input id="lokasi" name="lokasi" type="text" class="form-control" placeholder="Masukkan code inventory">                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar</label>

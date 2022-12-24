@@ -472,6 +472,7 @@ class M_guru extends CI_Model
 				'id_category' => $this->input->post('kategori'),
 				'nama_aset' => $this->input->post('nama'),
 				'code' => $this->input->post('code'),
+				'lokasi' => $this->input->post('lokasi'),
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
@@ -544,6 +545,7 @@ class M_guru extends CI_Model
 					'deskripsi' => 1,
 					'img' => 1,
 					'status' => 1,
+					'lokasi' => 1,
 					'tujuan_info.nama_Admin' => 1,
 					'user_info.nama_Admin' => 1,
 					'kategori_info.nama_kategori' => 1
@@ -564,7 +566,8 @@ class M_guru extends CI_Model
 					'nama_aset' => 1,
 					'img' => 1,
 					'spesifikasi' => 1,
-					'deskripsi' => 1
+					'deskripsi' => 1,
+					'lokasi' => 1
 				]]
 			]
 		)->toArray();
@@ -574,7 +577,8 @@ class M_guru extends CI_Model
 					'id_category' => $this->input->post('kategori'),
 					'nama_aset' => $this->input->post('nama'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
-					'deskripsi' => $this->input->post('deskripsi')
+					'deskripsi' => $this->input->post('deskripsi'),
+					'lokasi' => $this->input->post('lokasi')
 				];
 				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
@@ -588,7 +592,8 @@ class M_guru extends CI_Model
 					'nama_aset' => $this->input->post('nama'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
 					'deskripsi' => $this->input->post('deskripsi'),
-					'img' => $this->input->post('img')
+					'img' => $this->input->post('img'),
+					'lokasi' => $this->input->post('lokasi')
 				];
 				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
@@ -649,6 +654,7 @@ class M_guru extends CI_Model
 					'spesifikasi' => 1,
 					'deskripsi' => 1,
 					'status' => 1,
+					'lokasi' => 1,
 				]]
 			]
 		)->toArray();
@@ -659,6 +665,7 @@ class M_guru extends CI_Model
 				'nama_aset' => $this->input->post('nama'),
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
+				'lokasi' => $this->input->post('lokasi'),
 				'status' => $result['status']
 			];
 			$add =  $this->table('aset')->updateOne(
@@ -675,6 +682,7 @@ class M_guru extends CI_Model
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
+				'lokasi' => $this->input->post('lokasi'),
 				'status' => $result['status']
 			];
 			$add = $this->table('aset')->updateOne(

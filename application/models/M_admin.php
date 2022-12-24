@@ -86,7 +86,8 @@ class M_admin extends CI_Model
 					'id_category' => $this->input->post('kategori'),
 					'nama_aset' => $this->input->post('nama'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
-					'deskripsi' => $this->input->post('deskripsi')
+					'deskripsi' => $this->input->post('deskripsi'),
+					'lokasi' => $this->input->post('lokasi')
 				];
 				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
@@ -100,7 +101,8 @@ class M_admin extends CI_Model
 					'nama_aset' => $this->input->post('nama'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
 					'deskripsi' => $this->input->post('deskripsi'),
-					'img' => $this->input->post('img')
+					'img' => $this->input->post('img'),
+					'lokasi' => $this->input->post('lokasi')
 				];
 				$this->table('aset')->updateOne(
 					['id_aset' => $this->input->post('id_aset')],
@@ -163,7 +165,8 @@ class M_admin extends CI_Model
 					'nama_aset' => 1,
 					'spesifikasi' => 1,
 					'deskripsi' => 1,
-					'status' => 1
+					'status' => 1,
+					'lokasi' => 1
 				]]
 			]
 		)->toArray();
@@ -174,7 +177,8 @@ class M_admin extends CI_Model
 				'nama_aset' => $this->input->post('nama'),
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
-				'status' => $result['status']
+				'status' => $result['status'],
+				'lokasi' => $this->input->post('lokasi')
 			];
 			$add =  $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
@@ -190,7 +194,8 @@ class M_admin extends CI_Model
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
-				'status' => $result['status']
+				'status' => $result['status'],
+				'lokasi' => $this->input->post('lokasi')
 			];
 			$add = $this->table('aset')->updateOne(
 				['id_aset' => $this->input->post('id_aset')],
@@ -352,6 +357,7 @@ class M_admin extends CI_Model
 				'spesifikasi' => $this->input->post('spesifikasi'),
 				'deskripsi' => $this->input->post('deskripsi'),
 				'img' => $this->input->post('img'),
+				'lokasi' => $this->input->post('lokasi'),
 				'status' => $stts
 			]);
 			$add = [
@@ -407,6 +413,7 @@ class M_admin extends CI_Model
 					'deskripsi' => 1,
 					'img' => 1,
 					'status' => 1,
+					'lokasi' => 1,
 					'tujuan_info.nama_Admin' => 1,
 					'user_info.nama_Admin' => 1,
 					'kategori_info.nama_kategori' => 1
@@ -434,7 +441,8 @@ class M_admin extends CI_Model
 						'nama_aset' => $this->input->post('nama'),
 						'code' => $this->input->post('code'),
 						'spesifikasi' => $this->input->post('spesifikasi'),
-						'deskripsi' => $this->input->post('deskripsi')
+						'deskripsi' => $this->input->post('deskripsi'),
+						'lokasi' => $this->input->post('lokasi')
 					]
 				]
 			);
@@ -449,7 +457,8 @@ class M_admin extends CI_Model
 						'code' => $this->input->post('code'),
 						'spesifikasi' => $this->input->post('spesifikasi'),
 						'deskripsi' => $this->input->post('deskripsi'),
-						'img' => $this->input->post('img')
+						'img' => $this->input->post('img'),
+						'lokasi' => $this->input->post('lokasi')
 					]
 				]
 			);
@@ -473,6 +482,7 @@ class M_admin extends CI_Model
 				'spesifikasi' => $result['spesifikasi'],
 				'deskripsi' => $result['deskripsi'],
 				'img' => $result['img'],
+				'lokasi' => $result['lokasi'],
 				'status' => $result['status'],
 				'date' => date("Y-m-d H:i:s")
 			];
@@ -685,6 +695,7 @@ class M_admin extends CI_Model
 					'deskripsi' => 1,
 					'img' => 1,
 					'status' => 1,
+					'lokasi' => 1,
 					'tujuan_info.nama_Admin' => 1,
 					'user_info.nama_Admin' => 1,
 					'kategori_info.nama_kategori' => 1
@@ -730,6 +741,7 @@ class M_admin extends CI_Model
 					'id_category' => $this->input->post('kategori'),
 					'nama_aset' => $this->input->post('nama'),
 					'code' => $this->input->post('code'),
+					'lokasi' => $this->input->post('lokasi'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
 					'deskripsi' => $this->input->post('deskripsi'),
 					'img' => $this->input->post('img'),
@@ -745,6 +757,7 @@ class M_admin extends CI_Model
 					'id_category' => $this->input->post('kategori'),
 					'nama_aset' => $this->input->post('nama'),
 					'code' => $this->input->post('code'),
+					'lokasi' => $this->input->post('lokasi'),
 					'spesifikasi' => $this->input->post('spesifikasi'),
 					'deskripsi' => $this->input->post('deskripsi'),
 					'img' => $this->input->post('img'),

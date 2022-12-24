@@ -156,7 +156,11 @@
 											</div>
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
-												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code invemtory" required>                                
+												<input name="code" type="text" class="form-control" id="cod" placeholder="Masukkan code inventory" required>                                
+											</div>
+											<div class="form-group">
+												<label for="lokasi">Lokasi Inventory</label>
+												<input name="code" type="text" class="form-control" id="loc" placeholder="Masukkan lokasi inventory" required>                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar Inventory</label>
@@ -232,6 +236,10 @@
 											<div class="form-group">
 												<label for="email2">Code Inventory</label>
 												<input id="code" name="code" type="text" class="form-control" disabled placeholder="Masukkan code inventory">                                
+											</div>
+											<div class="form-group">
+												<label for="email2">Lokasi</label>
+												<input id="lokasi" name="lokasi" type="text" class="form-control" placeholder="Masukkan lokasi inventory">                                
 											</div>
 											<div class="form-group">
 												<label for="exampleFormControlFile1">Masukkan Gambar</label>

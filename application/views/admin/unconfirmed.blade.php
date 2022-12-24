@@ -116,6 +116,13 @@
 												<p id="tujup" class="mb-1"></p>
 											</div>
 										</div>
+										<div class="col-md-6">
+											<div class="form-group form-group-default">
+												<input type="text" id="lok" hidden/>
+												<label for="exampleFormControlSelect1">Lokasi</label>
+												<p id="lokup" class="mb-1"></p>
+											</div>
+										</div>
 										<div class="col-md-12">
 											<div class="form-group">
 												<img id="blah" src="#" alt="your image" style="max-width: 20rem;" />

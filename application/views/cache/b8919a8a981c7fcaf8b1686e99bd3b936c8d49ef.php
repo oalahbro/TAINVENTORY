@@ -99,6 +99,12 @@
 												</div>
 												<div class="col-md-6">
 													<div class="form-group form-group-default">
+														<label for="email2">Lokasi Inventory</label>
+														<p id="lokasi" class="mb-1"></p>                        
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-group-default">
 														<input type="text" id="id_aset" hidden/>
 														<label for="exampleFormControlSelect1">Kategori</label>
 														<p id="katup"class="mb-1"></p>
@@ -216,6 +222,10 @@
 												<div class="form-group">
 													<label for="email2">Code Inventory</label>
 													<input id="code_u" name="code" type="text" class="form-control" disabled placeholder="Masukkan code inventory">                                
+												</div>
+												<div class="form-group">
+													<label for="email2">Lokasi Inventory</label>
+													<input id="lok_u" name="code" type="text" class="form-control" placeholder="Masukkan lokasi inventory">                                
 												</div>
 												<div class="form-group">
 													<label for="exampleFormControlFile1">Masukkan Gambar</label>
